@@ -83,9 +83,9 @@ func writeModel(set spec.SpecificationSet, name string, outFolder string, public
 	if err = tmpl.Execute(
 		&buf,
 		struct {
-			PublicMode bool
 			Set        spec.SpecificationSet
 			Spec       spec.Specification
+			PublicMode bool
 		}{
 			PublicMode: publicMode,
 			Set:        set,
@@ -129,8 +129,8 @@ func writeIdentitiesRegistry(set spec.SpecificationSet, outFolder string, public
 	if err = tmpl.Execute(
 		&buf,
 		struct {
-			PublicMode bool
 			Set        spec.SpecificationSet
+			PublicMode bool
 		}{
 			PublicMode: publicMode,
 			Set:        set,
@@ -168,8 +168,8 @@ func writeRelationshipsRegistry(set spec.SpecificationSet, outFolder string, pub
 	if err = tmpl.Execute(
 		&buf,
 		struct {
-			PublicMode bool
 			Set        spec.SpecificationSet
+			PublicMode bool
 		}{
 			PublicMode: publicMode,
 			Set:        set,
