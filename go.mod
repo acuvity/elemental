@@ -2,6 +2,8 @@ module go.acuvity.ai/elemental
 
 go 1.21
 
+require go.acuvity.ai/regolithe v0.0.0-20231121172723-71f00501b394
+
 require (
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/getkin/kin-openapi v0.113.0
@@ -12,7 +14,6 @@ require (
 	github.com/mitchellh/copystructure v1.2.0
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/ugorji/go/codec v1.2.8
-	go.acuvity.ai/regolithe v0.0.0-20231121172723-71f00501b394
 	golang.org/x/sync v0.1.0
 	golang.org/x/text v0.8.0
 	golang.org/x/tools v0.6.0
