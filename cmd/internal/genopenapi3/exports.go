@@ -7,7 +7,7 @@ import (
 	"path"
 	"path/filepath"
 
-	"go.aporeto.io/regolithe/spec"
+	"go.acuvity.ai/regolithe/spec"
 )
 
 // Config is used to guide the generator function

@@ -14,7 +14,7 @@ package testmodel
 import (
 	"fmt"
 
-	"go.aporeto.io/elemental"
+	"go.acuvity.ai/elemental"
 )
 
 // UnmarshalableListIdentity represents the Identity of the object.

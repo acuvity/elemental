@@ -7,7 +7,7 @@ import (
 	"sort"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"go.aporeto.io/regolithe/spec"
+	"go.acuvity.ai/regolithe/spec"
 )
 
 var (

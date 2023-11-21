@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"go.aporeto.io/regolithe/spec"
+	"go.acuvity.ai/regolithe/spec"
 )
 
 func TestConverter_Do__error_bad_externalType_mapping(t *testing.T) {

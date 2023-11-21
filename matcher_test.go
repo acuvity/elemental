@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"go.aporeto.io/elemental"
-	"go.aporeto.io/elemental/internal"
-	testmodel "go.aporeto.io/elemental/test/model"
+	"go.acuvity.ai/elemental"
+	"go.acuvity.ai/elemental/internal"
+	testmodel "go.acuvity.ai/elemental/test/model"
 )
 
 // this unit test suite tests the functionality of the EqualComparator when used in conjunction with the helper

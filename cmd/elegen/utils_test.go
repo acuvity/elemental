@@ -15,7 +15,7 @@ import (
 	"reflect"
 	"testing"
 
-	"go.aporeto.io/regolithe/spec"
+	"go.acuvity.ai/regolithe/spec"
 )
 
 func Test_attributeTypeConverter(t *testing.T) {

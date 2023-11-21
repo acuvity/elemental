@@ -6,7 +6,7 @@ product_name = dummy
 
 [transformer]
 name = gaia
-url = go.aporeto.io/api
+url = go.acuvity.ai/api
 author =  Aporeto Inc.
 email = dev@aporeto.com
 version = 1.0

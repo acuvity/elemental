@@ -37,7 +37,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -94,7 +94,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -143,7 +143,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -209,7 +209,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -292,7 +292,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -355,7 +355,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -439,7 +439,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -536,7 +536,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -605,7 +605,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -685,7 +685,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -759,7 +759,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"
@@ -828,7 +828,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
-								"url":   "go.aporeto.io/api"
+								"url":   "go.acuvity.ai/api"
 							},
 							"license": {
 								"name": "TODO"

@@ -16,12 +16,12 @@ import (
 	"os"
 	"path"
 
-	"go.aporeto.io/elemental/cmd/elegen/versions"
-	"go.aporeto.io/regolithe"
-	"go.aporeto.io/regolithe/spec"
+	"go.acuvity.ai/elemental/cmd/elegen/versions"
+	"go.acuvity.ai/regolithe"
+	"go.acuvity.ai/regolithe/spec"
 	"golang.org/x/sync/errgroup"
 
-	"go.aporeto.io/elemental/cmd/internal/genopenapi3"
+	"go.acuvity.ai/elemental/cmd/internal/genopenapi3"
 )
 
 const (

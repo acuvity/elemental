@@ -33,4 +33,4 @@
 //
 // Elemental is mainly an abstract package and cannot really be used by itself. You must use the provided command
 // (elegen) to generate an Elemental Model from a Regolithe Specification Set.
-package elemental // import "go.aporeto.io/elemental"
+package elemental // import "go.acuvity.ai/elemental"

@@ -22,7 +22,7 @@ func TestConverter_Do__splitOutput_emptyRootModel(t *testing.T) {
 				"contact": {
 					"email": "dev@aporeto.com",
 					"name":  "Aporeto Inc.",
-					"url":   "go.aporeto.io/api"
+					"url":   "go.acuvity.ai/api"
 				},
 				"license": {
 					"name": "TODO"
@@ -135,7 +135,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 					"contact": {
 						"email": "dev@aporeto.com",
 						"name":  "Aporeto Inc.",
-						"url":   "go.aporeto.io/api"
+						"url":   "go.acuvity.ai/api"
 					},
 					"license": {
 						"name": "TODO"
@@ -373,7 +373,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 					"contact": {
 						"email": "dev@aporeto.com",
 						"name":  "Aporeto Inc.",
-						"url":   "go.aporeto.io/api"
+						"url":   "go.acuvity.ai/api"
 					},
 					"license": {
 						"name": "TODO"
@@ -416,7 +416,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 					"contact": {
 						"email": "dev@aporeto.com",
 						"name":  "Aporeto Inc.",
-						"url":   "go.aporeto.io/api"
+						"url":   "go.acuvity.ai/api"
 					},
 					"license": {
 						"name": "TODO"
@@ -511,7 +511,7 @@ func TestConverter_Do__split_output_withPrivateModel(t *testing.T) {
 					"contact": {
 						"email": "dev@aporeto.com",
 						"name":  "Aporeto Inc.",
-						"url":   "go.aporeto.io/api"
+						"url":   "go.acuvity.ai/api"
 					},
 					"license": {
 						"name": "TODO"

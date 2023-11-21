@@ -4,7 +4,7 @@ import (
 	"sort"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"go.aporeto.io/regolithe/spec"
+	"go.acuvity.ai/regolithe/spec"
 )
 
 func (c *converter) convertParamDefAsQueryParams(paramDef *spec.ParameterDefinition) openapi3.Parameters {
