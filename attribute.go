@@ -273,7 +273,7 @@ func NewAESAttributeEncrypter(passphrase string) (AttributeEncrypter, error) {
 	case 32:
 		break
 	default:
-		return nil, fmt.Errorf("the value for AES Attribute encrypter must be 16, 24 or 32 bytes long to select AES-128, AES-192 or AES-256. Current lenght is %d", len(passbytes))
+		return nil, fmt.Errorf("the length for AES Attribute encrypter must be 16, 24 or 32 bytes long (current length %d) to select AES-128, AES-192 or AES-256", len(passbytes))
 	}
 
 	return &aesAttributeEncrypter{
