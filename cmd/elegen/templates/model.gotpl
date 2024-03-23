@@ -454,9 +454,11 @@ func (o *{{ .Spec.Model.EntityName }}) Validate() error {
 
     {{ if or (eq .Type "refList") (eq .Type "refMap") }}
     for _, sub := range o.{{ .ConvertedName }} {
+        {{- if ne .Extensions.refMode "nopointer" }}
         if sub == nil {
             continue
         }
+        {{ end -}}
         elemental.ResetDefaultForZeroValues(sub)
         if err := sub.Validate(); err != nil {
             errors = errors.Append(err)
