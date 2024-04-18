@@ -98,27 +98,29 @@ func (c *converter) extractOperationGetAll(parentRestName string, relation *spec
 	}
 
 	op := &openapi3.Operation{
-		OperationID: "get-all-" + model.ResourceName,
+		OperationID: "get-all-" + model.EntityNamePlural,
 		Tags:        []string{model.Group, model.Package},
 		Description: relationAction.Description,
-		Responses: openapi3.Responses{
-			"200": &openapi3.ResponseRef{
-				Value: &openapi3.Response{
-					Description: &noDesc,
-					Content: openapi3.Content{
-						"application/json": &openapi3.MediaType{
-							Schema: respBodySchema.NewRef(),
+		Responses: openapi3.NewResponses(
+			openapi3.WithStatus(200,
+				&openapi3.ResponseRef{
+					Value: &openapi3.Response{
+						Description: &noDesc,
+						Content: openapi3.Content{
+							"application/json": &openapi3.MediaType{
+								Schema: respBodySchema.NewRef(),
+							},
 						},
 					},
 				},
-			},
-			// TODO: more responses like 422, 500, etc if needed
-		},
+			),
+		),
+		// TODO: more responses like 422, 500, etc if needed
 		Parameters: c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
 	}
 
 	if parentRestName != "" {
-		op.OperationID = "get-all-" + model.ResourceName + "-for-a-given-" + parentRestName
+		op.OperationID = "get-all-" + model.EntityNamePlural + "-in-" + parentRestName
 	}
 	return op
 }
@@ -141,7 +143,7 @@ func (c *converter) extractOperationPost(parentRestName string, relation *spec.R
 	}
 
 	op := &openapi3.Operation{
-		OperationID: "create-a-new-" + relation.RestName,
+		OperationID: "create-" + model.EntityName,
 		Tags:        []string{model.Group, model.Package},
 		Description: relationAction.Description,
 		RequestBody: &openapi3.RequestBodyRef{
@@ -153,24 +155,26 @@ func (c *converter) extractOperationPost(parentRestName string, relation *spec.R
 				},
 			},
 		},
-		Responses: openapi3.Responses{
-			"200": &openapi3.ResponseRef{
-				Value: &openapi3.Response{
-					Description: &noDesc,
-					Content: openapi3.Content{
-						"application/json": &openapi3.MediaType{
-							Schema: schemaRef,
+		Responses: openapi3.NewResponses(
+			openapi3.WithStatus(200,
+				&openapi3.ResponseRef{
+					Value: &openapi3.Response{
+						Description: &noDesc,
+						Content: openapi3.Content{
+							"application/json": &openapi3.MediaType{
+								Schema: schemaRef,
+							},
 						},
 					},
 				},
-			},
-			// TODO: more responses like 422, 500, etc if needed
-		},
+			),
+		),
+		// TODO: more responses like 422, 500, etc if needed
 		Parameters: c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
 	}
 
 	if parentRestName != "" {
-		op.OperationID = "create-a-new-" + model.RestName + "-for-a-given-" + parentRestName
+		op.OperationID = "create-" + model.EntityName + "-in-" + parentRestName
 	}
 	return op
 }
@@ -185,22 +189,24 @@ func (c *converter) extractOperationGetByID(model *spec.Model) *openapi3.Operati
 	respBodySchemaRef := openapi3.NewSchemaRef("#/components/schemas/"+model.RestName, nil)
 
 	op := &openapi3.Operation{
-		OperationID: fmt.Sprintf("get-%s-by-ID", model.RestName),
+		OperationID: fmt.Sprintf("get-%s", model.EntityName),
 		Tags:        []string{model.Group, model.Package},
 		Description: relationAction.Description,
-		Responses: openapi3.Responses{
-			"200": &openapi3.ResponseRef{
-				Value: &openapi3.Response{
-					Description: &noDesc,
-					Content: openapi3.Content{
-						"application/json": &openapi3.MediaType{
-							Schema: respBodySchemaRef,
+		Responses: openapi3.NewResponses(
+			openapi3.WithStatus(200,
+				&openapi3.ResponseRef{
+					Value: &openapi3.Response{
+						Description: &noDesc,
+						Content: openapi3.Content{
+							"application/json": &openapi3.MediaType{
+								Schema: respBodySchemaRef,
+							},
 						},
 					},
 				},
-			},
+			),
 			// TODO: more responses like 422, 500, etc if needed
-		},
+		),
 		Parameters: c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
 	}
 
@@ -217,22 +223,24 @@ func (c *converter) extractOperationDeleteByID(model *spec.Model) *openapi3.Oper
 	respBodySchemaRef := openapi3.NewSchemaRef("#/components/schemas/"+model.RestName, nil)
 
 	op := &openapi3.Operation{
-		OperationID: fmt.Sprintf("delete-%s-by-ID", model.RestName),
+		OperationID: fmt.Sprintf("delete-%s", model.EntityName),
 		Tags:        []string{model.Group, model.Package},
 		Description: relationAction.Description,
-		Responses: openapi3.Responses{
-			"200": &openapi3.ResponseRef{
-				Value: &openapi3.Response{
-					Description: &noDesc,
-					Content: openapi3.Content{
-						"application/json": &openapi3.MediaType{
-							Schema: respBodySchemaRef,
+		Responses: openapi3.NewResponses(
+			openapi3.WithStatus(200,
+				&openapi3.ResponseRef{
+					Value: &openapi3.Response{
+						Description: &noDesc,
+						Content: openapi3.Content{
+							"application/json": &openapi3.MediaType{
+								Schema: respBodySchemaRef,
+							},
 						},
 					},
 				},
-			},
-			// TODO: more responses like 422, 500, etc if needed
-		},
+			),
+		),
+		// TODO: more responses like 422, 500, etc if needed
 		Parameters: c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
 	}
 
@@ -249,7 +257,7 @@ func (c *converter) extractOperationPutByID(model *spec.Model) *openapi3.Operati
 	schemaRef := openapi3.NewSchemaRef("#/components/schemas/"+model.RestName, nil)
 
 	op := &openapi3.Operation{
-		OperationID: fmt.Sprintf("update-%s-by-ID", model.RestName),
+		OperationID: fmt.Sprintf("update-%s", model.EntityName),
 		Tags:        []string{model.Group, model.Package},
 		Description: relationAction.Description,
 		RequestBody: &openapi3.RequestBodyRef{
@@ -261,19 +269,21 @@ func (c *converter) extractOperationPutByID(model *spec.Model) *openapi3.Operati
 				},
 			},
 		},
-		Responses: openapi3.Responses{
-			"200": &openapi3.ResponseRef{
-				Value: &openapi3.Response{
-					Description: &noDesc,
-					Content: openapi3.Content{
-						"application/json": &openapi3.MediaType{
-							Schema: schemaRef,
+		Responses: openapi3.NewResponses(
+			openapi3.WithStatus(200,
+				&openapi3.ResponseRef{
+					Value: &openapi3.Response{
+						Description: &noDesc,
+						Content: openapi3.Content{
+							"application/json": &openapi3.MediaType{
+								Schema: schemaRef,
+							},
 						},
 					},
 				},
-			},
-			// TODO: more responses like 422, 500, etc if needed
-		},
+			),
+		),
+		// TODO: more responses like 422, 500, etc if needed
 		Parameters: c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
 	}
 

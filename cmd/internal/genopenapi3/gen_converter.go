@@ -81,7 +81,7 @@ func (c *converter) processSpec(s spec.Specification) error {
 	if model.IsRoot {
 		pathItems := c.convertRelationsForRootSpec(s.Relations())
 		for path, item := range pathItems {
-			c.outRootDoc.Paths[path] = item
+			c.outRootDoc.Paths.Set(path, item)
 		}
 		// we don't care about root model's relations for now, so we are done for root spec
 		return nil
@@ -95,12 +95,12 @@ func (c *converter) processSpec(s spec.Specification) error {
 
 	pathItems := c.convertRelationsForNonRootModel(model)
 	for path, item := range pathItems {
-		c.outRootDoc.Paths[path] = item
+		c.outRootDoc.Paths.Set(path, item)
 	}
 
 	pathItems = c.convertRelationsForNonRootSpec(model.ResourceName, s.Relations())
 	for path, item := range pathItems {
-		c.outRootDoc.Paths[path] = item
+		c.outRootDoc.Paths.Set(path, item)
 	}
 
 	return nil
@@ -123,10 +123,10 @@ func (c *converter) convertedDocs() map[string]openapi3.T {
 		docs[name] = template
 	}
 
-	for path, item := range c.outRootDoc.Paths {
+	for path, item := range c.outRootDoc.Paths.Map() {
 		pathRoot := strings.SplitN(strings.Trim(path, "/"), "/", 2)[0]
 		docName := c.resourceToRest[pathRoot]
-		docs[docName].Paths[path] = item
+		docs[docName].Paths.Set(path, item)
 	}
 
 	return docs
@@ -172,21 +172,22 @@ func (c *converter) globalTags() openapi3.Tags {
 func newOpenAPI3Template(specConfig *spec.Config) openapi3.T {
 	return openapi3.T{
 		OpenAPI: "3.0.3",
-		Info: &openapi3.Info{
-			Title:          defaultDocName,
-			Version:        specConfig.Version,
-			Description:    specConfig.Description,
-			TermsOfService: "https://localhost/TODO", // TODO
-			License: &openapi3.License{
-				Name: "TODO",
+		Servers: openapi3.Servers{
+			&openapi3.Server{
+				URL: "https://api.acuvity.ai",
 			},
+		},
+		Info: &openapi3.Info{
+			Title:       defaultDocName,
+			Version:     specConfig.Version,
+			Description: specConfig.Description,
 			Contact: &openapi3.Contact{
 				Name:  specConfig.Author,
 				URL:   specConfig.URL,
 				Email: specConfig.Email,
 			},
 		},
-		Paths: openapi3.Paths{},
+		Paths: &openapi3.Paths{},
 		Components: &openapi3.Components{
 			Schemas: make(openapi3.Schemas),
 		},
