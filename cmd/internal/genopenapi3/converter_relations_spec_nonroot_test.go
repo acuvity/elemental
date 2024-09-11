@@ -35,6 +35,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "N/A",
@@ -59,10 +60,6 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -91,7 +88,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 									}
 								],
 								"get": {
-									"operationId": "get-all-minesites-for-a-given-resource",
+									"operationId": "get-all-MineSites-in-resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Retrieve all mine sites.",
 									"parameters": [
@@ -172,6 +169,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "N/A",
@@ -196,10 +194,6 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -228,7 +222,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 									}
 								],
 								"post": {
-									"operationId": "create-a-new-minesite-for-a-given-resource",
+									"operationId": "create-MineSites-in-resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Creates a mine site.",
 									"parameters": [
@@ -296,6 +290,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "N/A",
@@ -316,10 +311,6 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -371,6 +362,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "N/A",
@@ -395,10 +387,6 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -427,7 +415,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 									}
 								],
 								"post": {
-									"operationId": "create-a-new-minesite-for-a-given-resource",
+									"operationId": "create-MineSites-in-resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Creates a mine site.",
 									"requestBody": {
@@ -453,7 +441,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 									}
 								},
 								"get": {
-									"operationId": "get-all-minesites-for-a-given-resource",
+									"operationId": "get-all-MineSites-in-resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Retrieve all mine sites.",
 									"responses": {

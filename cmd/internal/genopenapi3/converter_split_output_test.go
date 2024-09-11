@@ -18,16 +18,13 @@ func TestConverter_Do__splitOutput_emptyRootModel(t *testing.T) {
 	outDocs := `
 		{
 			"openapi": "3.0.3",
+			"servers": [{ "url": "https://api.acuvity.ai"}],
 			"info": {
 				"contact": {
 					"email": "dev@aporeto.com",
 					"name":  "Aporeto Inc.",
 					"url":   "go.acuvity.ai/api"
 				},
-				"license": {
-					"name": "TODO"
-				},
-				"termsOfService": "https://localhost/TODO",
 				"version": "1.0",
 				"title": "toplevel"
 			},
@@ -121,6 +118,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 		"minesite": `
 			{
 				"openapi": "3.0.3",
+				"servers": [{ "url": "https://api.acuvity.ai"}],
 				"tags":[
 					{
 						"name": "useful/thing",
@@ -137,10 +135,6 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 						"name":  "Aporeto Inc.",
 						"url":   "go.acuvity.ai/api"
 					},
-					"license": {
-						"name": "TODO"
-					},
-					"termsOfService": "https://localhost/TODO",
 					"version": "1.0",
 					"title": "minesite"
 				},
@@ -156,7 +150,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 					"/minesites": {
 						"get": {
 							"description": "Retrieves all minesites.",
-							"operationId": "get-all-minesites",
+							"operationId": "get-all-MineSites",
 							"responses": {
 								"200": {
 									"content": {
@@ -179,7 +173,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 						},
 						"post": {
 							"description": "Creates a new minesite.",
-							"operationId": "create-a-new-minesite",
+							"operationId": "create-MineSites",
 							"requestBody": {
 								"content": {
 									"application/json": {
@@ -210,7 +204,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 					"/minesites/{id}": {
 						"delete": {
 							"description": "Delete a minesite by ID.",
-							"operationId": "delete-minesite-by-ID",
+							"operationId": "delete-MineSites",
 							"responses": {
 								"200": {
 									"content": {
@@ -230,7 +224,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 						},
 						"get": {
 							"description": "Retrieves a mine site by ID.",
-							"operationId": "get-minesite-by-ID",
+							"operationId": "get-MineSites",
 							"responses": {
 								"200": {
 									"content": {
@@ -260,7 +254,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 						],
 						"put": {
 							"description": "Updates a mine site by ID.",
-							"operationId": "update-minesite-by-ID",
+							"operationId": "update-MineSites",
 							"requestBody": {
 								"content": {
 									"application/json": {
@@ -291,7 +285,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 					"/minesites/{id}/resources": {
 						"get": {
 							"description": "Retrieves a list of resources for a given mine site.",
-							"operationId": "get-all-resources-for-a-given-minesite",
+							"operationId": "get-all-Resources-in-minesite",
 							"responses": {
 								"200": {
 									"content": {
@@ -324,7 +318,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 						],
 						"post": {
 							"description": "assign a new resource for a given mine site.",
-							"operationId": "create-a-new-resource-for-a-given-minesite",
+							"operationId": "create-Resources-in-minesite",
 							"requestBody": {
 								"content": {
 									"application/json": {
@@ -358,6 +352,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 
 		"resource": `
 			{
+				"servers": [{ "url": "https://api.acuvity.ai"}],
 				"openapi": "3.0.3",
 				"tags":[
 					{
@@ -375,10 +370,6 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 						"name":  "Aporeto Inc.",
 						"url":   "go.acuvity.ai/api"
 					},
-					"license": {
-						"name": "TODO"
-					},
-					"termsOfService": "https://localhost/TODO",
 					"version": "1.0",
 					"title": "resource"
 				},
@@ -401,6 +392,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 
 		"employee": `
 			{
+				"servers": [{ "url": "https://api.acuvity.ai"}],
 				"openapi": "3.0.3",
 				"tags":[
 					{
@@ -418,10 +410,6 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 						"name":  "Aporeto Inc.",
 						"url":   "go.acuvity.ai/api"
 					},
-					"license": {
-						"name": "TODO"
-					},
-					"termsOfService": "https://localhost/TODO",
 					"version": "1.0",
 					"title": "employee"
 				},
@@ -496,6 +484,7 @@ func TestConverter_Do__split_output_withPrivateModel(t *testing.T) {
 	outDocs := map[string]string{
 		"minesite": `
 			{
+				"servers": [{ "url": "https://api.acuvity.ai"}],
 				"openapi": "3.0.3",
 				"tags":[
 					{
@@ -513,10 +502,6 @@ func TestConverter_Do__split_output_withPrivateModel(t *testing.T) {
 						"name":  "Aporeto Inc.",
 						"url":   "go.acuvity.ai/api"
 					},
-					"license": {
-						"name": "TODO"
-					},
-					"termsOfService": "https://localhost/TODO",
 					"version": "1.0",
 					"title": "minesite"
 				},
@@ -532,7 +517,7 @@ func TestConverter_Do__split_output_withPrivateModel(t *testing.T) {
 					"/minesites": {
 						"get": {
 							"description": "Retrieves all minesites.",
-							"operationId": "get-all-minesites",
+							"operationId": "get-all-MineSites",
 							"responses": {
 								"200": {
 									"content": {

@@ -24,16 +24,13 @@ func TestConverter_Do__model_root(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"info": {
 							"contact": {
 								"email": "dev@aporeto.com",
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},

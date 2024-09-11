@@ -2,7 +2,7 @@ module go.acuvity.ai/elemental
 
 go 1.21
 
-require go.acuvity.ai/regolithe v0.0.0-20240208181405-61281e04e61d
+require go.acuvity.ai/regolithe v0.0.0-20240402174917-1d6a5d4961ae
 
 require (
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de

@@ -34,6 +34,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags":[
 							{
 								"name": "useful/thing",
@@ -50,10 +51,6 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -68,7 +65,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 						"paths": {
 							"/resources": {
 								"post": {
-									"operationId": "create-a-new-resource",
+									"operationId": "create-Resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"parameters": [
 										{
@@ -112,7 +109,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 				model:
 					rest_name: resource
 					resource_name: resources
-					entity_name: Recource
+					entity_name: Resource
 					package: usefulPackageName
 					group: useful/thing
 					description: Represents a resource.
@@ -144,6 +141,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "useful/thing",
@@ -160,10 +158,6 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -178,7 +172,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 						"paths": {
 							"/resources": {
 								"get": {
-									"operationId": "get-all-resources",
+									"operationId": "get-all-Resources",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Retrieve all resources.",
 									"parameters": [
@@ -216,7 +210,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 				model:
 					rest_name: resource
 					resource_name: resources
-					entity_name: Recource
+					entity_name: Resource
 					package: usefulPackageName
 					group: useful/thing
 					description: Represents a resource.
@@ -241,6 +235,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags":[
 							{
 								"name": "useful/thing",
@@ -257,10 +252,6 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -280,7 +271,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 				model:
 					rest_name: resource
 					resource_name: resources
-					entity_name: Recource
+					entity_name: Resource
 					package: usefulPackageName
 					group: useful/thing
 					description: Represents a resource.
@@ -316,6 +307,7 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 		"toplevel": `
 			{
 				"openapi": "3.0.3",
+				"servers": [{ "url": "https://api.acuvity.ai"}],
 				"tags":[
 					{
 						"name": "useful/thing",
@@ -332,10 +324,6 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 						"name":  "Aporeto Inc.",
 						"url":   "go.acuvity.ai/api"
 					},
-					"license": {
-						"name": "TODO"
-					},
-					"termsOfService": "https://localhost/TODO",
 					"version": "1.0",
 					"title": "toplevel"
 				},
@@ -350,7 +338,7 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 				"paths": {
 					"/resources": {
 						"post": {
-							"operationId": "create-a-new-resource",
+							"operationId": "create-Resource",
 							"tags": ["useful/thing", "usefulPackageName"],
 							"description": "Creates some resource.",
 							"requestBody": {
@@ -386,7 +374,7 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 		model:
 			rest_name: resource
 			resource_name: resources
-			entity_name: Recource
+			entity_name: Resource
 			package: usefulPackageName
 			group: useful/thing
 			description: Represents a resource.

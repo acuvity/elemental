@@ -5,7 +5,7 @@ import (
 )
 
 func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	cases := map[string]testCase{
 
@@ -22,6 +22,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -39,10 +40,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -79,6 +76,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -96,10 +94,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -138,6 +132,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"info": {
 							"contact": {
@@ -145,10 +140,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -194,6 +185,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -211,10 +203,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -277,6 +265,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -294,10 +283,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -340,6 +325,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -357,10 +343,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -424,6 +406,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -441,10 +424,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -521,6 +500,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -538,10 +518,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -590,6 +566,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -607,10 +584,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -670,6 +643,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -687,10 +661,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -744,6 +714,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -761,10 +732,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -813,6 +780,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -830,10 +798,6 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},

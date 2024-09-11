@@ -30,6 +30,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"openapi": "3.0.3",
 						"tags": [
 							{
@@ -47,10 +48,6 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -75,7 +72,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								],
 								"get": {
-									"operationId": "get-resource-by-ID",
+									"operationId": "get-Resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Retrieves the resource with the given ID.",
 									"parameters": [
@@ -130,6 +127,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "useful/thing",
@@ -146,10 +144,6 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -174,7 +168,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								],
 								"delete": {
-									"operationId": "delete-resource-by-ID",
+									"operationId": "delete-Resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Deletes the resource with the given ID.",
 									"parameters": [
@@ -231,6 +225,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "useful/thing",
@@ -247,10 +242,6 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -275,7 +266,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								],
 								"put": {
-									"operationId": "update-resource-by-ID",
+									"operationId": "update-Resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Updates the resource with the given ID.",
 									"parameters": [
@@ -337,6 +328,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"openapi": "3.0.3",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "useful/thing",
@@ -353,10 +345,6 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"name":  "Aporeto Inc.",
 								"url":   "go.acuvity.ai/api"
 							},
-							"license": {
-								"name": "TODO"
-							},
-							"termsOfService": "https://localhost/TODO",
 							"version": "1.0",
 							"title": "toplevel"
 						},
@@ -381,7 +369,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								],
 								"get": {
-									"operationId": "get-resource-by-ID",
+									"operationId": "get-Resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Retrieves the resource with the given ID.",
 									"responses": {
@@ -398,7 +386,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								},
 								"delete": {
-									"operationId": "delete-resource-by-ID",
+									"operationId": "delete-Resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Deletes the resource with the given ID.",
 									"responses": {
@@ -415,7 +403,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								},
 								"put": {
-									"operationId": "update-resource-by-ID",
+									"operationId": "update-Resource",
 									"tags": ["useful/thing", "usefulPackageName"],
 									"description": "Updates the resource with the given ID.",
 									"requestBody": {
