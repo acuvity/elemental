@@ -8,7 +8,7 @@ default: lint test
 lint:
 	golangci-lint run \
 		--disable-all \
-		--skip-files data_test.go \
+		--exclude-files data_test.go \
 		--exclude-use-default=false \
 		--exclude=dot-imports \
 		--exclude=package-comments \
