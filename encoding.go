@@ -165,6 +165,22 @@ func Encode(encoding EncodingType, obj any) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
+type streamConfig struct {
+	separator string
+}
+
+// StreamEncodingOption represents options for the stream encoder and decoders.
+type StreamEncodingOption func(*streamConfig)
+
+// StreamEncodingOptionSeparator sets the separator to use when encoding a stream.
+// By default, all encodings are appended as is. You may want to do json line,
+// in which can use StreamEncodingOptionSeparator("\n")
+func StreamEncodingOptionSeparator(sep string) StreamEncodingOption {
+	return func(c *streamConfig) {
+		c.separator = sep
+	}
+}
+
 // MakeStreamDecoder returns a function that can be used to decode a stream from the
 // given reader using the given encoding.
 //
@@ -219,7 +235,12 @@ func MakeStreamDecoder(encoding EncodingType, reader io.Reader) (func(dest any) 
 // It also returns a function must be called once the encoding procedure
 // is complete, so the internal encoders can be put back into the shared
 // memory pools.
-func MakeStreamEncoder(encoding EncodingType, writer io.Writer) (func(obj any) error, func()) {
+func MakeStreamEncoder(encoding EncodingType, writer io.Writer, opts ...StreamEncodingOption) (func(obj any) error, func()) {
+
+	cfg := streamConfig{}
+	for _, opt := range opts {
+		opt(&cfg)
+	}
 
 	var pool *sync.Pool
 
@@ -244,6 +265,10 @@ func MakeStreamEncoder(encoding EncodingType, writer io.Writer) (func(obj any) e
 
 			if err := enc.Encode(dest); err != nil {
 				return fmt.Errorf("unable to encode %s: %s", encoding, err.Error())
+			}
+
+			if cfg.separator != "" {
+				_, _ = writer.Write([]byte(cfg.separator))
 			}
 
 			return nil

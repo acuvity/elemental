@@ -152,7 +152,7 @@ func TestMakeStreamEncoderDecoder(t *testing.T) {
 	Convey("Given I have a bunch of json lines and a stream decoder", t, func() {
 
 		data := bytes.NewBuffer(nil)
-		encoder, closeFunc1 := MakeStreamEncoder(EncodingTypeJSON, data)
+		encoder, closeFunc1 := MakeStreamEncoder(EncodingTypeJSON, data, StreamEncodingOptionSeparator("\n"))
 		defer closeFunc1()
 
 		if err := encoder(&List{Name: "1"}); err != nil {
