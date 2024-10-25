@@ -47,6 +47,13 @@ func newConverter(inSpecSet spec.SpecificationSet, cfg Config) *converter {
 
 func (c *converter) Do(newWriter func(name string) (io.WriteCloser, error)) error {
 
+	// register external types within the components first
+	for _, s := range c.inSpecSet.Specifications() {
+		if err := c.processSpecComponentRegistryExtension(s); err != nil {
+			return fmt.Errorf("unable to process spec component registry extension: %w", err)
+		}
+	}
+
 	for _, s := range c.inSpecSet.Specifications() {
 		if err := c.processSpec(s); err != nil {
 			return fmt.Errorf("unable to to process spec: %w", err)
@@ -64,6 +71,30 @@ func (c *converter) Do(newWriter func(name string) (io.WriteCloser, error)) erro
 		enc.SetIndent("", "  ")
 		if err := enc.Encode(doc); err != nil {
 			return fmt.Errorf("'%s': marshaling openapi3 document: %w", name, err)
+		}
+	}
+
+	return nil
+}
+
+func (c *converter) processSpecComponentRegistryExtension(s spec.Specification) error {
+
+	model := s.Model()
+
+	if types, ok := getComponentRegistryExtension(model.Extensions); ok {
+		for _, typ := range types {
+			if _, ok := c.outRootDoc.Components.Schemas[typ]; ok {
+				continue
+			}
+			typMapping, err := c.inSpecSet.TypeMapping().Mapping("openapi3", typ)
+			if err != nil {
+				return fmt.Errorf("invalid model spec '%s': invalid %s extension: no type mapping found for %s: %w", model.ResourceName, componentRegistryExtensionName, typ, err)
+			}
+			typSchema := new(openapi3.Schema)
+			if err := json.Unmarshal([]byte(typMapping.Type), typSchema); err != nil {
+				return fmt.Errorf("invalid model spec '%s': invalid %s extension: type mapping unmarshaling failed: %w", model.ResourceName, componentRegistryExtensionName, err)
+			}
+			c.outRootDoc.Components.Schemas[typ] = typSchema.NewRef()
 		}
 	}
 
