@@ -112,6 +112,9 @@ type Task struct {
 	// The type of the parent of the object.
 	ParentType string `json:"parentType" msgpack:"parentType" bson:"parenttype" mapstructure:"parentType,omitempty"`
 
+	// This attribute is secret.
+	Secret string `json:"secret" msgpack:"secret" bson:"secret" mapstructure:"secret,omitempty"`
+
 	// The status of the task.
 	Status TaskStatusValue `json:"status" msgpack:"status" bson:"status" mapstructure:"status,omitempty"`
 
@@ -162,6 +165,7 @@ func (o *Task) GetBSON() (any, error) {
 	s.Name = o.Name
 	s.ParentID = o.ParentID
 	s.ParentType = o.ParentType
+	s.Secret = o.Secret
 	s.Status = o.Status
 
 	return s, nil
@@ -185,6 +189,7 @@ func (o *Task) SetBSON(raw bson.Raw) error {
 	o.Name = s.Name
 	o.ParentID = s.ParentID
 	o.ParentType = s.ParentType
+	o.Secret = s.Secret
 	o.Status = s.Status
 
 	return nil
@@ -243,6 +248,7 @@ func (o *Task) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			Name:        &o.Name,
 			ParentID:    &o.ParentID,
 			ParentType:  &o.ParentType,
+			Secret:      &o.Secret,
 			Status:      &o.Status,
 		}
 	}
@@ -260,6 +266,8 @@ func (o *Task) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			sp.ParentID = &(o.ParentID)
 		case "parentType":
 			sp.ParentType = &(o.ParentType)
+		case "secret":
+			sp.Secret = &(o.Secret)
 		case "status":
 			sp.Status = &(o.Status)
 		}
@@ -289,6 +297,9 @@ func (o *Task) Patch(sparse elemental.SparseIdentifiable) {
 	}
 	if so.ParentType != nil {
 		o.ParentType = *so.ParentType
+	}
+	if so.Secret != nil {
+		o.Secret = *so.Secret
 	}
 	if so.Status != nil {
 		o.Status = *so.Status
@@ -377,6 +388,8 @@ func (o *Task) ValueForAttribute(name string) any {
 		return o.ParentID
 	case "parentType":
 		return o.ParentType
+	case "secret":
+		return o.Secret
 	case "status":
 		return o.Status
 	}
@@ -455,6 +468,19 @@ var TaskAttributesMap = map[string]elemental.AttributeSpecification{
 		Name:           "parentType",
 		Orderable:      true,
 		ReadOnly:       true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"Secret": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "secret",
+		ConvertedName:  "Secret",
+		Description:    `This attribute is secret.`,
+		Exposed:        true,
+		Filterable:     true,
+		Name:           "secret",
+		Orderable:      true,
+		Secret:         true,
 		Stored:         true,
 		Type:           "string",
 	},
@@ -544,6 +570,19 @@ var TaskLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		Name:           "parentType",
 		Orderable:      true,
 		ReadOnly:       true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"secret": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "secret",
+		ConvertedName:  "Secret",
+		Description:    `This attribute is secret.`,
+		Exposed:        true,
+		Filterable:     true,
+		Name:           "secret",
+		Orderable:      true,
+		Secret:         true,
 		Stored:         true,
 		Type:           "string",
 	},
@@ -640,6 +679,9 @@ type SparseTask struct {
 	// The type of the parent of the object.
 	ParentType *string `json:"parentType,omitempty" msgpack:"parentType,omitempty" bson:"parenttype,omitempty" mapstructure:"parentType,omitempty"`
 
+	// This attribute is secret.
+	Secret *string `json:"secret,omitempty" msgpack:"secret,omitempty" bson:"secret,omitempty" mapstructure:"secret,omitempty"`
+
 	// The status of the task.
 	Status *TaskStatusValue `json:"status,omitempty" msgpack:"status,omitempty" bson:"status,omitempty" mapstructure:"status,omitempty"`
 
@@ -701,6 +743,9 @@ func (o *SparseTask) GetBSON() (any, error) {
 	if o.ParentType != nil {
 		s.ParentType = o.ParentType
 	}
+	if o.Secret != nil {
+		s.Secret = o.Secret
+	}
 	if o.Status != nil {
 		s.Status = o.Status
 	}
@@ -735,6 +780,9 @@ func (o *SparseTask) SetBSON(raw bson.Raw) error {
 	if s.ParentType != nil {
 		o.ParentType = s.ParentType
 	}
+	if s.Secret != nil {
+		o.Secret = s.Secret
+	}
 	if s.Status != nil {
 		o.Status = s.Status
 	}
@@ -766,6 +814,9 @@ func (o *SparseTask) ToPlain() elemental.PlainIdentifiable {
 	}
 	if o.ParentType != nil {
 		out.ParentType = *o.ParentType
+	}
+	if o.Secret != nil {
+		out.Secret = *o.Secret
 	}
 	if o.Status != nil {
 		out.Status = *o.Status
@@ -820,6 +871,7 @@ type mongoAttributesTask struct {
 	Name        string          `bson:"name"`
 	ParentID    string          `bson:"parentid"`
 	ParentType  string          `bson:"parenttype"`
+	Secret      string          `bson:"secret"`
 	Status      TaskStatusValue `bson:"status"`
 }
 type mongoAttributesSparseTask struct {
@@ -828,5 +880,6 @@ type mongoAttributesSparseTask struct {
 	Name        *string          `bson:"name,omitempty"`
 	ParentID    *string          `bson:"parentid,omitempty"`
 	ParentType  *string          `bson:"parenttype,omitempty"`
+	Secret      *string          `bson:"secret,omitempty"`
 	Status      *TaskStatusValue `bson:"status,omitempty"`
 }

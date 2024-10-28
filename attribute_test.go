@@ -79,14 +79,52 @@ func Test_ResetSecretAttributesValues(t *testing.T) {
 		l := NewList()
 		l.Secret = "it's a secret to everybody"
 
-		Convey("When I call ResetSecretAttributesValues", func() {
+		ResetSecretAttributesValues(l)
 
-			ResetSecretAttributesValues(l)
+		So(l.Secret, ShouldEqual, "")
+	})
 
-			Convey("Then the secret should have been erased", func() {
-				So(l.Secret, ShouldEqual, "")
-			})
-		})
+	Convey("Given I have an identifiable with a ref with secret property", t, func() {
+
+		l := NewList()
+		l.Ref = NewTask()
+		l.Ref.Secret = "it's a secret to everybody"
+
+		ResetSecretAttributesValues(l)
+
+		So(l.Ref.Secret, ShouldEqual, "")
+	})
+
+	Convey("Given I have an identifiable with a refList with secret property", t, func() {
+
+		l := NewList()
+		l.RefList = TasksList{
+			NewTask(),
+			NewTask(),
+		}
+		l.RefList[0].Secret = "it's a secret to everybody"
+		l.RefList[1].Secret = "it's a secret to everybody"
+
+		ResetSecretAttributesValues(l)
+
+		So(l.RefList[0].Secret, ShouldEqual, "")
+		So(l.RefList[1].Secret, ShouldEqual, "")
+	})
+
+	Convey("Given I have an identifiable with a refMap with secret property", t, func() {
+
+		l := NewList()
+		l.RefMap = map[string]*Task{
+			"a": NewTask(),
+			"b": NewTask(),
+		}
+		l.RefMap["a"].Secret = "it's a secret to everybody"
+		l.RefMap["b"].Secret = "it's a secret to everybody"
+
+		ResetSecretAttributesValues(l)
+
+		So(l.RefMap["a"].Secret, ShouldEqual, "")
+		So(l.RefMap["b"].Secret, ShouldEqual, "")
 	})
 
 	Convey("Given I have some identifiables with a secret property", t, func() {
@@ -97,15 +135,10 @@ func Test_ResetSecretAttributesValues(t *testing.T) {
 		l2 := NewList()
 		l2.Secret = "it's a secret to everybody"
 
-		Convey("When I call ResetSecretAttributesValues", func() {
+		ResetSecretAttributesValues(ListsList{l1, l2})
 
-			ResetSecretAttributesValues(ListsList{l1, l2})
-
-			Convey("Then the secret should have been erased", func() {
-				So(l1.Secret, ShouldEqual, "")
-				So(l2.Secret, ShouldEqual, "")
-			})
-		})
+		So(l1.Secret, ShouldEqual, "")
+		So(l2.Secret, ShouldEqual, "")
 	})
 
 	Convey("Given I have an sparse identifiable with a secret property", t, func() {
@@ -115,14 +148,9 @@ func Test_ResetSecretAttributesValues(t *testing.T) {
 		l := NewSparseList()
 		l.Secret = &val
 
-		Convey("When I call ResetSecretAttributesValues", func() {
+		ResetSecretAttributesValues(l)
 
-			ResetSecretAttributesValues(l)
-
-			Convey("Then the secret should have been erased", func() {
-				So(l.Secret, ShouldBeNil)
-			})
-		})
+		So(l.Secret, ShouldBeNil)
 	})
 
 	Convey("Given I have some sparse identifiables with a secret property", t, func() {
@@ -135,63 +163,36 @@ func Test_ResetSecretAttributesValues(t *testing.T) {
 		val2 := "it's a secret to everybody"
 		l2.Secret = &val2
 
-		Convey("When I call ResetSecretAttributesValues", func() {
+		ResetSecretAttributesValues(SparseListsList{l1, l2})
 
-			ResetSecretAttributesValues(SparseListsList{l1, l2})
-
-			Convey("Then the secret should have been erased", func() {
-				So(l1.Secret, ShouldBeNil)
-				So(l2.Secret, ShouldBeNil)
-			})
-		})
+		So(l1.Secret, ShouldBeNil)
+		So(l2.Secret, ShouldBeNil)
 	})
 
 	Convey("Given I have some random non pointer struct", t, func() {
-
 		s := struct{}{}
 
-		Convey("When I call ResetSecretAttributesValues", func() {
-
-			ResetSecretAttributesValues(s)
-
-			Convey("Then it should not panic", func() {
-				So(func() { ResetSecretAttributesValues(s) }, ShouldNotPanic)
-			})
-		})
+		ResetSecretAttributesValues(s)
+		So(func() { ResetSecretAttributesValues(s) }, ShouldNotPanic)
 	})
 
 	Convey("Given I have some random pointer struct", t, func() {
-
 		s := &struct{}{}
-
-		Convey("Then it should not panic", func() {
-			So(func() { ResetSecretAttributesValues(s) }, ShouldNotPanic)
-		})
+		So(func() { ResetSecretAttributesValues(s) }, ShouldNotPanic)
 	})
 
 	Convey("Given I have some nil pointer struct", t, func() {
-
 		var s *struct{}
-
-		Convey("Then it should not panic", func() {
-			So(func() { ResetSecretAttributesValues(s) }, ShouldNotPanic)
-		})
+		So(func() { ResetSecretAttributesValues(s) }, ShouldNotPanic)
 	})
 
 	Convey("Given I have some nil value", t, func() {
-
-		Convey("Then it should not panic", func() {
-			So(func() { ResetSecretAttributesValues(nil) }, ShouldNotPanic)
-		})
+		So(func() { ResetSecretAttributesValues(nil) }, ShouldNotPanic)
 	})
 
 	Convey("Given I have some nil pointer identifiable", t, func() {
-
 		var s *List
-
-		Convey("Then it should not panic", func() {
-			So(func() { ResetSecretAttributesValues(s) }, ShouldNotPanic)
-		})
+		So(func() { ResetSecretAttributesValues(s) }, ShouldNotPanic)
 	})
 
 	Convey("Given I have an non pointer identifiable with a secret property", t, func() {
@@ -199,14 +200,8 @@ func Test_ResetSecretAttributesValues(t *testing.T) {
 		l := NewList()
 		l.Secret = "it's a secret to everybody"
 
-		Convey("When I call ResetSecretAttributesValues", func() {
-
-			ResetSecretAttributesValues(*l)
-
-			Convey("Then the secret should have been erased", func() {
-				So(l.Secret, ShouldEqual, "it's a secret to everybody")
-			})
-		})
+		ResetSecretAttributesValues(*l)
+		So(l.Secret, ShouldEqual, "it's a secret to everybody")
 	})
 }
 

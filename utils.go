@@ -56,7 +56,15 @@ func RemoveZeroValues(obj any) {
 // object using reflection.
 func extractFieldNames(obj any) []string {
 
+	if obj == nil {
+		return []string{}
+	}
+
 	val := reflect.Indirect(reflect.ValueOf(obj))
+	if !val.IsValid() {
+		return []string{}
+	}
+
 	c := val.NumField()
 	fields := make([]string, c)
 

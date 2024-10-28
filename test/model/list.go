@@ -108,6 +108,15 @@ type List struct {
 	// This attribute is readonly.
 	ReadOnly string `json:"readOnly" msgpack:"readOnly" bson:"readonly" mapstructure:"readOnly,omitempty"`
 
+	// This attribute is a ref to a single object.
+	Ref *Task `json:"-" msgpack:"-" bson:"ref" mapstructure:"-,omitempty"`
+
+	// This attribute is a ref to a objects.
+	RefList TasksList `json:"-" msgpack:"-" bson:"reflist" mapstructure:"-,omitempty"`
+
+	// This attribute is a ref map to a objects.
+	RefMap map[string]*Task `json:"-" msgpack:"-" bson:"refmap" mapstructure:"-,omitempty"`
+
 	// This attribute is secret.
 	Secret string `json:"secret" msgpack:"secret" bson:"secret" mapstructure:"secret,omitempty"`
 
@@ -125,6 +134,9 @@ func NewList() *List {
 
 	return &List{
 		ModelVersion: 1,
+		Ref:          NewTask(),
+		RefList:      TasksList{},
+		RefMap:       map[string]*Task{},
 		Slice:        []string{},
 	}
 }
@@ -167,6 +179,9 @@ func (o *List) GetBSON() (any, error) {
 	s.ParentID = o.ParentID
 	s.ParentType = o.ParentType
 	s.ReadOnly = o.ReadOnly
+	s.Ref = o.Ref
+	s.RefList = o.RefList
+	s.RefMap = o.RefMap
 	s.Secret = o.Secret
 	s.Slice = o.Slice
 	s.Unexposed = o.Unexposed
@@ -195,6 +210,9 @@ func (o *List) SetBSON(raw bson.Raw) error {
 	o.ParentID = s.ParentID
 	o.ParentType = s.ParentType
 	o.ReadOnly = s.ReadOnly
+	o.Ref = s.Ref
+	o.RefList = s.RefList
+	o.RefMap = s.RefMap
 	o.Secret = s.Secret
 	o.Slice = s.Slice
 	o.Unexposed = s.Unexposed
@@ -258,6 +276,9 @@ func (o *List) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			ParentID:     &o.ParentID,
 			ParentType:   &o.ParentType,
 			ReadOnly:     &o.ReadOnly,
+			Ref:          o.Ref,
+			RefList:      &o.RefList,
+			RefMap:       &o.RefMap,
 			Secret:       &o.Secret,
 			Slice:        &o.Slice,
 			Unexposed:    &o.Unexposed,
@@ -283,6 +304,12 @@ func (o *List) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			sp.ParentType = &(o.ParentType)
 		case "readOnly":
 			sp.ReadOnly = &(o.ReadOnly)
+		case "ref":
+			sp.Ref = o.Ref
+		case "refList":
+			sp.RefList = &(o.RefList)
+		case "refMap":
+			sp.RefMap = &(o.RefMap)
 		case "secret":
 			sp.Secret = &(o.Secret)
 		case "slice":
@@ -325,6 +352,15 @@ func (o *List) Patch(sparse elemental.SparseIdentifiable) {
 	}
 	if so.ReadOnly != nil {
 		o.ReadOnly = *so.ReadOnly
+	}
+	if so.Ref != nil {
+		o.Ref = so.Ref
+	}
+	if so.RefList != nil {
+		o.RefList = *so.RefList
+	}
+	if so.RefMap != nil {
+		o.RefMap = *so.RefMap
 	}
 	if so.Secret != nil {
 		o.Secret = *so.Secret
@@ -421,6 +457,12 @@ func (o *List) ValueForAttribute(name string) any {
 		return o.ParentType
 	case "readOnly":
 		return o.ReadOnly
+	case "ref":
+		return o.Ref
+	case "refList":
+		return o.RefList
+	case "refMap":
+		return o.RefMap
 	case "secret":
 		return o.Secret
 	case "slice":
@@ -543,6 +585,42 @@ var ListAttributesMap = map[string]elemental.AttributeSpecification{
 		ReadOnly:       true,
 		Stored:         true,
 		Type:           "string",
+	},
+	"Ref": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "ref",
+		ConvertedName:  "Ref",
+		Description:    `This attribute is a ref to a single object.`,
+		Filterable:     true,
+		Name:           "ref",
+		Orderable:      true,
+		Stored:         true,
+		SubType:        "task",
+		Type:           "ref",
+	},
+	"RefList": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "reflist",
+		ConvertedName:  "RefList",
+		Description:    `This attribute is a ref to a objects.`,
+		Filterable:     true,
+		Name:           "refList",
+		Orderable:      true,
+		Stored:         true,
+		SubType:        "task",
+		Type:           "refList",
+	},
+	"RefMap": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "refmap",
+		ConvertedName:  "RefMap",
+		Description:    `This attribute is a ref map to a objects.`,
+		Filterable:     true,
+		Name:           "refMap",
+		Orderable:      true,
+		Stored:         true,
+		SubType:        "task",
+		Type:           "refMap",
 	},
 	"Secret": {
 		AllowedChoices: []string{},
@@ -695,6 +773,42 @@ var ListLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		Stored:         true,
 		Type:           "string",
 	},
+	"ref": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "ref",
+		ConvertedName:  "Ref",
+		Description:    `This attribute is a ref to a single object.`,
+		Filterable:     true,
+		Name:           "ref",
+		Orderable:      true,
+		Stored:         true,
+		SubType:        "task",
+		Type:           "ref",
+	},
+	"reflist": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "reflist",
+		ConvertedName:  "RefList",
+		Description:    `This attribute is a ref to a objects.`,
+		Filterable:     true,
+		Name:           "refList",
+		Orderable:      true,
+		Stored:         true,
+		SubType:        "task",
+		Type:           "refList",
+	},
+	"refmap": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "refmap",
+		ConvertedName:  "RefMap",
+		Description:    `This attribute is a ref map to a objects.`,
+		Filterable:     true,
+		Name:           "refMap",
+		Orderable:      true,
+		Stored:         true,
+		SubType:        "task",
+		Type:           "refMap",
+	},
 	"secret": {
 		AllowedChoices: []string{},
 		BSONFieldName:  "secret",
@@ -821,6 +935,15 @@ type SparseList struct {
 	// This attribute is readonly.
 	ReadOnly *string `json:"readOnly,omitempty" msgpack:"readOnly,omitempty" bson:"readonly,omitempty" mapstructure:"readOnly,omitempty"`
 
+	// This attribute is a ref to a single object.
+	Ref *Task `json:"-" msgpack:"-" bson:"ref,omitempty" mapstructure:"-,omitempty"`
+
+	// This attribute is a ref to a objects.
+	RefList *TasksList `json:"-" msgpack:"-" bson:"reflist,omitempty" mapstructure:"-,omitempty"`
+
+	// This attribute is a ref map to a objects.
+	RefMap *map[string]*Task `json:"-" msgpack:"-" bson:"refmap,omitempty" mapstructure:"-,omitempty"`
+
 	// This attribute is secret.
 	Secret *string `json:"secret,omitempty" msgpack:"secret,omitempty" bson:"secret,omitempty" mapstructure:"secret,omitempty"`
 
@@ -897,6 +1020,15 @@ func (o *SparseList) GetBSON() (any, error) {
 	if o.ReadOnly != nil {
 		s.ReadOnly = o.ReadOnly
 	}
+	if o.Ref != nil {
+		s.Ref = o.Ref
+	}
+	if o.RefList != nil {
+		s.RefList = o.RefList
+	}
+	if o.RefMap != nil {
+		s.RefMap = o.RefMap
+	}
 	if o.Secret != nil {
 		s.Secret = o.Secret
 	}
@@ -946,6 +1078,15 @@ func (o *SparseList) SetBSON(raw bson.Raw) error {
 	if s.ReadOnly != nil {
 		o.ReadOnly = s.ReadOnly
 	}
+	if s.Ref != nil {
+		o.Ref = s.Ref
+	}
+	if s.RefList != nil {
+		o.RefList = s.RefList
+	}
+	if s.RefMap != nil {
+		o.RefMap = s.RefMap
+	}
 	if s.Secret != nil {
 		o.Secret = s.Secret
 	}
@@ -992,6 +1133,15 @@ func (o *SparseList) ToPlain() elemental.PlainIdentifiable {
 	}
 	if o.ReadOnly != nil {
 		out.ReadOnly = *o.ReadOnly
+	}
+	if o.Ref != nil {
+		out.Ref = o.Ref
+	}
+	if o.RefList != nil {
+		out.RefList = *o.RefList
+	}
+	if o.RefMap != nil {
+		out.RefMap = *o.RefMap
 	}
 	if o.Secret != nil {
 		out.Secret = *o.Secret
@@ -1047,28 +1197,34 @@ func (o *SparseList) DeepCopyInto(out *SparseList) {
 }
 
 type mongoAttributesList struct {
-	ID           bson.ObjectId `bson:"_id,omitempty"`
-	CreationOnly string        `bson:"creationonly"`
-	Date         time.Time     `bson:"date"`
-	Description  string        `bson:"description"`
-	Name         string        `bson:"name"`
-	ParentID     string        `bson:"parentid"`
-	ParentType   string        `bson:"parenttype"`
-	ReadOnly     string        `bson:"readonly"`
-	Secret       string        `bson:"secret"`
-	Slice        []string      `bson:"slice"`
-	Unexposed    string        `bson:"unexposed"`
+	ID           bson.ObjectId    `bson:"_id,omitempty"`
+	CreationOnly string           `bson:"creationonly"`
+	Date         time.Time        `bson:"date"`
+	Description  string           `bson:"description"`
+	Name         string           `bson:"name"`
+	ParentID     string           `bson:"parentid"`
+	ParentType   string           `bson:"parenttype"`
+	ReadOnly     string           `bson:"readonly"`
+	Ref          *Task            `bson:"ref"`
+	RefList      TasksList        `bson:"reflist"`
+	RefMap       map[string]*Task `bson:"refmap"`
+	Secret       string           `bson:"secret"`
+	Slice        []string         `bson:"slice"`
+	Unexposed    string           `bson:"unexposed"`
 }
 type mongoAttributesSparseList struct {
-	ID           bson.ObjectId `bson:"_id,omitempty"`
-	CreationOnly *string       `bson:"creationonly,omitempty"`
-	Date         *time.Time    `bson:"date,omitempty"`
-	Description  *string       `bson:"description,omitempty"`
-	Name         *string       `bson:"name,omitempty"`
-	ParentID     *string       `bson:"parentid,omitempty"`
-	ParentType   *string       `bson:"parenttype,omitempty"`
-	ReadOnly     *string       `bson:"readonly,omitempty"`
-	Secret       *string       `bson:"secret,omitempty"`
-	Slice        *[]string     `bson:"slice,omitempty"`
-	Unexposed    *string       `bson:"unexposed,omitempty"`
+	ID           bson.ObjectId     `bson:"_id,omitempty"`
+	CreationOnly *string           `bson:"creationonly,omitempty"`
+	Date         *time.Time        `bson:"date,omitempty"`
+	Description  *string           `bson:"description,omitempty"`
+	Name         *string           `bson:"name,omitempty"`
+	ParentID     *string           `bson:"parentid,omitempty"`
+	ParentType   *string           `bson:"parenttype,omitempty"`
+	ReadOnly     *string           `bson:"readonly,omitempty"`
+	Ref          *Task             `bson:"ref,omitempty"`
+	RefList      *TasksList        `bson:"reflist,omitempty"`
+	RefMap       *map[string]*Task `bson:"refmap,omitempty"`
+	Secret       *string           `bson:"secret,omitempty"`
+	Slice        *[]string         `bson:"slice,omitempty"`
+	Unexposed    *string           `bson:"unexposed,omitempty"`
 }

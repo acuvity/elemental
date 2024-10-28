@@ -19,6 +19,8 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+
+	"go.acuvity.ai/regolithe/spec"
 )
 
 // An AttributeSpecifiable is the interface an object must implement in order to access specification of its attributes.
@@ -230,13 +232,59 @@ func ResetSecretAttributesValues(obj any) {
 
 			for _, aspec := range attrspec.AttributeSpecifications() {
 
-				if !aspec.Secret {
+				if !aspec.Secret &&
+					aspec.Type != string(spec.AttributeTypeRef) &&
+					aspec.Type != string(spec.AttributeTypeRefMap) &&
+					aspec.Type != string(spec.AttributeTypeRefList) {
 					continue
 				}
 
 				rv = reflect.Indirect(reflect.ValueOf(o))
 				val = rv.FieldByName(aspec.ConvertedName)
-				val.Set(reflect.Zero(val.Type()))
+
+				if !val.IsValid() {
+					continue
+				}
+
+				switch aspec.Type {
+
+				case string(spec.AttributeTypeRef):
+					ResetSecretAttributesValues(val.Interface())
+
+				case string(spec.AttributeTypeRefList):
+
+					vval := reflect.Indirect(val)
+
+					if !vval.IsValid() {
+						continue
+					}
+
+					for i := 0; i < vval.Len(); i++ {
+						vii := vval.Index(i)
+						if vii.IsValid() {
+							ResetSecretAttributesValues(vii.Interface())
+						}
+					}
+
+				case string(spec.AttributeTypeRefMap):
+
+					vval := reflect.Indirect(val)
+
+					if !vval.IsValid() {
+						continue
+					}
+
+					for _, k := range vval.MapKeys() {
+						vii := vval.MapIndex(k)
+						if vii.IsValid() {
+							ResetSecretAttributesValues(vii.Interface())
+						}
+					}
+
+				default:
+					val.Set(reflect.Zero(val.Type()))
+				}
+
 			}
 		}
 	}
