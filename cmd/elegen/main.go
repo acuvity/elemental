@@ -22,6 +22,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"go.acuvity.ai/elemental/cmd/internal/genopenapi3"
+	"go.acuvity.ai/elemental/cmd/internal/genpython"
 )
 
 const (
@@ -34,9 +35,10 @@ func main() {
 
 	// will be initialized later
 	var (
-		genType     string
-		publicMode  bool
-		splitOutput bool
+		genType           string
+		licenseHeaderFile string
+		publicMode        bool
+		splitOutput       bool
 	)
 
 	generator := func(sets []spec.SpecificationSet, out string) error {
@@ -48,6 +50,14 @@ func main() {
 				OutputDir:   out,
 			}
 			return genopenapi3.GeneratorFunc(sets, cfg)
+		case "python":
+			cfg := genpython.Config{
+				Public:      publicMode,
+				SplitOutput: splitOutput,
+				OutputDir:   out,
+				LicenseFile: licenseHeaderFile,
+			}
+			return genpython.GeneratorFunc(sets, cfg)
 		case "", "elemental":
 			return genElemental(sets, out, publicMode)
 		default:
@@ -79,11 +89,18 @@ func main() {
 		"If set to true, the openapi3 output will be split into multiple files",
 	)
 	cmd.PersistentFlags().StringVarP(
+		&licenseHeaderFile,
+		"license-header",
+		"l",
+		"",
+		"The path to the license header file to use. This will be included at the top of each generated file",
+	)
+	cmd.PersistentFlags().StringVarP(
 		&genType,
 		"gen-type",
 		"g",
 		"elemental",
-		"The desired type of what needs to be generated. Possible choices are: [elemental openapi3]",
+		"The desired type of what needs to be generated. Possible choices are: [elemental python openapi3]",
 	)
 
 	if err := cmd.Execute(); err != nil {

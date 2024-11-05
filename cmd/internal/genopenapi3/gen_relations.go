@@ -345,7 +345,6 @@ func (c *converter) getSchemaRef(parentRestName, restName string, isArray bool) 
 		return openapi3.NewSchemaRef("#/components/schemas/"+restName, nil)
 	}
 	return openapi3.NewSchemaRef("./"+restName+"#/components/schemas/"+restName, nil)
-
 }
 
 // createResponsesFromExtension creates a responses object from the openapi_response_map extension
