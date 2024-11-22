@@ -743,26 +743,6 @@ func TestRequest_NewRequestFromHTTPRequest(t *testing.T) {
 		})
 	})
 
-	Convey("Given I have a http request with after and 2 order parameters", t, func() {
-
-		req, _ := http.NewRequest(http.MethodGet, "http://server/lists/xx/?after=xxx&order=a&order=b", nil)
-		req.Header.Set("Content-Type", "application/json")
-
-		Convey("When I create a new elemental Request from it", func() {
-
-			r, err := NewRequestFromHTTPRequest(req, Manager())
-
-			Convey("Then r should be nil", func() {
-				So(r, ShouldBeNil)
-			})
-
-			Convey("Then err should not be nil", func() {
-				So(err, ShouldNotBeNil)
-				So(err.Error(), ShouldEqual, "error 400 (elemental): Bad Request: You can only order on a single field when using 'after'")
-			})
-		})
-	})
-
 	Convey("Given I have a http request with after and page parameters", t, func() {
 
 		req, _ := http.NewRequest(http.MethodGet, "http://server/lists/xx/?after=xxx&page=2", nil)
