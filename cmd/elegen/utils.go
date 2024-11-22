@@ -124,16 +124,27 @@ func attrToType(set spec.SpecificationSet, shadow bool, attr *spec.Attribute) st
 	var convertedType string
 	switch attr.Type {
 	case spec.AttributeTypeRef:
-		convertedType = pointerShadow + pointer + set.Specification(attr.SubType).Model().EntityName
+		remoteSpec := set.Specification(attr.SubType)
+		if remoteSpec == nil {
+			panic(fmt.Sprintf("unable to find ref subtype '%s' for attr '%s'", attr.SubType, attr.Name))
+		}
+		convertedType = pointerShadow + pointer + remoteSpec.Model().EntityName
 	case spec.AttributeTypeRefList:
 		remoteSpec := set.Specification(attr.SubType)
+		if remoteSpec == nil {
+			panic(fmt.Sprintf("unable to find refList subtype '%s' for attr '%s'", attr.SubType, attr.Name))
+		}
 		if remoteSpec.Model().Detached {
 			convertedType = pointerShadow + "[]" + pointer + remoteSpec.Model().EntityName
 		} else {
 			convertedType = pointerShadow + pointer + remoteSpec.Model().EntityNamePlural + "List"
 		}
 	case spec.AttributeTypeRefMap:
-		convertedType = pointerShadow + "map[string]" + pointer + set.Specification(attr.SubType).Model().EntityName
+		remoteSpec := set.Specification(attr.SubType)
+		if remoteSpec == nil {
+			panic(fmt.Sprintf("unable to find refMap subtype '%s' for attr '%s'", attr.SubType, attr.Name))
+		}
+		convertedType = pointerShadow + "map[string]" + pointer + remoteSpec.Model().EntityName
 	default:
 		convertedType = pointerShadow + attr.ConvertedType
 	}
