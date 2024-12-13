@@ -54,12 +54,12 @@ func getResponseMapExtension(extensions map[string]any) (map[string]responseSpec
 			panic(fmt.Sprintf("invalid %s extension entry: response spec: expected type map[string]any, got %T", responseMapExtensionName, responseEntry))
 		}
 		specEntry, ok := responseEntryMap["spec"]
-		if !ok {
-			panic(fmt.Sprintf("invalid %s extension entry: response spec: missing 'spec' key", responseMapExtensionName))
-		}
-		spec, ok := specEntry.(string)
-		if !ok {
-			panic(fmt.Sprintf("invalid %s extension entry: response spec: 'spec' key: expected type string, got %T", responseMapExtensionName, specEntry))
+		var spec string
+		if ok {
+			spec, ok = specEntry.(string)
+			if !ok {
+				panic(fmt.Sprintf("invalid %s extension entry: response spec: 'spec' key: expected type string, got %T", responseMapExtensionName, specEntry))
+			}
 		}
 		description := ""
 		if descEntry, ok := responseEntryMap["description"]; ok {

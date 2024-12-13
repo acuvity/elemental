@@ -376,45 +376,65 @@ func (c *converter) createResponsesFromExtension(relationAction *spec.RelationAc
 			panic(fmt.Sprintf("invalid status code string '%s': %s", statusCodeStr, err))
 		}
 
-		var respSchemaRef *openapi3.SchemaRef
-		responseSpecSpec := c.inSpecSet.Specification(responseSpec.Spec)
-		if responseSpecSpec != nil {
-			// if there is a spec, then there will be a component and we simply use it
-			responseModel := responseSpecSpec.Model()
-			if responseModel == nil {
-				panic(fmt.Sprintf("invalid response spec '%s': no model", responseSpec.Spec))
-			}
-			respSchemaRef = c.getSchemaRef(parentRestName, responseModel.RestName, responseSpec.IsArray)
-		} else if _, ok = c.outRootDoc.Components.Schemas[responseSpec.Spec]; ok {
-			// otherwise there might have been a component with this spec registered through the openapi_component_registry extension
-			// we create a new reference for that in this case
-			respSchemaRef = openapi3.NewSchemaRef("#/components/schemas/"+responseSpec.Spec, nil)
-		} else {
-			// or otherwise this could be referring to a registered type mapping
-			// and as it was not embedded in the components, we create a new schema for it and embed it
-			mapping, err := c.inSpecSet.TypeMapping().Mapping("openapi3", responseSpec.Spec)
-			if err != nil {
-				panic(fmt.Sprintf("invalid response spec '%s': no spec found, and no type mapping found: %s", responseSpec.Spec, err))
-			}
-			attrSchema := new(openapi3.Schema)
-			if err := json.Unmarshal([]byte(mapping.Type), attrSchema); err != nil {
-				panic(fmt.Sprintf("invalid response spec '%s': no spec found, and type mapping unmarshaling failed: %s", responseSpec.Spec, err))
-			}
-			respSchemaRef = attrSchema.NewRef()
-		}
+		var resp openapi3.NewResponsesOption
 
-		resp := openapi3.WithStatus(statusCode,
-			&openapi3.ResponseRef{
-				Value: &openapi3.Response{
-					Description: stringPtr(responseSpec.Description),
-					Content: openapi3.Content{
-						"application/json": &openapi3.MediaType{
-							Schema: respSchemaRef,
+		if responseSpec.Spec == "" {
+			// if the spec is empty, we assume that this is a text/plain type of response
+			// as we don't have a type
+			resp = openapi3.WithStatus(statusCode,
+				&openapi3.ResponseRef{
+					Value: &openapi3.Response{
+						Description: stringPtr(responseSpec.Description),
+						Content: openapi3.Content{
+							"text/plain": &openapi3.MediaType{
+								Schema: openapi3.NewStringSchema().NewRef(),
+							},
 						},
 					},
 				},
-			},
-		)
+			)
+		} else {
+			var respSchemaRef *openapi3.SchemaRef
+			responseSpecSpec := c.inSpecSet.Specification(responseSpec.Spec)
+			if responseSpecSpec != nil {
+				// if there is a spec, then there will be a component and we simply use it
+				responseModel := responseSpecSpec.Model()
+				if responseModel == nil {
+					panic(fmt.Sprintf("invalid response spec '%s': no model", responseSpec.Spec))
+				}
+				respSchemaRef = c.getSchemaRef(parentRestName, responseModel.RestName, responseSpec.IsArray)
+			} else if _, ok = c.outRootDoc.Components.Schemas[responseSpec.Spec]; ok {
+				// otherwise there might have been a component with this spec registered through the openapi_component_registry extension
+				// we create a new reference for that in this case
+				respSchemaRef = openapi3.NewSchemaRef("#/components/schemas/"+responseSpec.Spec, nil)
+			} else {
+				// or otherwise this could be referring to a registered type mapping
+				// and as it was not embedded in the components, we create a new schema for it and embed it
+				mapping, err := c.inSpecSet.TypeMapping().Mapping("openapi3", responseSpec.Spec)
+				if err != nil {
+					panic(fmt.Sprintf("invalid response spec '%s': no spec found, and no type mapping found: %s", responseSpec.Spec, err))
+				}
+				attrSchema := new(openapi3.Schema)
+				if err := json.Unmarshal([]byte(mapping.Type), attrSchema); err != nil {
+					panic(fmt.Sprintf("invalid response spec '%s': no spec found, and type mapping unmarshaling failed: %s", responseSpec.Spec, err))
+				}
+				respSchemaRef = attrSchema.NewRef()
+			}
+
+			resp = openapi3.WithStatus(statusCode,
+				&openapi3.ResponseRef{
+					Value: &openapi3.Response{
+						Description: stringPtr(responseSpec.Description),
+						Content: openapi3.Content{
+							"application/json": &openapi3.MediaType{
+								Schema: respSchemaRef,
+							},
+						},
+					},
+				},
+			)
+		}
+
 		respOpts = append(respOpts, resp)
 	}
 
