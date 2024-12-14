@@ -120,7 +120,7 @@ func (c *converter) extractOperationGetAll(parentRestName string, relation *spec
 
 	op := &openapi3.Operation{
 		OperationID: "get-all-" + model.EntityNamePlural,
-		Tags:        []string{model.Group, model.Package},
+		Tags:        []string{model.Group},
 		Description: relationAction.Description,
 		Responses:   openapi3.NewResponses(resp200),
 		Parameters:  c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
@@ -167,7 +167,7 @@ func (c *converter) extractOperationPost(parentRestName string, relation *spec.R
 
 	op := &openapi3.Operation{
 		OperationID: "create-" + model.EntityName,
-		Tags:        []string{model.Group, model.Package},
+		Tags:        []string{model.Group},
 		Description: relationAction.Description,
 		RequestBody: &openapi3.RequestBodyRef{
 			Value: &openapi3.RequestBody{
@@ -221,7 +221,7 @@ func (c *converter) extractOperationGetByID(model *spec.Model) *openapi3.Operati
 
 	op := &openapi3.Operation{
 		OperationID: fmt.Sprintf("get-%s", model.EntityName),
-		Tags:        []string{model.Group, model.Package},
+		Tags:        []string{model.Group},
 		Description: relationAction.Description,
 		Responses:   openapi3.NewResponses(resp200),
 		Parameters:  c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
@@ -262,7 +262,7 @@ func (c *converter) extractOperationDeleteByID(model *spec.Model) *openapi3.Oper
 
 	op := &openapi3.Operation{
 		OperationID: fmt.Sprintf("delete-%s", model.EntityName),
-		Tags:        []string{model.Group, model.Package},
+		Tags:        []string{model.Group},
 		Description: relationAction.Description,
 		Responses:   openapi3.NewResponses(resp200),
 		Parameters:  c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
@@ -303,7 +303,7 @@ func (c *converter) extractOperationPutByID(model *spec.Model) *openapi3.Operati
 
 	op := &openapi3.Operation{
 		OperationID: fmt.Sprintf("update-%s", model.EntityName),
-		Tags:        []string{model.Group, model.Package},
+		Tags:        []string{model.Group},
 		Description: relationAction.Description,
 		RequestBody: &openapi3.RequestBodyRef{
 			Value: &openapi3.RequestBody{

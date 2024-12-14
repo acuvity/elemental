@@ -98,6 +98,14 @@ func (c *converter) processSpecComponentRegistryExtension(s spec.Specification) 
 		}
 	}
 
+	if license, ok := getLicenseExtension(model.Extensions); ok {
+		c.outRootDoc.Info.License = license
+	}
+
+	if servers, ok := getServersExtension(model.Extensions); ok {
+		c.outRootDoc.Servers = servers
+	}
+
 	return nil
 }
 
@@ -177,10 +185,6 @@ func (c *converter) cacheTags(model *spec.Model) {
 			Name:        model.Group,
 			Description: fmt.Sprintf("This tag is for group '%s'", model.Group),
 		},
-		{
-			Name:        model.Package,
-			Description: fmt.Sprintf("This tag is for package '%s'", model.Package),
-		},
 	}
 
 	for _, t := range tags {
@@ -202,20 +206,24 @@ func (c *converter) globalTags() openapi3.Tags {
 
 func newOpenAPI3Template(specConfig *spec.Config) openapi3.T {
 	return openapi3.T{
-		OpenAPI: "3.0.3",
+		OpenAPI: "3.1.0",
 		Servers: openapi3.Servers{
 			&openapi3.Server{
 				URL: "https://api.acuvity.ai",
 			},
 		},
 		Info: &openapi3.Info{
-			Title:       defaultDocName,
+			Title:       specConfig.ProductName,
 			Version:     specConfig.Version,
 			Description: specConfig.Description,
 			Contact: &openapi3.Contact{
 				Name:  specConfig.Author,
 				URL:   specConfig.URL,
 				Email: specConfig.Email,
+			},
+			License: &openapi3.License{
+				Name: "Apache 2.0",
+				URL:  "https://www.apache.org/licenses/LICENSE-2.0",
 			},
 		},
 		Paths: &openapi3.Paths{},

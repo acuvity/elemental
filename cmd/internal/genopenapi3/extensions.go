@@ -1,8 +1,14 @@
 package genopenapi3
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/getkin/kin-openapi/openapi3"
+)
 
 const (
+	licenseExtensionName           = "openapi_license"
+	serversExtensionName           = "openapi_servers"
 	pathExtensionName              = "openapi_path"
 	responseMapExtensionName       = "openapi_response_map"
 	componentRegistryExtensionName = "openapi_component_registry"
@@ -12,6 +18,96 @@ type responseSpec struct {
 	Spec        string
 	IsArray     bool
 	Description string
+}
+
+func getLicenseExtension(extensions map[string]any) (*openapi3.License, bool) {
+
+	if extensions == nil {
+		return nil, false
+	}
+
+	entry, ok := extensions[licenseExtensionName]
+	if !ok {
+		return nil, false
+	}
+
+	licenseMap, ok := entry.(map[string]any)
+	if !ok {
+		panic(fmt.Sprintf("invalid %s extension: expected type map[string]any, got %T", licenseExtensionName, entry))
+	}
+
+	license := &openapi3.License{}
+	if name, ok := licenseMap["name"].(string); ok {
+		license.Name = name
+	}
+	if url, ok := licenseMap["url"].(string); ok {
+		license.URL = url
+	}
+
+	return license, true
+}
+
+func getServersExtension(extensions map[string]any) ([]*openapi3.Server, bool) {
+
+	if extensions == nil {
+		return nil, false
+	}
+
+	entry, ok := extensions[serversExtensionName]
+	if !ok {
+		return nil, false
+	}
+
+	serversUntyped, ok := entry.([]any)
+	if !ok {
+		panic(fmt.Sprintf("invalid %s extension: expected type []any, got %T", serversExtensionName, entry))
+	}
+
+	servers := make([]*openapi3.Server, len(serversUntyped))
+	for i, serverUntyped := range serversUntyped {
+		serverMap, ok := serverUntyped.(map[string]any)
+		if !ok {
+			panic(fmt.Sprintf("invalid %s extension entry: expected type map[string]any, got %T", serversExtensionName, serverUntyped))
+		}
+
+		server := &openapi3.Server{}
+		if url, ok := serverMap["url"].(string); ok {
+			server.URL = url
+		}
+		if description, ok := serverMap["description"].(string); ok {
+			server.Description = description
+		}
+		if variablesUntyped, ok := serverMap["variables"].(map[string]any); ok {
+			variables := make(map[string]*openapi3.ServerVariable, len(variablesUntyped))
+			for variableName, variableUntyped := range variablesUntyped {
+				variableMap, ok := variableUntyped.(map[string]any)
+				if !ok {
+					panic(fmt.Sprintf("invalid %s extension entry: server variable: expected type map[string]any, got %T", serversExtensionName, variableUntyped))
+				}
+
+				variable := &openapi3.ServerVariable{}
+				if defaultValue, ok := variableMap["default"].(string); ok {
+					variable.Default = defaultValue
+				}
+				if description, ok := variableMap["description"].(string); ok {
+					variable.Description = description
+				}
+				if enumUntyped, ok := variableMap["enum"].([]any); ok {
+					enum := make([]string, len(enumUntyped))
+					for i, enumEntry := range enumUntyped {
+						enum[i] = enumEntry.(string)
+					}
+					variable.Enum = enum
+				}
+				variables[variableName] = variable
+			}
+			server.Variables = variables
+		}
+
+		servers[i] = server
+	}
+
+	return servers, true
 }
 
 func getPathExtension(extensions map[string]any) (string, bool) {
