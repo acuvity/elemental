@@ -100,6 +100,7 @@ func (c *converter) extractOperationGetAll(parentRestName string, relation *spec
 		return nil
 	}
 	relationAction := relation.Get
+	openAPIExtensions, _ := getOpenAPIExtensionsExtension(relationAction.Extensions)
 
 	model := relation.Specification().Model()
 
@@ -124,6 +125,7 @@ func (c *converter) extractOperationGetAll(parentRestName string, relation *spec
 		Description: relationAction.Description,
 		Responses:   openapi3.NewResponses(resp200),
 		Parameters:  c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
+		Extensions:  openAPIExtensions,
 	}
 
 	if parentRestName != "" {
@@ -147,6 +149,7 @@ func (c *converter) extractOperationPost(parentRestName string, relation *spec.R
 		return nil
 	}
 	relationAction := relation.Create
+	openAPIExtensions, _ := getOpenAPIExtensionsExtension(relationAction.Extensions)
 
 	model := relation.Specification().Model()
 
@@ -181,6 +184,7 @@ func (c *converter) extractOperationPost(parentRestName string, relation *spec.R
 		},
 		Responses:  openapi3.NewResponses(resp200),
 		Parameters: c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
+		Extensions: openAPIExtensions,
 	}
 
 	if parentRestName != "" {
@@ -204,6 +208,7 @@ func (c *converter) extractOperationGetByID(model *spec.Model) *openapi3.Operati
 		return nil
 	}
 	relationAction := model.Get
+	openAPIExtensions, _ := getOpenAPIExtensionsExtension(relationAction.Extensions)
 
 	respBodySchemaRef := c.getSchemaRef("", model.RestName, false)
 
@@ -226,6 +231,7 @@ func (c *converter) extractOperationGetByID(model *spec.Model) *openapi3.Operati
 		Description: relationAction.Description,
 		Responses:   openapi3.NewResponses(resp200),
 		Parameters:  c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
+		Extensions:  openAPIExtensions,
 	}
 
 	extensionResponses, newOperationID := c.createResponsesFromExtension(relationAction, resp200, "", op.OperationID)
@@ -245,6 +251,7 @@ func (c *converter) extractOperationDeleteByID(model *spec.Model) *openapi3.Oper
 		return nil
 	}
 	relationAction := model.Delete
+	openAPIExtensions, _ := getOpenAPIExtensionsExtension(relationAction.Extensions)
 
 	respBodySchemaRef := c.getSchemaRef("", model.RestName, false)
 
@@ -267,6 +274,7 @@ func (c *converter) extractOperationDeleteByID(model *spec.Model) *openapi3.Oper
 		Description: relationAction.Description,
 		Responses:   openapi3.NewResponses(resp200),
 		Parameters:  c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
+		Extensions:  openAPIExtensions,
 	}
 
 	extensionResponses, newOperationID := c.createResponsesFromExtension(relationAction, resp200, "", op.OperationID)
@@ -286,6 +294,7 @@ func (c *converter) extractOperationPutByID(model *spec.Model) *openapi3.Operati
 		return nil
 	}
 	relationAction := model.Update
+	openAPIExtensions, _ := getOpenAPIExtensionsExtension(relationAction.Extensions)
 
 	schemaRef := c.getSchemaRef("", model.RestName, false)
 
@@ -318,6 +327,7 @@ func (c *converter) extractOperationPutByID(model *spec.Model) *openapi3.Operati
 		},
 		Responses:  openapi3.NewResponses(resp200),
 		Parameters: c.convertParamDefAsQueryParams(relationAction.ParameterDefinition),
+		Extensions: openAPIExtensions,
 	}
 
 	extensionResponses, newOperationID := c.createResponsesFromExtension(relationAction, resp200, "", op.OperationID)

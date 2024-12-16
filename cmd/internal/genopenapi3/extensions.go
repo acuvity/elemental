@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	openapiExtensionsName             = "openapi_extensions"
 	licenseExtensionName              = "openapi_license"
 	serversExtensionName              = "openapi_servers"
 	securitySchemesExtensionName      = "openapi_security_schemes"
@@ -20,6 +21,25 @@ type responseSpec struct {
 	Spec        string
 	IsArray     bool
 	Description string
+}
+
+func getOpenAPIExtensionsExtension(extensions map[string]any) (map[string]any, bool) {
+
+	if extensions == nil {
+		return nil, false
+	}
+
+	entry, ok := extensions[openapiExtensionsName]
+	if !ok {
+		return nil, false
+	}
+
+	openapiExtensions, ok := entry.(map[string]any)
+	if !ok {
+		panic(fmt.Sprintf("invalid %s extension: expected type map[string]any, got %T", openapiExtensionsName, entry))
+	}
+
+	return openapiExtensions, true
 }
 
 func getSecuritySchemesExtension(extensions map[string]any) (openapi3.SecuritySchemes, bool) {

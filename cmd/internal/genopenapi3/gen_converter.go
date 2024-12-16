@@ -69,7 +69,7 @@ func (c *converter) Do(newWriter func(name string) (io.WriteCloser, error)) erro
 
 		enc := json.NewEncoder(dest)
 		enc.SetIndent("", "  ")
-		if err := enc.Encode(doc); err != nil {
+		if err := enc.Encode(&doc); err != nil {
 			return fmt.Errorf("'%s': marshaling openapi3 document: %w", name, err)
 		}
 	}
@@ -112,6 +112,10 @@ func (c *converter) processSpecComponentRegistryExtension(s spec.Specification) 
 
 	if securitySchemes, ok := getSecuritySchemesExtension(model.Extensions); ok {
 		c.outRootDoc.Components.SecuritySchemes = securitySchemes
+	}
+
+	if openAPIExtensions, ok := getOpenAPIExtensionsExtension(model.Extensions); ok {
+		c.outRootDoc.Extensions = openAPIExtensions
 	}
 
 	return nil
