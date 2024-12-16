@@ -7,17 +7,146 @@ import (
 )
 
 const (
-	licenseExtensionName           = "openapi_license"
-	serversExtensionName           = "openapi_servers"
-	pathExtensionName              = "openapi_path"
-	responseMapExtensionName       = "openapi_response_map"
-	componentRegistryExtensionName = "openapi_component_registry"
+	licenseExtensionName              = "openapi_license"
+	serversExtensionName              = "openapi_servers"
+	securitySchemesExtensionName      = "openapi_security_schemes"
+	securityRequirementsExtensionName = "openapi_security_requirements"
+	pathExtensionName                 = "openapi_path"
+	responseMapExtensionName          = "openapi_response_map"
+	componentRegistryExtensionName    = "openapi_component_registry"
 )
 
 type responseSpec struct {
 	Spec        string
 	IsArray     bool
 	Description string
+}
+
+func getSecuritySchemesExtension(extensions map[string]any) (openapi3.SecuritySchemes, bool) {
+
+	if extensions == nil {
+		return nil, false
+	}
+
+	entry, ok := extensions[securitySchemesExtensionName]
+	if !ok {
+		return nil, false
+	}
+
+	securitySchemesMap, ok := entry.(map[string]any)
+	if !ok {
+		panic(fmt.Sprintf("invalid %s extension: expected type map[string]any, got %T", securitySchemesExtensionName, entry))
+	}
+
+	securitySchemes := make(openapi3.SecuritySchemes, len(securitySchemesMap))
+	for name, securitySchemeUntyped := range securitySchemesMap {
+		securitySchemeMap, ok := securitySchemeUntyped.(map[string]any)
+		if !ok {
+			panic(fmt.Sprintf("invalid %s extension entry: security scheme: expected type map[string]any, got %T", securitySchemesExtensionName, securitySchemeUntyped))
+		}
+
+		securityScheme := &openapi3.SecurityScheme{}
+		typUntyped, ok := securitySchemeMap["type"]
+		if !ok {
+			panic(fmt.Sprintf("invalid %s extension entry: security scheme: missing 'type' key", securitySchemesExtensionName))
+		}
+		typ, ok := typUntyped.(string)
+		if !ok {
+			panic(fmt.Sprintf("invalid %s extension entry: security scheme: 'type' key: expected type string, got %T", securitySchemesExtensionName, securitySchemeMap["type"]))
+		}
+
+		securityScheme.Type = typ
+		if description, ok := securitySchemeMap["description"].(string); ok {
+			securityScheme.Description = description
+		}
+
+		switch typ {
+		case "http":
+			schemeUntyped, ok := securitySchemeMap["scheme"]
+			if !ok {
+				panic(fmt.Sprintf("invalid %s extension entry: security scheme: missing 'scheme' key as 'type' is 'http'", securitySchemesExtensionName))
+			}
+			scheme, ok := schemeUntyped.(string)
+			if !ok {
+				panic(fmt.Sprintf("invalid %s extension entry: security scheme: 'scheme' key: expected type string, got %T", securitySchemesExtensionName, securitySchemeMap["scheme"]))
+			}
+			securityScheme.Scheme = scheme
+			if bearerFormat, ok := securitySchemeMap["bearerFormat"].(string); ok {
+				securityScheme.BearerFormat = bearerFormat
+			}
+		case "apiKey":
+			inUntyped, ok := securitySchemeMap["in"]
+			if !ok {
+				panic(fmt.Sprintf("invalid %s extension entry: security scheme: missing 'in' key as 'type' is 'apiKey'", securitySchemesExtensionName))
+			}
+			in, ok := inUntyped.(string)
+			if !ok {
+				panic(fmt.Sprintf("invalid %s extension entry: security scheme: 'in' key: expected type string, got %T", securitySchemesExtensionName, securitySchemeMap["in"]))
+			}
+			securityScheme.In = in
+			nameUntyped, ok := securitySchemeMap["name"]
+			if !ok {
+				panic(fmt.Sprintf("invalid %s extension entry: security scheme: missing 'name' key as 'type' is 'apiKey'", securitySchemesExtensionName))
+			}
+			name, ok := nameUntyped.(string)
+			if !ok {
+				panic(fmt.Sprintf("invalid %s extension entry: security scheme: 'name' key: expected type string, got %T", securitySchemesExtensionName, securitySchemeMap["name"]))
+			}
+			securityScheme.Name = name
+		default:
+			panic(fmt.Sprintf("invalid %s extension entry: security scheme: unsupported type %q", securitySchemesExtensionName, typ))
+		}
+
+		securitySchemes[name] = &openapi3.SecuritySchemeRef{Value: securityScheme}
+	}
+
+	return securitySchemes, true
+}
+
+func getSecurityRequirementsExtension(extensions map[string]any) (openapi3.SecurityRequirements, bool) {
+
+	if extensions == nil {
+		return nil, false
+	}
+
+	entry, ok := extensions[securityRequirementsExtensionName]
+	if !ok {
+		return nil, false
+	}
+
+	securityRequirementsUntyped, ok := entry.([]any)
+	if !ok {
+		panic(fmt.Sprintf("invalid %s extension: expected type []any, got %T", securityRequirementsExtensionName, entry))
+	}
+
+	securityRequirements := make(openapi3.SecurityRequirements, len(securityRequirementsUntyped))
+	for i, securityRequirementUntyped := range securityRequirementsUntyped {
+		securityRequirementMap, ok := securityRequirementUntyped.(map[string]any)
+		if !ok {
+			panic(fmt.Sprintf("invalid %s extension entry: security requirement: expected type map[string]any, got %T", securityRequirementsExtensionName, securityRequirementUntyped))
+		}
+
+		securityRequirement := make(openapi3.SecurityRequirement, len(securityRequirementMap))
+		for name, scopesUntyped := range securityRequirementMap {
+			scopesArrayUntyped, ok := scopesUntyped.([]any)
+			if !ok {
+				panic(fmt.Sprintf("invalid %s extension entry: security requirement: expected type []any, got %T", securityRequirementsExtensionName, scopesUntyped))
+			}
+			scopes := make([]string, len(scopesArrayUntyped))
+			for i, scopeUntyped := range scopesArrayUntyped {
+				scope, ok := scopeUntyped.(string)
+				if !ok {
+					panic(fmt.Sprintf("invalid %s extension entry: security requirement: scope: expected type string, got %T", securityRequirementsExtensionName, scopeUntyped))
+				}
+				scopes[i] = scope
+			}
+			securityRequirement[name] = scopes
+		}
+
+		securityRequirements[i] = securityRequirement
+	}
+
+	return securityRequirements, true
 }
 
 func getLicenseExtension(extensions map[string]any) (*openapi3.License, bool) {

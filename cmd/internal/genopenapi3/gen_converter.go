@@ -106,6 +106,14 @@ func (c *converter) processSpecComponentRegistryExtension(s spec.Specification) 
 		c.outRootDoc.Servers = servers
 	}
 
+	if securityRequirements, ok := getSecurityRequirementsExtension(model.Extensions); ok {
+		c.outRootDoc.Security = securityRequirements
+	}
+
+	if securitySchemes, ok := getSecuritySchemesExtension(model.Extensions); ok {
+		c.outRootDoc.Components.SecuritySchemes = securitySchemes
+	}
+
 	return nil
 }
 
@@ -220,10 +228,6 @@ func newOpenAPI3Template(specConfig *spec.Config) openapi3.T {
 				Name:  specConfig.Author,
 				URL:   specConfig.URL,
 				Email: specConfig.Email,
-			},
-			License: &openapi3.License{
-				Name: "Apache 2.0",
-				URL:  "https://www.apache.org/licenses/LICENSE-2.0",
 			},
 		},
 		Paths: &openapi3.Paths{},
