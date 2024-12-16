@@ -171,6 +171,7 @@ func (c *converter) extractOperationPost(parentRestName string, relation *spec.R
 		Description: relationAction.Description,
 		RequestBody: &openapi3.RequestBodyRef{
 			Value: &openapi3.RequestBody{
+				Required: true,
 				Content: openapi3.Content{
 					"application/json": &openapi3.MediaType{
 						Schema: schemaRef,
@@ -307,6 +308,7 @@ func (c *converter) extractOperationPutByID(model *spec.Model) *openapi3.Operati
 		Description: relationAction.Description,
 		RequestBody: &openapi3.RequestBodyRef{
 			Value: &openapi3.RequestBody{
+				Required: true,
 				Content: openapi3.Content{
 					"application/json": &openapi3.MediaType{
 						Schema: schemaRef,
