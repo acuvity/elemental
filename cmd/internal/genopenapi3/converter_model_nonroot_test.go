@@ -23,15 +23,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -41,7 +37,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -77,15 +73,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -95,7 +87,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -133,7 +125,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"info": {
 							"contact": {
 								"email": "dev@aporeto.com",
@@ -141,7 +133,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {},
 						"paths": {}
@@ -186,15 +178,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -204,7 +192,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -266,15 +254,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -284,7 +268,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -326,15 +310,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -344,7 +324,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -407,15 +387,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -425,7 +401,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -501,15 +477,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -519,7 +491,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -567,15 +539,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -585,7 +553,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -644,15 +612,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -662,7 +626,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -715,15 +679,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -733,7 +693,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -781,15 +741,11 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
 							}
 						],
 						"info": {
@@ -799,7 +755,7 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {

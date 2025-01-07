@@ -31,15 +31,11 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 				"toplevel": `
 					{
 						"servers": [{ "url": "https://api.acuvity.ai"}],
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"tags": [
 							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -49,7 +45,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -73,7 +69,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								],
 								"get": {
 									"operationId": "get-Resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Retrieves the resource with the given ID.",
 									"parameters": [
 										{
@@ -126,16 +122,12 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -145,7 +137,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -169,7 +161,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								],
 								"delete": {
 									"operationId": "delete-Resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Deletes the resource with the given ID.",
 									"parameters": [
 										{
@@ -224,16 +216,12 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -243,7 +231,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -267,7 +255,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								],
 								"put": {
 									"operationId": "update-Resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Updates the resource with the given ID.",
 									"parameters": [
 										{
@@ -286,7 +274,8 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 													"$ref": "#/components/schemas/resource"
 												}
 											}
-										}
+										},
+										"required": true
 									},
 									"responses": {
 										"200": {
@@ -327,16 +316,12 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -346,7 +331,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -370,7 +355,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								],
 								"get": {
 									"operationId": "get-Resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Retrieves the resource with the given ID.",
 									"responses": {
 										"200": {
@@ -387,7 +372,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								},
 								"delete": {
 									"operationId": "delete-Resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Deletes the resource with the given ID.",
 									"responses": {
 										"200": {
@@ -404,7 +389,7 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								},
 								"put": {
 									"operationId": "update-Resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Updates the resource with the given ID.",
 									"requestBody": {
 										"content": {
@@ -413,7 +398,8 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 													"$ref": "#/components/schemas/resource"
 												}
 											}
-										}
+										},
+										"required": true
 									},
 									"responses": {
 										"200": {

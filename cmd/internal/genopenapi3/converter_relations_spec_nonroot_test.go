@@ -34,7 +34,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
@@ -42,16 +42,8 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"description": "This tag is for group 'N/A'"
 							},
 							{
-								"name": "resource",
-								"description": "This tag is for package 'resource'"
-							},
-							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -61,7 +53,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -89,7 +81,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								],
 								"get": {
 									"operationId": "get-all-MineSites-in-resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Retrieve all mine sites.",
 									"parameters": [
 										{
@@ -168,7 +160,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
@@ -176,16 +168,8 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"description": "This tag is for group 'N/A'"
 							},
 							{
-								"name": "resource",
-								"description": "This tag is for package 'resource'"
-							},
-							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -195,7 +179,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -223,7 +207,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								],
 								"post": {
 									"operationId": "create-MineSites-in-resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Creates a mine site.",
 									"parameters": [
 										{
@@ -242,7 +226,8 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 													"$ref": "#/components/schemas/minesite"
 												}
 											}
-										}
+										},
+										"required": true
 									},
 									"responses": {
 										"200": {
@@ -289,20 +274,12 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "N/A",
 								"description": "This tag is for group 'N/A'"
-							},
-							{
-								"name": "None",
-								"description": "This tag is for package 'None'"
-							},
-							{
-								"name": "resource",
-								"description": "This tag is for package 'resource'"
 							}
 						],
 						"info": {
@@ -312,7 +289,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -361,7 +338,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
@@ -369,16 +346,8 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"description": "This tag is for group 'N/A'"
 							},
 							{
-								"name": "resource",
-								"description": "This tag is for package 'resource'"
-							},
-							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -388,7 +357,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -416,7 +385,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								],
 								"post": {
 									"operationId": "create-MineSites-in-resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Creates a mine site.",
 									"requestBody": {
 										"content": {
@@ -425,7 +394,8 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 													"$ref": "#/components/schemas/minesite"
 												}
 											}
-										}
+										},
+										"required": true
 									},
 									"responses": {
 										"200": {
@@ -442,7 +412,7 @@ func TestConverter_Do__specRelations_nonRoot(t *testing.T) {
 								},
 								"get": {
 									"operationId": "get-all-MineSites-in-resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Retrieve all mine sites.",
 									"responses": {
 										"200": {

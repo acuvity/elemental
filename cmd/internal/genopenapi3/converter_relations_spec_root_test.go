@@ -33,16 +33,12 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags":[
 							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -52,7 +48,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -66,7 +62,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 							"/resources": {
 								"post": {
 									"operationId": "create-Resource",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"parameters": [
 										{
 											"description": "This is a fancy parameter.",
@@ -85,7 +81,8 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 													"$ref": "#/components/schemas/resource"
 												}
 											}
-										}
+										},
+										"required": true
 									},
 									"responses": {
 										"200": {
@@ -140,16 +137,12 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags": [
 							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -159,7 +152,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -173,7 +166,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 							"/resources": {
 								"get": {
 									"operationId": "get-all-Resources",
-									"tags": ["useful/thing", "usefulPackageName"],
+									"tags": ["useful/thing"],
 									"description": "Retrieve all resources.",
 									"parameters": [
 									  {
@@ -234,16 +227,12 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"tags":[
 							{
 								"name": "useful/thing",
 								"description": "This tag is for group 'useful/thing'"
-							},
-							{
-								"name": "usefulPackageName",
-								"description": "This tag is for package 'usefulPackageName'"
 							}
 						],
 						"info": {
@@ -253,7 +242,7 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {
 							"schemas": {
@@ -306,16 +295,12 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 	outDoc := map[string]string{
 		"toplevel": `
 			{
-				"openapi": "3.0.3",
+				"openapi": "3.1.0",
 				"servers": [{ "url": "https://api.acuvity.ai"}],
 				"tags":[
 					{
 						"name": "useful/thing",
 						"description": "This tag is for group 'useful/thing'"
-					},
-					{
-						"name": "usefulPackageName",
-						"description": "This tag is for package 'usefulPackageName'"
 					}
 				],
 				"info": {
@@ -325,7 +310,7 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 						"url":   "go.acuvity.ai/api"
 					},
 					"version": "1.0",
-					"title": "toplevel"
+					"title": "dummy"
 				},
 				"components": {
 					"schemas": {
@@ -339,7 +324,7 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 					"/resources": {
 						"post": {
 							"operationId": "create-Resource",
-							"tags": ["useful/thing", "usefulPackageName"],
+							"tags": ["useful/thing"],
 							"description": "Creates some resource.",
 							"requestBody": {
 								"content": {
@@ -348,7 +333,8 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 											"$ref": "#/components/schemas/resource"
 										}
 									}
-								}
+								},
+								"required": true
 							},
 							"responses": {
 								"200": {

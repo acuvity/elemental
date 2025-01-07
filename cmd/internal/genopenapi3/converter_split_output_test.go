@@ -17,7 +17,7 @@ func TestConverter_Do__splitOutput_emptyRootModel(t *testing.T) {
 	`
 	outDocs := `
 		{
-			"openapi": "3.0.3",
+			"openapi": "3.1.0",
 			"servers": [{ "url": "https://api.acuvity.ai"}],
 			"info": {
 				"contact": {
@@ -26,7 +26,7 @@ func TestConverter_Do__splitOutput_emptyRootModel(t *testing.T) {
 					"url":   "go.acuvity.ai/api"
 				},
 				"version": "1.0",
-				"title": "toplevel"
+				"title": "dummy"
 			},
 			"components": {},
 			"paths": {}
@@ -117,16 +117,12 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 	outDocs := map[string]string{
 		"minesite": `
 			{
-				"openapi": "3.0.3",
+				"openapi": "3.1.0",
 				"servers": [{ "url": "https://api.acuvity.ai"}],
 				"tags":[
 					{
 						"name": "useful/thing",
 						"description": "This tag is for group 'useful/thing'"
-					},
-					{
-						"name": "usefulPackageName",
-						"description": "This tag is for package 'usefulPackageName'"
 					}
 				],
 				"info": {
@@ -167,8 +163,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 								}
 							},
 							"tags": [
-								"useful/thing",
-								"usefulPackageName"
+								"useful/thing"
 							]
 						},
 						"post": {
@@ -181,7 +176,8 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 											"$ref": "#/components/schemas/minesite"
 										}
 									}
-								}
+								},
+								"required": true
 							},
 							"responses": {
 								"200": {
@@ -196,8 +192,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 								}
 							},
 							"tags": [
-								"useful/thing",
-								"usefulPackageName"
+								"useful/thing"
 							]
 						}
 					},
@@ -218,8 +213,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 								}
 							},
 							"tags": [
-								"useful/thing",
-								"usefulPackageName"
+								"useful/thing"
 							]
 						},
 						"get": {
@@ -238,8 +232,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 								}
 							},
 							"tags": [
-								"useful/thing",
-								"usefulPackageName"
+								"useful/thing"
 							]
 						},
 						"parameters": [
@@ -262,7 +255,8 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 											"$ref": "#/components/schemas/minesite"
 										}
 									}
-								}
+								},
+								"required": true
 							},
 							"responses": {
 								"200": {
@@ -277,8 +271,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 								}
 							},
 							"tags": [
-								"useful/thing",
-								"usefulPackageName"
+								"useful/thing"
 							]
 						}
 					},
@@ -302,8 +295,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 								}
 							},
 							"tags": [
-								"oil/gas",
-								"naturalResources"
+								"oil/gas"
 							]
 						},
 						"parameters": [
@@ -326,7 +318,8 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 											"$ref": "./resource#/components/schemas/resource"
 										}
 									}
-								}
+								},
+								"required": true
 							},
 							"responses": {
 								"200": {
@@ -341,8 +334,7 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 								}
 							},
 							"tags": [
-								"oil/gas",
-								"naturalResources"
+								"oil/gas"
 							]
 						}
 					}
@@ -353,15 +345,11 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 		"resource": `
 			{
 				"servers": [{ "url": "https://api.acuvity.ai"}],
-				"openapi": "3.0.3",
+				"openapi": "3.1.0",
 				"tags":[
 					{
 						"name": "oil/gas",
 						"description": "This tag is for group 'oil/gas'"
-					},
-					{
-						"name": "naturalResources",
-						"description": "This tag is for package 'naturalResources'"
 					}
 				],
 				"info": {
@@ -393,15 +381,11 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 		"employee": `
 			{
 				"servers": [{ "url": "https://api.acuvity.ai"}],
-				"openapi": "3.0.3",
+				"openapi": "3.1.0",
 				"tags":[
 					{
 						"name": "employee/affairs",
 						"description": "This tag is for group 'employee/affairs'"
-					},
-					{
-						"name": "people",
-						"description": "This tag is for package 'people'"
 					}
 				],
 				"info": {
@@ -485,15 +469,11 @@ func TestConverter_Do__split_output_withPrivateModel(t *testing.T) {
 		"minesite": `
 			{
 				"servers": [{ "url": "https://api.acuvity.ai"}],
-				"openapi": "3.0.3",
+				"openapi": "3.1.0",
 				"tags":[
 					{
 						"name": "useful/thing",
 						"description": "This tag is for group 'useful/thing'"
-					},
-					{
-						"name": "usefulPackageName",
-						"description": "This tag is for package 'usefulPackageName'"
 					}
 				],
 				"info": {
@@ -534,8 +514,7 @@ func TestConverter_Do__split_output_withPrivateModel(t *testing.T) {
 								}
 							},
 							"tags": [
-								"useful/thing",
-								"usefulPackageName"
+								"useful/thing"
 							]
 						}
 					}

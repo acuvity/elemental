@@ -23,7 +23,7 @@ func TestConverter_Do__model_root(t *testing.T) {
 			outDocs: map[string]string{
 				"toplevel": `
 					{
-						"openapi": "3.0.3",
+						"openapi": "3.1.0",
 						"servers": [{ "url": "https://api.acuvity.ai"}],
 						"info": {
 							"contact": {
@@ -32,7 +32,7 @@ func TestConverter_Do__model_root(t *testing.T) {
 								"url":   "go.acuvity.ai/api"
 							},
 							"version": "1.0",
-							"title": "toplevel"
+							"title": "dummy"
 						},
 						"components": {},
 						"paths": {}
