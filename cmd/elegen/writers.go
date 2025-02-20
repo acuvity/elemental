@@ -74,7 +74,7 @@ func writeModel(set spec.SpecificationSet, name string, outFolder string, public
 		bnames[bname] = struct{}{}
 	}
 
-	if s.Model().Private && publicMode {
+	if (s.Model().Private || s.Model().Undocumented) && publicMode {
 		return nil
 	}
 

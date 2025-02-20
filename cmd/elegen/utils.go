@@ -343,7 +343,7 @@ func shouldRegisterSpecification(s spec.Specification, publicMode bool) bool {
 	}
 
 	if publicMode {
-		return !s.Model().Private
+		return !s.Model().Private && !s.Model().Undocumented
 	}
 
 	return true
@@ -363,7 +363,7 @@ func shouldRegisterRelationship(set spec.SpecificationSet, entityName string, pu
 	}
 
 	if publicMode {
-		return !s.Model().Private
+		return !s.Model().Private && !s.Model().Undocumented
 	}
 
 	return true
@@ -378,7 +378,7 @@ func shouldRegisterInnerRelationship(set spec.SpecificationSet, restName string,
 	}
 
 	if publicMode {
-		return !s.Model().Private
+		return !s.Model().Private && !s.Model().Undocumented
 	}
 
 	return true
