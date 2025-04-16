@@ -4,7 +4,7 @@ go 1.23.0
 
 toolchain go1.24.0
 
-require go.acuvity.ai/regolithe v0.0.0-20250226152157-fbd9f24f9cec
+require go.acuvity.ai/regolithe v0.0.0-20250321141528-1fe83b60f317
 
 require (
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
