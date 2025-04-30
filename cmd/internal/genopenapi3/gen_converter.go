@@ -237,6 +237,27 @@ func newOpenAPI3Template(specConfig *spec.Config) openapi3.T {
 		Paths: &openapi3.Paths{},
 		Components: &openapi3.Components{
 			Schemas: make(openapi3.Schemas),
+			SecuritySchemes: openapi3.SecuritySchemes{
+				"BearerAuth": &openapi3.SecuritySchemeRef{
+					Value: &openapi3.SecurityScheme{
+						Type:   "http",
+						Scheme: "bearer",
+					},
+				},
+				"NamespaceHeader": &openapi3.SecuritySchemeRef{
+					Value: &openapi3.SecurityScheme{
+						Type: "apiKey",
+						Name: "X-Namespace",
+						In:   "header",
+					},
+				},
+			},
+		},
+		Security: openapi3.SecurityRequirements{
+			openapi3.SecurityRequirement{
+				"BearerAuth":      {},
+				"NamespaceHeader": {},
+			},
 		},
 	}
 }
