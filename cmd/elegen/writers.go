@@ -98,7 +98,7 @@ func writeModel(set spec.SpecificationSet, name string, outFolder string, public
 	if err != nil {
 		if errs, ok := err.(scanner.ErrorList); ok {
 			lines := strings.Split(buf.String(), "\n")
-			for i := 0; i < errs.Len(); i++ {
+			for i := range errs.Len() {
 				fmt.Printf("Error in '%s' near:\n\n\t%s\n\n", name, lines[errs[i].Pos.Line-1])
 			}
 		}
