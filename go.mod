@@ -8,7 +8,7 @@ require go.acuvity.ai/regolithe v0.0.0-20250321141528-1fe83b60f317
 
 require (
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
-	github.com/getkin/kin-openapi v0.124.0
+	github.com/getkin/kin-openapi v0.132.0
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-test/deep v1.0.8
 	github.com/gofrs/uuid v4.4.0+incompatible
@@ -34,8 +34,8 @@ require (
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.6.1 // indirect
 	github.com/go-git/go-git/v5 v5.13.1 // indirect
-	github.com/go-openapi/jsonpointer v0.20.2 // indirect
-	github.com/go-openapi/swag v0.22.8 // indirect
+	github.com/go-openapi/jsonpointer v0.21.0 // indirect
+	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -51,6 +51,8 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
+	github.com/oasdiff/yaml v0.0.0-20250309154309-f31be36b4037 // indirect
+	github.com/oasdiff/yaml3 v0.0.0-20250309153720-d2182401db90 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
