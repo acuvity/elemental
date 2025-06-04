@@ -8,27 +8,19 @@ default: lint test
 lint:
 	golangci-lint run \
 		--timeout=5m \
-		--disable-all \
-		--exclude-files data_test.go \
-		--exclude-use-default=false \
-		--exclude=dot-imports \
-		--exclude=package-comments \
-		--exclude=unused-parameter \
-		--exclude=superfluous-else \
+		--disable=govet  \
 		--enable=errcheck \
-		--enable=goimports \
 		--enable=ineffassign \
-		--enable=revive \
-		--enable=unused \
-		--enable=staticcheck \
 		--enable=unused \
 		--enable=unconvert \
 		--enable=misspell \
 		--enable=prealloc \
 		--enable=nakedret \
 		--enable=unparam \
+		--enable=nilerr \
+		--enable=bodyclose \
+		--enable=errorlint \
 		./...
-
 sec:
 	gosec -quiet ./...
 

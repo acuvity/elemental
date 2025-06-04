@@ -13,6 +13,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"go/format"
 	"go/scanner"
@@ -91,18 +92,19 @@ func writeModel(set spec.SpecificationSet, name string, outFolder string, public
 			Set:        set,
 			Spec:       s,
 		}); err != nil {
-		return fmt.Errorf("unable to generate model '%s': %s", name, err)
+		return fmt.Errorf("unable to generate model '%s': %w", name, err)
 	}
 
 	p, err := format.Source(buf.Bytes())
 	if err != nil {
-		if errs, ok := err.(scanner.ErrorList); ok {
+		var errs scanner.ErrorList
+		if errors.As(err, &errs) {
 			lines := strings.Split(buf.String(), "\n")
 			for i := range errs.Len() {
 				fmt.Printf("Error in '%s' near:\n\n\t%s\n\n", name, lines[errs[i].Pos.Line-1])
 			}
 		}
-		return fmt.Errorf("unable to format model '%s': %s", name, err)
+		return fmt.Errorf("unable to format model '%s': %w", name, err)
 	}
 
 	p, err = imports.Process("", p, nil)
@@ -135,22 +137,22 @@ func writeIdentitiesRegistry(set spec.SpecificationSet, outFolder string, public
 			PublicMode: publicMode,
 			Set:        set,
 		}); err != nil {
-		return fmt.Errorf("unable to generate identities_registry code:%s", err)
+		return fmt.Errorf("unable to generate identities_registry code: %w", err)
 	}
 
 	p, err := format.Source(buf.Bytes())
 	if err != nil {
-		return fmt.Errorf("unable to format identities_registry code:%s", err)
+		return fmt.Errorf("unable to format identities_registry code: %w", err)
 	}
 
 	p, err = imports.Process("", p, nil)
 	if err != nil {
 		fmt.Println(buf.String())
-		return fmt.Errorf("unable to goimport relationships_registry code:%s", err)
+		return fmt.Errorf("unable to goimport relationships_registry code: %w", err)
 	}
 
 	if err := writeFile(path.Join(outFolder, "identities_registry.go"), p); err != nil {
-		return fmt.Errorf("unable to write file for identities_registry: %s", err)
+		return fmt.Errorf("unable to write file for identities_registry: %w", err)
 	}
 
 	return nil
@@ -174,23 +176,23 @@ func writeRelationshipsRegistry(set spec.SpecificationSet, outFolder string, pub
 			PublicMode: publicMode,
 			Set:        set,
 		}); err != nil {
-		return fmt.Errorf("unable to generate relationships_registry code:%s", err)
+		return fmt.Errorf("unable to generate relationships_registry code: %w", err)
 	}
 
 	p, err := format.Source(buf.Bytes())
 	if err != nil {
 		fmt.Println(buf.String())
-		return fmt.Errorf("unable to format relationships_registry code:%s", err)
+		return fmt.Errorf("unable to format relationships_registry code: %w", err)
 	}
 
 	p, err = imports.Process("", p, nil)
 	if err != nil {
 		fmt.Println(buf.String())
-		return fmt.Errorf("unable to goimport relationships_registry code:%s", err)
+		return fmt.Errorf("unable to goimport relationships_registry code: %w", err)
 	}
 
 	if err := writeFile(path.Join(outFolder, "relationships_registry.go"), p); err != nil {
-		return fmt.Errorf("unable to write file for relationships_registry: %s", err)
+		return fmt.Errorf("unable to write file for relationships_registry: %w", err)
 	}
 
 	return nil

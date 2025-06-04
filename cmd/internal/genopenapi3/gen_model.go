@@ -115,7 +115,7 @@ func (c *converter) convertAttribute(attr *spec.Attribute) (schemaRef *openapi3.
 
 		attrSchema := new(openapi3.Schema)
 		if err := json.Unmarshal([]byte(mapping.Type), attrSchema); err != nil {
-			return nil, fmt.Errorf("%w: '%s': %s", errUnmarshalingExternalType, attr.SubType, err)
+			return nil, fmt.Errorf("%w: '%s': %w", errUnmarshalingExternalType, attr.SubType, err)
 		}
 
 		return attrSchema.NewRef(), nil

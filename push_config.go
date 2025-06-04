@@ -13,7 +13,9 @@ package elemental
 
 import (
 	"fmt"
+	"maps"
 	"net/url"
+	"slices"
 )
 
 // A PushFilter represents an abstract filter for filtering out push notifications. This is now aliased to PushConfig as a
@@ -93,9 +95,7 @@ func (pc *PushConfig) Parameters() url.Values {
 	}
 
 	out := make(url.Values, len(pc.Params))
-	for k, v := range pc.Params {
-		out[k] = v
-	}
+	maps.Copy(out, pc.Params)
 
 	return out
 }
@@ -134,7 +134,7 @@ func (pc *PushConfig) ParseIdentityFilters() error {
 		if err != nil {
 			// in the event an error occurs we zero out the parsed identities to avoid having a partially set of parsed identities
 			pc.parsedIdentityFilters = map[string]*Filter{}
-			return fmt.Errorf("elemental: unable to parse filter %q: %s", unparsedFilter, err)
+			return fmt.Errorf("elemental: unable to parse filter %q: %w", unparsedFilter, err)
 		}
 
 		pc.parsedIdentityFilters[identity] = filter
@@ -164,13 +164,7 @@ func (pc *PushConfig) IsFilteredOut(identityName string, eventType EventType) bo
 
 	// If if there are some event types defined, we don't filter out
 	// if the current event type is in the list.
-	for _, t := range types {
-		if t == eventType {
-			return false
-		}
-	}
-
-	return true
+	return !slices.Contains(types, eventType)
 }
 
 // FilterForIdentity returns the associated fine-grained filter for the given identity. In the event that no fine-grained
@@ -194,13 +188,8 @@ func (pc *PushConfig) Duplicate() *PushConfig {
 		config.FilterIdentity(id, types...)
 	}
 
-	for id, f := range pc.IdentityFilters {
-		config.IdentityFilters[id] = f
-	}
-
-	for id, f := range pc.parsedIdentityFilters {
-		config.parsedIdentityFilters[id] = f
-	}
+	maps.Copy(config.IdentityFilters, pc.IdentityFilters)
+	maps.Copy(config.parsedIdentityFilters, pc.parsedIdentityFilters)
 
 	for k, v := range pc.Params {
 		config.SetParameter(k, v...)

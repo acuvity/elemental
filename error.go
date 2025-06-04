@@ -13,8 +13,10 @@ package elemental
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
+	"slices"
 	"strings"
 )
 
@@ -23,11 +25,13 @@ import (
 func IsErrorWithCode(err error, code int) bool {
 
 	var c int
-	switch e := err.(type) {
-	case Error:
-		c = e.Code
-	case Errors:
-		c = e.Code()
+	var e1 Error
+	var e2 Errors
+
+	if errors.As(err, &e1) {
+		c = e1.Code
+	} else if errors.As(err, &e2) {
+		c = e2.Code()
 	}
 
 	return c == code
@@ -111,15 +115,17 @@ func (e Errors) Code() int {
 // also the given errors.
 func (e Errors) Append(errs ...error) Errors {
 
-	out := append(Errors{}, e...)
+	out := slices.Clone(e)
 
 	for _, err := range errs {
-		switch er := err.(type) {
-		case Error:
-			out = append(out, er)
-		case Errors:
-			out = append(out, er...)
-		default:
+
+		var e1 Error
+		var e2 Errors
+		if errors.As(err, &e1) {
+			out = append(out, e1)
+		} else if errors.As(err, &e2) {
+			out = append(out, e2...)
+		} else {
 			out = append(out, NewError("Internal Server Error", err.Error(), "elemental", http.StatusInternalServerError))
 		}
 	}
@@ -162,24 +168,24 @@ func DecodeErrors(data []byte) (Errors, error) {
 func IsValidationError(err error, title string, attribute string) bool {
 
 	var elementalError Error
-	switch e := err.(type) {
 
-	case Errors:
-		if e.Code() != http.StatusUnprocessableEntity {
+	var e1 Errors
+	var e2 Error
+
+	if errors.As(err, &e1) {
+		if e1.Code() != http.StatusUnprocessableEntity {
 			return false
 		}
-		if len(e) != 1 {
+		if len(e1) != 1 {
 			return false
 		}
-		elementalError = e[0]
-
-	case Error:
-		if e.Code != http.StatusUnprocessableEntity {
+		elementalError = e1[0]
+	} else if errors.As(err, &e2) {
+		if e2.Code != http.StatusUnprocessableEntity {
 			return false
 		}
-		elementalError = e
-
-	default:
+		elementalError = e2
+	} else {
 		return false
 	}
 

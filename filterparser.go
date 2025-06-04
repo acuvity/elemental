@@ -12,6 +12,7 @@
 package elemental
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -509,7 +510,7 @@ func (p *FilterParser) parseValue() (any, error) {
 	if err == nil {
 		return datetime, nil
 	}
-	if err != errorInvalidExpression {
+	if !errors.Is(err, errorInvalidExpression) {
 		return nil, err
 	}
 
@@ -517,7 +518,7 @@ func (p *FilterParser) parseValue() (any, error) {
 	if err == nil {
 		return duration, nil
 	}
-	if err != errorInvalidExpression {
+	if !errors.Is(err, errorInvalidExpression) {
 		return nil, err
 	}
 

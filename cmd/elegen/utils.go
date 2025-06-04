@@ -190,7 +190,7 @@ func attrToField(set spec.SpecificationSet, shadow bool, attr *spec.Attribute) s
 	}
 
 	descLines := strings.Split(attr.Description, "\n")
-	for i := 0; i < len(descLines); i++ {
+	for i := range len(descLines) {
 		descLines[i] = "// " + descLines[i]
 	}
 
@@ -260,7 +260,7 @@ func attrBSONFieldName(attr *spec.Attribute) string {
 }
 
 func escapeBackticks(str string) string {
-	return strings.Replace(str, "`", "`+\"`\"+`", -1)
+	return strings.ReplaceAll(str, "`", "`+\"`\"+`")
 }
 
 func buildEnums(s spec.Specification, version string) []Enum {
@@ -471,7 +471,7 @@ func crawl(val reflect.Value, prefix string) string {
 	case reflect.Slice:
 
 		out := "[]" + val.Index(0).Elem().Kind().String() + "{\n"
-		for i := 0; i < val.Len(); i++ {
+		for i := range val.Len() {
 			out += fmt.Sprintf("%s,\n", crawl(val.Index(i).Elem(), prefix))
 		}
 		out += "}"

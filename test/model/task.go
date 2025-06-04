@@ -5,6 +5,7 @@ package testmodel
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/globalsign/mgo/bson"
 	"github.com/mitchellh/copystructure"
@@ -45,14 +46,14 @@ func (o TasksList) Identity() elemental.Identity {
 // Copy returns a pointer to a copy the TasksList.
 func (o TasksList) Copy() elemental.Identifiables {
 
-	out := append(TasksList{}, o...)
+	out := slices.Clone(o)
 	return &out
 }
 
 // Append appends the objects to the a new copy of the TasksList.
 func (o TasksList) Append(objects ...elemental.Identifiable) elemental.Identifiables {
 
-	out := append(TasksList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*Task))
 	}
@@ -64,7 +65,7 @@ func (o TasksList) Append(objects ...elemental.Identifiable) elemental.Identifia
 func (o TasksList) List() elemental.IdentifiablesList {
 
 	out := make(elemental.IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i]
 	}
 
@@ -82,7 +83,7 @@ func (o TasksList) DefaultOrder() []string {
 func (o TasksList) ToSparse(fields ...string) elemental.Identifiables {
 
 	out := make(SparseTasksList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i].ToSparse(fields...).(*SparseTask)
 	}
 
@@ -613,14 +614,14 @@ func (o SparseTasksList) Identity() elemental.Identity {
 // Copy returns a pointer to a copy the SparseTasksList.
 func (o SparseTasksList) Copy() elemental.Identifiables {
 
-	copy := append(SparseTasksList{}, o...)
+	copy := slices.Clone(o)
 	return &copy
 }
 
 // Append appends the objects to the a new copy of the SparseTasksList.
 func (o SparseTasksList) Append(objects ...elemental.Identifiable) elemental.Identifiables {
 
-	out := append(SparseTasksList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*SparseTask))
 	}
@@ -632,7 +633,7 @@ func (o SparseTasksList) Append(objects ...elemental.Identifiable) elemental.Ide
 func (o SparseTasksList) List() elemental.IdentifiablesList {
 
 	out := make(elemental.IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i]
 	}
 
@@ -649,7 +650,7 @@ func (o SparseTasksList) DefaultOrder() []string {
 func (o SparseTasksList) ToPlain() elemental.IdentifiablesList {
 
 	out := make(elemental.IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i].ToPlain()
 	}
 

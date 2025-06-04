@@ -33,7 +33,7 @@ func TestValidator_ValidateRequiredInt(t *testing.T) {
 
 	Convey("Given I call the method ValidateRequiredInt with a nonvalid int", t, func() {
 
-		validationError := ValidateRequiredInt("age", 0).(Error)
+		validationError := ValidateRequiredInt("age", 0).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -69,7 +69,7 @@ func TestValidator_ValidateRequiredExternal(t *testing.T) {
 
 	Convey("Given I call the method ValidateRequiredExternal with an empty array", t, func() {
 
-		validationError := ValidateRequiredExternal("ages", []string{}).(Error)
+		validationError := ValidateRequiredExternal("ages", []string{}).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -82,7 +82,7 @@ func TestValidator_ValidateRequiredExternal(t *testing.T) {
 
 	Convey("Given I call the method ValidateRequiredExternal with a nonvalid int", t, func() {
 
-		validationError := ValidateRequiredExternal("age", nil).(Error)
+		validationError := ValidateRequiredExternal("age", nil).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -108,7 +108,7 @@ func TestValidator_ValidateRequiredFloat(t *testing.T) {
 
 	Convey("Given I call the method ValidateRequiredFloat with a nonvalid float", t, func() {
 
-		validationError := ValidateRequiredFloat("age", 0).(Error)
+		validationError := ValidateRequiredFloat("age", 0).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -134,7 +134,7 @@ func TestValidator_ValidateRequiredString(t *testing.T) {
 
 	Convey("Given I call the method ValidateRequiredString with a nonvalid string", t, func() {
 
-		validationError := ValidateRequiredString("name", "").(Error)
+		validationError := ValidateRequiredString("name", "").(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -161,7 +161,7 @@ func TestValidator_ValidateRequiredTime(t *testing.T) {
 	Convey("Given I call the method ValidateRequiredTime with a nonvalid time", t, func() {
 
 		var t time.Time
-		validationError := ValidateRequiredTime("date", t).(Error)
+		validationError := ValidateRequiredTime("date", t).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -187,7 +187,7 @@ func TestValidator_ValidateMaximumFloat(t *testing.T) {
 
 	Convey("Given I call the method ValidateMaximumFloat with a unvalid float and none exclusive", t, func() {
 
-		validationError := ValidateMaximumFloat("age", 18.1, 18, false).(Error)
+		validationError := ValidateMaximumFloat("age", 18.1, 18, false).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -218,7 +218,7 @@ func TestValidator_ValidateMaximumFloat(t *testing.T) {
 
 	Convey("Given I call the method ValidateMaximumFloat with a unvalid float and exclusive", t, func() {
 
-		validationError := ValidateMaximumFloat("age", 18.1, 18, true).(Error)
+		validationError := ValidateMaximumFloat("age", 18.1, 18, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -231,7 +231,7 @@ func TestValidator_ValidateMaximumFloat(t *testing.T) {
 
 	Convey("Given I call the method ValidateMaximumFloat with a unvalid float and exclusive", t, func() {
 
-		validationError := ValidateMaximumFloat("age", 18, 18, true).(Error)
+		validationError := ValidateMaximumFloat("age", 18, 18, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -257,7 +257,7 @@ func TestValidator_ValidateMinimumFloat(t *testing.T) {
 
 	Convey("Given I call the method ValidateMinimumFloat with a unvalid float and none exclusive", t, func() {
 
-		validationError := ValidateMinimumFloat("age", 18.1, 19, false).(Error)
+		validationError := ValidateMinimumFloat("age", 18.1, 19, false).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -290,7 +290,7 @@ func TestValidator_ValidateMinimumFloat(t *testing.T) {
 
 	Convey("Given I call the method ValidateMinimumFloat with a unvalid float and exclusive", t, func() {
 
-		validationError := ValidateMinimumFloat("age", 18.1, 19, true).(Error)
+		validationError := ValidateMinimumFloat("age", 18.1, 19, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -303,7 +303,7 @@ func TestValidator_ValidateMinimumFloat(t *testing.T) {
 
 	Convey("Given I call the method ValidateMinimumFloat with a unvalid float and exclusive", t, func() {
 
-		validationError := ValidateMinimumFloat("age", 18, 18, true).(Error)
+		validationError := ValidateMinimumFloat("age", 18, 18, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -329,7 +329,7 @@ func TestValidator_ValidateMaximumInt(t *testing.T) {
 
 	Convey("Given I call the method ValidateMaximumInt with a unvalid int and none exclusive", t, func() {
 
-		validationError := ValidateMaximumInt("age", 19, 18, false).(Error)
+		validationError := ValidateMaximumInt("age", 19, 18, false).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -362,7 +362,7 @@ func TestValidator_ValidateMaximumInt(t *testing.T) {
 
 	Convey("Given I call the method ValidateMaximumInt with a unvalid float and exclusive", t, func() {
 
-		validationError := ValidateMaximumInt("age", 19, 18, true).(Error)
+		validationError := ValidateMaximumInt("age", 19, 18, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -375,7 +375,7 @@ func TestValidator_ValidateMaximumInt(t *testing.T) {
 
 	Convey("Given I call the method ValidateMaximumInt with a unvalid float and exclusive", t, func() {
 
-		validationError := ValidateMaximumInt("age", 18, 18, true).(Error)
+		validationError := ValidateMaximumInt("age", 18, 18, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -401,7 +401,7 @@ func TestValidator_ValidateMinimumInt(t *testing.T) {
 
 	Convey("Given I call the method ValidateMinimumInt with a unvalid float and none exclusive", t, func() {
 
-		validationError := ValidateMinimumInt("age", 18, 19, false).(Error)
+		validationError := ValidateMinimumInt("age", 18, 19, false).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -434,7 +434,7 @@ func TestValidator_ValidateMinimumInt(t *testing.T) {
 
 	Convey("Given I call the method ValidateMinimumInt with a unvalid float and exclusive", t, func() {
 
-		validationError := ValidateMinimumInt("age", 18, 19, true).(Error)
+		validationError := ValidateMinimumInt("age", 18, 19, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -447,7 +447,7 @@ func TestValidator_ValidateMinimumInt(t *testing.T) {
 
 	Convey("Given I call the method ValidateMinimumInt with a unvalid float and exclusive", t, func() {
 
-		validationError := ValidateMinimumInt("age", 18, 18, true).(Error)
+		validationError := ValidateMinimumInt("age", 18, 18, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -473,7 +473,7 @@ func TestValidator_ValidateMaximumLength(t *testing.T) {
 
 	Convey("Given I call the method ValidateMaximumLength with a unvalid length and none exclusive", t, func() {
 
-		validationError := ValidateMaximumLength("name", "Alexandre", 1, false).(Error)
+		validationError := ValidateMaximumLength("name", "Alexandre", 1, false).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -506,7 +506,7 @@ func TestValidator_ValidateMaximumLength(t *testing.T) {
 
 	Convey("Given I call the method ValidateMaximumLength with a unvalid length and exclusive", t, func() {
 
-		validationError := ValidateMaximumLength("name", "Alexandre", 1, true).(Error)
+		validationError := ValidateMaximumLength("name", "Alexandre", 1, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -519,7 +519,7 @@ func TestValidator_ValidateMaximumLength(t *testing.T) {
 
 	Convey("Given I call the method ValidateMaximumLength with a unvalid length and exclusive", t, func() {
 
-		validationError := ValidateMaximumLength("name", "Alexandre", 9, true).(Error)
+		validationError := ValidateMaximumLength("name", "Alexandre", 9, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -545,7 +545,7 @@ func TestValidator_ValidateMinimumLength(t *testing.T) {
 
 	Convey("Given I call the method ValidateMinimumLength with a unvalid length and none exclusive", t, func() {
 
-		validationError := ValidateMinimumLength("name", "Alexandre", 19, false).(Error)
+		validationError := ValidateMinimumLength("name", "Alexandre", 19, false).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -578,7 +578,7 @@ func TestValidator_ValidateMinimumLength(t *testing.T) {
 
 	Convey("Given I call the method ValidateMinimumLength with a unvalid length and exclusive", t, func() {
 
-		validationError := ValidateMinimumLength("name", "Alexandre", 19, true).(Error)
+		validationError := ValidateMinimumLength("name", "Alexandre", 19, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -591,7 +591,7 @@ func TestValidator_ValidateMinimumLength(t *testing.T) {
 
 	Convey("Given I call the method ValidateMinimumLength with a unvalid length and exclusive", t, func() {
 
-		validationError := ValidateMinimumLength("name", "Alexandre", 9, true).(Error)
+		validationError := ValidateMinimumLength("name", "Alexandre", 9, true).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 
@@ -625,7 +625,7 @@ func TestValidator_ValidateStringInList(t *testing.T) {
 
 	Convey("Given I call the method ValidateStringInList with a unvalid string", t, func() {
 
-		validationError := ValidateStringInList("name", "Alexandre", []string{"Dimitri", "Antoine"}, false).(Error)
+		validationError := ValidateStringInList("name", "Alexandre", []string{"Dimitri", "Antoine"}, false).(Error) // nolint
 
 		Convey("Then I should get nil in return", func() {
 
@@ -651,7 +651,7 @@ func TestValidator_ValidateIntInList(t *testing.T) {
 
 	Convey("Given I call the method ValidateIntInList with a unvalid int", t, func() {
 
-		validationError := ValidateIntInList("age", 18, []int{31, 12}).(Error)
+		validationError := ValidateIntInList("age", 18, []int{31, 12}).(Error) // nolint
 
 		Convey("Then I should get nil in return", func() {
 
@@ -677,7 +677,7 @@ func TestValidator_ValidateFloatInList(t *testing.T) {
 
 	Convey("Given I call the method ValidateFloatInList with a unvalid float", t, func() {
 
-		validationError := ValidateFloatInList("age", 18.3, []float64{31, 12}).(Error)
+		validationError := ValidateFloatInList("age", 18.3, []float64{31, 12}).(Error) // nolint
 
 		Convey("Then I should get nil in return", func() {
 
@@ -702,7 +702,7 @@ func TestValidator_ValidatePattern(t *testing.T) {
 
 	Convey("Given I call the method ValidatePattern with a valid string", t, func() {
 
-		validationError := ValidatePattern("name", "Alexandre", "Antoine", "should be 'Alexandre'", true).(Error)
+		validationError := ValidatePattern("name", "Alexandre", "Antoine", "should be 'Alexandre'", true).(Error) // nolint
 
 		Convey("Then I should get nil in return", func() {
 			So(validationError, ShouldNotBeNil)
@@ -736,7 +736,7 @@ func TestValidator_ValidateFloatInMap(t *testing.T) {
 
 	Convey("Given I call the method ValidateFloatInMap with a unvalid float", t, func() {
 
-		validationError := ValidateFloatInMap("age", 18.3, map[float64]any{float64(32.1): true}).(Error)
+		validationError := ValidateFloatInMap("age", 18.3, map[float64]any{float64(32.1): true}).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 			So(validationError, ShouldNotBeNil)
@@ -758,7 +758,7 @@ func TestValidator_ValidateIntInMap(t *testing.T) {
 
 	Convey("Given I call the method ValidateIntInMap with a unvalid float", t, func() {
 
-		validationError := ValidateIntInMap("age", 666, map[int]any{}).(Error)
+		validationError := ValidateIntInMap("age", 666, map[int]any{}).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 			So(validationError, ShouldNotBeNil)
@@ -780,7 +780,7 @@ func TestValidator_ValidateStringInMap(t *testing.T) {
 
 	Convey("Given I call the method ValidateStringInMap with a unvalid float", t, func() {
 
-		validationError := ValidateStringInMap("age", "666", map[string]any{}, false).(Error)
+		validationError := ValidateStringInMap("age", "666", map[string]any{}, false).(Error) // nolint
 
 		Convey("Then I should not get nil in return", func() {
 			So(validationError, ShouldNotBeNil)

@@ -13,6 +13,7 @@ package testmodel
 
 import (
 	"fmt"
+	"slices"
 
 	"go.acuvity.ai/elemental"
 )
@@ -32,14 +33,14 @@ func (o UnmarshalableListsList) Identity() elemental.Identity {
 // Copy returns a pointer to a copy the UnmarshalableListsList.
 func (o UnmarshalableListsList) Copy() elemental.Identifiables {
 
-	out := append(UnmarshalableListsList{}, o...)
+	out := slices.Clone(o)
 	return &out
 }
 
 // Append appends the objects to the a new copy of the UnmarshalableListsList.
 func (o UnmarshalableListsList) Append(objects ...elemental.Identifiable) elemental.Identifiables {
 
-	out := append(UnmarshalableListsList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*UnmarshalableList))
 	}

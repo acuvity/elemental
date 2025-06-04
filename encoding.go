@@ -13,6 +13,7 @@ package elemental
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"mime"
@@ -215,7 +216,7 @@ func MakeStreamDecoder(encoding EncodingType, reader io.Reader) (func(dest any) 
 
 			if err := dec.Decode(dest); err != nil {
 
-				if err == io.EOF {
+				if errors.Is(err, io.EOF) {
 					clean()
 					return err
 				}

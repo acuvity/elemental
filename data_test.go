@@ -3,6 +3,7 @@ package elemental
 import (
 	"fmt"
 	"time"
+	"slices"
 
     "github.com/globalsign/mgo/bson"
     "github.com/mitchellh/copystructure"
@@ -30,14 +31,14 @@ func (o ListsList) Identity() Identity {
 // Copy returns a pointer to a copy the ListsList.
 func (o ListsList) Copy() Identifiables {
 
-	out := append(ListsList{}, o...)
+	out := slices.Clone(o)
 	return &out
 }
 
 // Append appends the objects to the a new copy of the ListsList.
 func (o ListsList) Append(objects ...Identifiable) Identifiables {
 
-	out := append(ListsList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*List))
 	}
@@ -49,7 +50,7 @@ func (o ListsList) Append(objects ...Identifiable) Identifiables {
 func (o ListsList) List() IdentifiablesList {
 
 	out := make(IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i]
 	}
 
@@ -67,7 +68,7 @@ func (o ListsList) DefaultOrder() []string {
 func (o ListsList) ToSparse(fields ...string) Identifiables {
 
 	out := make(SparseListsList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i].ToSparse(fields...).(*SparseList)
 	}
 
@@ -858,14 +859,14 @@ func (o SparseListsList) Identity() Identity {
 // Copy returns a pointer to a copy the SparseListsList.
 func (o SparseListsList) Copy() Identifiables {
 
-	copy := append(SparseListsList{}, o...)
+	copy := slices.Clone(o)
 	return &copy
 }
 
 // Append appends the objects to the a new copy of the SparseListsList.
 func (o SparseListsList) Append(objects ...Identifiable) Identifiables {
 
-	out := append(SparseListsList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*SparseList))
 	}
@@ -877,7 +878,7 @@ func (o SparseListsList) Append(objects ...Identifiable) Identifiables {
 func (o SparseListsList) List() IdentifiablesList {
 
 	out := make(IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i]
 	}
 
@@ -894,7 +895,7 @@ func (o SparseListsList) DefaultOrder() []string {
 func (o SparseListsList) ToPlain() IdentifiablesList {
 
 	out := make(IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i].ToPlain()
 	}
 
@@ -1261,14 +1262,14 @@ func (o TasksList) Identity() Identity {
 // Copy returns a pointer to a copy the TasksList.
 func (o TasksList) Copy() Identifiables {
 
-	out := append(TasksList{}, o...)
+	out := slices.Clone(o)
 	return &out
 }
 
 // Append appends the objects to the a new copy of the TasksList.
 func (o TasksList) Append(objects ...Identifiable) Identifiables {
 
-	out := append(TasksList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*Task))
 	}
@@ -1280,7 +1281,7 @@ func (o TasksList) Append(objects ...Identifiable) Identifiables {
 func (o TasksList) List() IdentifiablesList {
 
 	out := make(IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i]
 	}
 
@@ -1298,7 +1299,7 @@ func (o TasksList) DefaultOrder() []string {
 func (o TasksList) ToSparse(fields ...string) Identifiables {
 
 	out := make(SparseTasksList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i].ToSparse(fields...).(*SparseTask)
 	}
 
@@ -1829,14 +1830,14 @@ func (o SparseTasksList) Identity() Identity {
 // Copy returns a pointer to a copy the SparseTasksList.
 func (o SparseTasksList) Copy() Identifiables {
 
-	copy := append(SparseTasksList{}, o...)
+	copy := slices.Clone(o)
 	return &copy
 }
 
 // Append appends the objects to the a new copy of the SparseTasksList.
 func (o SparseTasksList) Append(objects ...Identifiable) Identifiables {
 
-	out := append(SparseTasksList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*SparseTask))
 	}
@@ -1848,7 +1849,7 @@ func (o SparseTasksList) Append(objects ...Identifiable) Identifiables {
 func (o SparseTasksList) List() IdentifiablesList {
 
 	out := make(IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i]
 	}
 
@@ -1865,7 +1866,7 @@ func (o SparseTasksList) DefaultOrder() []string {
 func (o SparseTasksList) ToPlain() IdentifiablesList {
 
 	out := make(IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i].ToPlain()
 	}
 
@@ -2099,6 +2100,7 @@ type mongoAttributesSparseTask struct {
 	Secret      *string          `bson:"secret,omitempty"`
 	Status      *TaskStatusValue `bson:"status,omitempty"`
 }
+// UnmarshalableListIdentity represents the Identity of the object.
 var UnmarshalableListIdentity = Identity{Name: "list", Category: "lists"}
 
 // UnmarshalableListsList represents a list of UnmarshalableLists
@@ -2113,14 +2115,14 @@ func (o UnmarshalableListsList) Identity() Identity {
 // Copy returns a pointer to a copy the UnmarshalableListsList.
 func (o UnmarshalableListsList) Copy() Identifiables {
 
-	out := append(UnmarshalableListsList{}, o...)
+	out := slices.Clone(o)
 	return &out
 }
 
 // Append appends the objects to the a new copy of the UnmarshalableListsList.
 func (o UnmarshalableListsList) Append(objects ...Identifiable) Identifiables {
 
-	out := append(UnmarshalableListsList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*UnmarshalableList))
 	}
@@ -2234,14 +2236,14 @@ func (o UsersList) Identity() Identity {
 // Copy returns a pointer to a copy the UsersList.
 func (o UsersList) Copy() Identifiables {
 
-	out := append(UsersList{}, o...)
+	out := slices.Clone(o)
 	return &out
 }
 
 // Append appends the objects to the a new copy of the UsersList.
 func (o UsersList) Append(objects ...Identifiable) Identifiables {
 
-	out := append(UsersList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*User))
 	}
@@ -2253,7 +2255,7 @@ func (o UsersList) Append(objects ...Identifiable) Identifiables {
 func (o UsersList) List() IdentifiablesList {
 
 	out := make(IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i]
 	}
 
@@ -2271,7 +2273,7 @@ func (o UsersList) DefaultOrder() []string {
 func (o UsersList) ToSparse(fields ...string) Identifiables {
 
 	out := make(SparseUsersList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i].ToSparse(fields...).(*SparseUser)
 	}
 
@@ -2803,14 +2805,14 @@ func (o SparseUsersList) Identity() Identity {
 // Copy returns a pointer to a copy the SparseUsersList.
 func (o SparseUsersList) Copy() Identifiables {
 
-	copy := append(SparseUsersList{}, o...)
+	copy := slices.Clone(o)
 	return &copy
 }
 
 // Append appends the objects to the a new copy of the SparseUsersList.
 func (o SparseUsersList) Append(objects ...Identifiable) Identifiables {
 
-	out := append(SparseUsersList{}, o...)
+	out := slices.Clone(o)
 	for _, obj := range objects {
 		out = append(out, obj.(*SparseUser))
 	}
@@ -2822,7 +2824,7 @@ func (o SparseUsersList) Append(objects ...Identifiable) Identifiables {
 func (o SparseUsersList) List() IdentifiablesList {
 
 	out := make(IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i]
 	}
 
@@ -2839,7 +2841,7 @@ func (o SparseUsersList) DefaultOrder() []string {
 func (o SparseUsersList) ToPlain() IdentifiablesList {
 
 	out := make(IdentifiablesList, len(o))
-	for i := 0; i < len(o); i++ {
+	for i := range len(o) {
 		out[i] = o[i].ToPlain()
 	}
 

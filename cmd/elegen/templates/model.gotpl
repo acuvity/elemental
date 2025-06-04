@@ -5,6 +5,7 @@ package {{ .Set.Configuration.Name }}
 
 import (
     "fmt"
+	"slices"
     "go.acuvity.ai/elemental"
     "github.com/globalsign/mgo/bson"
     "github.com/mitchellh/copystructure"
@@ -54,14 +55,14 @@ func (o {{ .Spec.Model.EntityNamePlural }}List) Identity() elemental.Identity {
 // Copy returns a pointer to a copy the {{ .Spec.Model.EntityNamePlural }}List.
 func (o {{ .Spec.Model.EntityNamePlural }}List) Copy() elemental.Identifiables {
 
-    out := append({{ .Spec.Model.EntityNamePlural }}List{}, o...)
+	out := slices.Clone(o)
     return &out
 }
 
 // Append appends the objects to the a new copy of the {{ .Spec.Model.EntityNamePlural }}List.
 func (o {{ .Spec.Model.EntityNamePlural }}List) Append(objects ...elemental.Identifiable) elemental.Identifiables {
 
-    out := append({{ .Spec.Model.EntityNamePlural }}List{}, o...)
+	out := slices.Clone(o)
     for _, obj := range objects {
         out = append(out, obj.(*{{ .Spec.Model.EntityName}}))
     }
@@ -73,7 +74,7 @@ func (o {{ .Spec.Model.EntityNamePlural }}List) Append(objects ...elemental.Iden
 func (o {{ .Spec.Model.EntityNamePlural }}List) List() elemental.IdentifiablesList {
 
     out := make(elemental.IdentifiablesList, len(o))
-    for i := 0; i < len(o); i++ {
+	for i := range len(o) {
         out[i] = o[i]
     }
 
@@ -95,7 +96,7 @@ func (o {{ .Spec.Model.EntityNamePlural }}List) DefaultOrder() []string {
 func (o {{ .Spec.Model.EntityNamePlural }}List) ToSparse(fields ...string) elemental.Identifiables {
 
     out := make(Sparse{{ .Spec.Model.EntityNamePlural }}List, len(o))
-    for i := 0; i < len(o); i++ {
+	for i := range len(o) {
         out[i] = o[i].ToSparse(fields...).(*Sparse{{ .Spec.Model.EntityName }})
     }
 
@@ -797,14 +798,14 @@ func (o Sparse{{ .Spec.Model.EntityNamePlural }}List) Identity() elemental.Ident
 // Copy returns a pointer to a copy the Sparse{{ .Spec.Model.EntityNamePlural }}List.
 func (o Sparse{{ .Spec.Model.EntityNamePlural }}List) Copy() elemental.Identifiables {
 
-    copy := append(Sparse{{ .Spec.Model.EntityNamePlural }}List{}, o...)
+	copy := slices.Clone(o)
     return &copy
 }
 
 // Append appends the objects to the a new copy of the Sparse{{ .Spec.Model.EntityNamePlural }}List.
 func (o Sparse{{ .Spec.Model.EntityNamePlural }}List) Append(objects ...elemental.Identifiable) elemental.Identifiables {
 
-    out := append(Sparse{{ .Spec.Model.EntityNamePlural }}List{}, o...)
+	out := slices.Clone(o)
     for _, obj := range objects {
         out = append(out, obj.(*Sparse{{ .Spec.Model.EntityName}}))
     }
@@ -816,7 +817,7 @@ func (o Sparse{{ .Spec.Model.EntityNamePlural }}List) Append(objects ...elementa
 func (o Sparse{{ .Spec.Model.EntityNamePlural }}List) List() elemental.IdentifiablesList {
 
     out := make(elemental.IdentifiablesList, len(o))
-    for i := 0; i < len(o); i++ {
+	for i := range len(o) {
         out[i] = o[i]
     }
 
@@ -837,7 +838,7 @@ func (o Sparse{{ .Spec.Model.EntityNamePlural }}List) DefaultOrder() []string {
 func (o Sparse{{ .Spec.Model.EntityNamePlural }}List) ToPlain() elemental.IdentifiablesList {
 
     out := make(elemental.IdentifiablesList, len(o))
-    for i := 0; i < len(o); i++ {
+	for i := range len(o) {
         out[i] = o[i].ToPlain()
     }
 

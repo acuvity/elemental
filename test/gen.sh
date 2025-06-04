@@ -14,6 +14,7 @@ package elemental
 import (
 	"fmt"
 	"time"
+	"slices"
 
     "github.com/globalsign/mgo/bson"
     "github.com/mitchellh/copystructure"
@@ -22,10 +23,10 @@ import (
 //lint:file-ignore U1000 auto generated code.
 EOF
 {
-	tail -n +14 model/list.go
-	tail -n +13 model/task.go
+	tail -n +15 model/list.go
+	tail -n +14 model/task.go
 	tail -n +21 model/unmarshalable.go
-	tail -n +13 model/user.go
+	tail -n +14 model/user.go
 	tail -n +21 model/root.go
 	tail -n +7 model/identities_registry.go
 	tail -n +7 model/relationships_registry.go

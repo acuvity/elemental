@@ -42,7 +42,7 @@ func TestVerify_ValidateAdvancedSpecification(t *testing.T) {
 
 			l1.ReadOnly = "value"
 
-			errs := ValidateAdvancedSpecification(l1, nil, OperationCreate).(Errors)
+			errs := ValidateAdvancedSpecification(l1, nil, OperationCreate).(Errors) // nolint
 
 			Convey("Then errs should not be nil", func() {
 				So(errs, ShouldNotBeNil)
@@ -68,7 +68,7 @@ func TestVerify_ValidateAdvancedSpecification(t *testing.T) {
 			l1.ReadOnly = "value"
 			l2.ReadOnly = "not value"
 
-			errs := ValidateAdvancedSpecification(l1, l2, OperationUpdate).(Errors)
+			errs := ValidateAdvancedSpecification(l1, l2, OperationUpdate).(Errors) // nolint
 
 			Convey("Then errs should not be nil", func() {
 				So(errs, ShouldNotBeNil)
@@ -94,7 +94,7 @@ func TestVerify_ValidateAdvancedSpecification(t *testing.T) {
 			l1.CreationOnly = "value"
 			l2.CreationOnly = "not value"
 
-			errs := ValidateAdvancedSpecification(l1, l2, OperationUpdate).(Errors)
+			errs := ValidateAdvancedSpecification(l1, l2, OperationUpdate).(Errors) // nolint
 
 			Convey("Then errs should not be nil", func() {
 				So(errs, ShouldNotBeNil)
@@ -111,7 +111,7 @@ func TestVerify_ValidateAdvancedSpecification(t *testing.T) {
 			l1.CreationOnly = "value"
 			l2.CreationOnly = "not value"
 
-			errs := ValidateAdvancedSpecification(l1, l2, OperationUpdate).(Errors)
+			errs := ValidateAdvancedSpecification(l1, l2, OperationUpdate).(Errors) // nolint
 
 			Convey("Then errs should not be nil", func() {
 				So(errs, ShouldNotBeNil)
