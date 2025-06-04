@@ -56,6 +56,17 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 									"description": "Represents a resource.",
 									"type": "object"
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
 						"paths": {
@@ -98,7 +109,13 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 									}
 								}
 							}
-						}
+						},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -160,6 +177,17 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 									"description": "Represents a resource.",
 									"type": "object"
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
 						"paths": {
@@ -195,7 +223,13 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 									}
 								}
 							}
-						}
+						},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -250,9 +284,26 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 									"description": "Represents a resource.",
 									"type": "object"
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -318,6 +369,17 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 							"description": "Represents a resource.",
 							"type": "object"
 						}
+					},
+					"securitySchemes": {
+						"BearerAuth": {
+							"scheme": "bearer",
+							"type": "http"
+						},
+						"NamespaceHeader": {
+							"in": "header",
+							"name": "X-Namespace",
+							"type": "apiKey"
+						}
 					}
 				},
 				"paths": {
@@ -350,7 +412,13 @@ func TestConverter_Do__specRelations_root_withPrivateModel(t *testing.T) {
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": [],
+						"NamespaceHeader": []
+					}
+				]
 			}
 		`,
 	}

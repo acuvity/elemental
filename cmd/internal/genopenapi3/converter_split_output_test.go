@@ -28,8 +28,26 @@ func TestConverter_Do__splitOutput_emptyRootModel(t *testing.T) {
 				"version": "1.0",
 				"title": "dummy"
 			},
-			"components": {},
-			"paths": {}
+			"components": {
+				"securitySchemes": {
+					"BearerAuth": {
+						"scheme": "bearer",
+						"type": "http"
+					},
+					"NamespaceHeader": {
+						"in": "header",
+						"name": "X-Namespace",
+						"type": "apiKey"
+					}
+				}
+			},
+			"paths": {},
+			"security": [
+				{
+					"BearerAuth": [],
+					"NamespaceHeader": []
+				}
+			]
 		}
 	`
 
@@ -139,6 +157,17 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 						"minesite": {
 							"description": "Represents a resource mine site.",
 							"type": "object"
+						}
+					},
+					"securitySchemes": {
+						"BearerAuth": {
+							"scheme": "bearer",
+							"type": "http"
+						},
+						"NamespaceHeader": {
+							"in": "header",
+							"name": "X-Namespace",
+							"type": "apiKey"
 						}
 					}
 				},
@@ -338,7 +367,13 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 							]
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": [],
+						"NamespaceHeader": []
+					}
+				]
 			}
 		`,
 
@@ -372,9 +407,26 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 							},
 							"type": "object"
 						}
+					},
+					"securitySchemes": {
+						"BearerAuth": {
+							"scheme": "bearer",
+							"type": "http"
+						},
+						"NamespaceHeader": {
+							"in": "header",
+							"name": "X-Namespace",
+							"type": "apiKey"
+						}
 					}
 				},
-				"paths": {}
+				"paths": {},
+					"security": [
+						{
+							"BearerAuth": [],
+							"NamespaceHeader": []
+						}
+					]
 			}
 		`,
 
@@ -403,9 +455,26 @@ func TestConverter_Do__split_output_complex(t *testing.T) {
 							"description": "Represents a full-time employee.",
 							"type": "object"
 						}
+					},
+					"securitySchemes": {
+						"BearerAuth": {
+							"scheme": "bearer",
+							"type": "http"
+						},
+						"NamespaceHeader": {
+							"in": "header",
+							"name": "X-Namespace",
+							"type": "apiKey"
+						}
 					}
 				},
-				"paths": {}
+				"paths": {},
+				"security": [
+					{
+						"BearerAuth": [],
+						"NamespaceHeader": []
+					}
+				]
 			}
 		`,
 	}
@@ -491,6 +560,17 @@ func TestConverter_Do__split_output_withPrivateModel(t *testing.T) {
 							"description": "Represents a resource mine site.",
 							"type": "object"
 						}
+					},
+					"securitySchemes": {
+						"BearerAuth": {
+							"scheme": "bearer",
+							"type": "http"
+						},
+						"NamespaceHeader": {
+							"in": "header",
+							"name": "X-Namespace",
+							"type": "apiKey"
+						}
 					}
 				},
 				"paths": {
@@ -518,7 +598,13 @@ func TestConverter_Do__split_output_withPrivateModel(t *testing.T) {
 							]
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": [],
+						"NamespaceHeader": []
+					}
+				]
 			}
 		`,
 	}

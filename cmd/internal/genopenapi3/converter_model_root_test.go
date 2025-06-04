@@ -34,8 +34,26 @@ func TestConverter_Do__model_root(t *testing.T) {
 							"version": "1.0",
 							"title": "dummy"
 						},
-						"components": {},
-						"paths": {}
+						"components": {
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
+							}
+						},
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},

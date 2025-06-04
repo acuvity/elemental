@@ -53,6 +53,17 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									"description": "useful description.",
 									"type": "object"
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
 						"paths": {
@@ -96,7 +107,13 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								}
 							}
-						}
+						},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -145,6 +162,17 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									"description": "useful description.",
 									"type": "object"
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
 						"paths": {
@@ -187,7 +215,13 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								}
 							}
-						}
+						},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -238,6 +272,17 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"resource": {
 									"description": "useful description.",
 									"type": "object"
+								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
 								}
 							}
 						},
@@ -291,7 +336,13 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								}
 							}
-						}
+						},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -338,6 +389,17 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 								"resource": {
 									"description": "useful description.",
 									"type": "object"
+								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
 								}
 							}
 						},
@@ -415,7 +477,13 @@ func TestConverter_Do__modelRelations_nonRoot(t *testing.T) {
 									}
 								}
 							}
-						}
+						},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},

@@ -45,9 +45,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 									"description": "empty model.",
 									"type": "object"
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -95,9 +112,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 									"description": "dummy.",
 									"type": "object"
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -135,8 +169,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 							"version": "1.0",
 							"title": "dummy"
 						},
-						"components": {},
-						"paths": {}
+						"components": {
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
+							}
+						},
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -223,9 +275,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 										}
 									}
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -282,9 +351,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 										}
 									}
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -338,9 +424,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 										}
 									}
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -447,9 +550,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 										}
 									}
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -504,9 +624,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 										}
 									}
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -577,9 +714,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 										}
 									}
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -650,9 +804,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 										}
 									}
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -707,9 +878,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 										}
 									}
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
@@ -775,9 +963,26 @@ func TestConverter_Do__modelsAndAttributes_nonRoot(t *testing.T) {
 										}
 									}
 								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
 							}
 						},
-						"paths": {}
+						"paths": {},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
 					}
 				`,
 			},
