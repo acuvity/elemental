@@ -167,6 +167,23 @@ func (f modelManager) AllIdentities() []elemental.Identity {
     return AllIdentities()
 }
 
+func(f modelManager) DetachedFromString(name string) any {
+
+    switch name {
+    {{ range .Set.Specifications }}
+    {{- if not .Model.IsRoot }}
+    {{- if .Model.Detached }}
+    case "{{ .Model.RestName }}", "{{.Model.EntityName}}":
+        return New{{ .Model.EntityName }}()
+    {{- end }}
+    {{- end }}
+    {{- end }}
+    default:
+        return nil
+    }
+}
+
+
 var manager = modelManager{}
 
 // Manager returns the model elemental.ModelManager.

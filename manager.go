@@ -55,4 +55,8 @@ type ModelManager interface {
 
 	// AllIdentities return the list of all existing identities.
 	AllIdentities() []Identity
+
+	// DetachedFromString returns the detached object with the given
+	// model name string.
+	DetachedFromString(string) any
 }

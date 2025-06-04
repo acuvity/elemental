@@ -3390,6 +3390,15 @@ func (f modelManager) AllIdentities() []Identity {
 	return AllIdentities()
 }
 
+func (f modelManager) DetachedFromString(name string) any {
+
+	switch name {
+
+	default:
+		return nil
+	}
+}
+
 var manager = modelManager{}
 
 // Manager returns the model ModelManager.
