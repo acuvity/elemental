@@ -5,6 +5,10 @@ export GO111MODULE = on
 
 default: lint test
 
+install-tools:
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+	go install github.com/securego/gosec/cmd/gosec@master
+
 lint:
 	golangci-lint run \
 		--timeout=5m \
