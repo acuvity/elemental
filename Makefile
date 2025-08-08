@@ -31,3 +31,7 @@ sec:
 .PHONY: test
 test:
 	go test ./... -race -cover -covermode=atomic -coverprofile=unit_coverage.out
+
+remod:
+	go get go.acuvity.ai/regolithe@master
+	go mod tidy
