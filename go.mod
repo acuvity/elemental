@@ -1,6 +1,6 @@
 module go.acuvity.ai/elemental
 
-go 1.24.6
+go 1.25.0
 
 require go.acuvity.ai/regolithe v0.0.0-20250718005833-3569c82da647
 
