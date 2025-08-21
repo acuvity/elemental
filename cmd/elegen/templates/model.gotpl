@@ -445,12 +445,19 @@ func (o *{{ .Spec.Model.EntityName }}) Validate() error {
     {{ end }}
 
     {{ if eq .Type "ref" }}
+    {{- if ne .Extensions.refMode "pointer" }}
+    elemental.ResetDefaultForZeroValues(o.{{ .ConvertedName }})
+    if err := o.{{ .ConvertedName }}.Validate(); err != nil {
+        errors = errors.Append(err)
+    }
+    {{ else }}
     if o.{{ .ConvertedName }} != nil {
         elemental.ResetDefaultForZeroValues(o.{{ .ConvertedName }})
         if err := o.{{ .ConvertedName }}.Validate(); err != nil {
             errors = errors.Append(err)
         }
     }
+    {{ end -}}
     {{ end }}
 
     {{ if or (eq .Type "refList") (eq .Type "refMap") }}
