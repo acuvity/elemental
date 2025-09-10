@@ -398,6 +398,8 @@ func (o *{{ .Spec.Model.EntityName }}) DeepCopyInto(out *{{ .Spec.Model.EntityNa
 // Validate valides the current information stored into the structure.
 func (o *{{ .Spec.Model.EntityName }}) Validate() error {
 
+    elemental.ResetDefaultForZeroValues(o)
+
     errors := elemental.Errors{}
     requiredErrors := elemental.Errors{}
 
@@ -446,13 +448,11 @@ func (o *{{ .Spec.Model.EntityName }}) Validate() error {
 
     {{ if eq .Type "ref" }}
     {{- if ne .Extensions.refMode "pointer" }}
-    elemental.ResetDefaultForZeroValues(o.{{ .ConvertedName }})
     if err := o.{{ .ConvertedName }}.Validate(); err != nil {
         errors = errors.Append(err)
     }
     {{ else }}
     if o.{{ .ConvertedName }} != nil {
-        elemental.ResetDefaultForZeroValues(o.{{ .ConvertedName }})
         if err := o.{{ .ConvertedName }}.Validate(); err != nil {
             errors = errors.Append(err)
         }
@@ -467,7 +467,6 @@ func (o *{{ .Spec.Model.EntityName }}) Validate() error {
             continue
         }
         {{ end -}}
-        elemental.ResetDefaultForZeroValues(sub)
         if err := sub.Validate(); err != nil {
             errors = errors.Append(err)
         }
