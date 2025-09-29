@@ -327,36 +327,6 @@ func (o *{{ .Spec.Model.EntityName }}) ToSparse(fields ...string) elemental.Spar
     return sp
 }
 
-{{- if $isEncryptable }}
-// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
-func (o *{{ .Spec.Model.EntityName }}) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
-    {{ range .Spec.Attributes $latestVersion }}
-    {{- if .Encrypted }}
-    if o.{{ .ConvertedName}}, err = encrypter.EncryptString(o.{{ .ConvertedName}}); err != nil {
-        return fmt.Errorf("unable to encrypt attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
-    }
-    {{- end }}
-    {{- end }}
-
-    return nil
-}
-
-// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
-func (o *{{ .Spec.Model.EntityName }}) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
-    {{ range .Spec.Attributes $latestVersion }}
-    {{- if .Encrypted }}
-    if o.{{ .ConvertedName}}, err = encrypter.DecryptString(o.{{ .ConvertedName}}); err != nil {
-        return fmt.Errorf("unable to decrypt attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
-    }
-    {{- end }}
-    {{- end }}
-
-    return nil
-}
-
-{{- end }}
-
-
 // Patch apply the non nil value of a *Sparse{{ .Spec.Model.EntityName }} to the object.
 func (o *{{ .Spec.Model.EntityName }}) Patch(sparse elemental.SparseIdentifiable) {
 
@@ -380,6 +350,92 @@ func (o *{{ .Spec.Model.EntityName }}) Patch(sparse elemental.SparseIdentifiable
    {{- end }}
 }
 {{- end }}
+
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *{{ .Spec.Model.EntityName }}) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+    {{ range .Spec.Attributes $latestVersion }}
+
+    {{- if .Encrypted }}
+    if o.{{ .ConvertedName}}, err = encrypter.EncryptString(o.{{ .ConvertedName}}); err != nil {
+        return fmt.Errorf("unable to encrypt attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+    }
+    {{- end }}
+
+    {{ if eq .Type "ref" }}
+    {{- if ne .Extensions.refMode "pointer" }}
+    if err := o.{{ .ConvertedName }}.EncryptAttributes(encrypter); err != nil {
+        return fmt.Errorf("unable to encrypt ref attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+    }
+    {{ else }}
+    if o.{{ .ConvertedName }} != nil {
+        if err := o.{{ .ConvertedName }}.EncryptAttributes(encrypter); err != nil {
+            return fmt.Errorf("unable to encrypt ref attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+        }
+    }
+    {{ end -}}
+    {{ end }}
+
+    {{ if or (eq .Type "refList") (eq .Type "refMap") }}
+    for _, sub := range o.{{ .ConvertedName }} {
+        {{- if ne .Extensions.refMode "nopointer" }}
+        if sub == nil {
+            continue
+        }
+        {{ end -}}
+        if err := sub.EncryptAttributes(encrypter); err != nil {
+            return fmt.Errorf("unable to encrypt refList/refMap attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+        }
+    }
+    {{ end }}
+
+    {{- end }}
+
+    return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *{{ .Spec.Model.EntityName }}) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+    {{ range .Spec.Attributes $latestVersion }}
+
+    {{- if .Encrypted }}
+    if o.{{ .ConvertedName}}, err = encrypter.DecryptString(o.{{ .ConvertedName}}); err != nil {
+        return fmt.Errorf("unable to decrypt attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+    }
+    {{- end }}
+
+    {{ if eq .Type "ref" }}
+    {{- if ne .Extensions.refMode "pointer" }}
+    if err := o.{{ .ConvertedName }}.DecryptAttributes(encrypter); err != nil {
+        return fmt.Errorf("unable to decrypt ref attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+    }
+    {{ else }}
+    if o.{{ .ConvertedName }} != nil {
+        if err := o.{{ .ConvertedName }}.DecryptAttributes(encrypter); err != nil {
+            return fmt.Errorf("unable to decrypt ref attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+        }
+    }
+    {{ end -}}
+    {{ end }}
+
+    {{ if or (eq .Type "refList") (eq .Type "refMap") }}
+    for _, sub := range o.{{ .ConvertedName }} {
+        {{- if ne .Extensions.refMode "nopointer" }}
+        if sub == nil {
+            continue
+        }
+        {{ end -}}
+        if err := sub.DecryptAttributes(encrypter); err != nil {
+            return fmt.Errorf("unable to decrypt refList/refMap attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+        }
+    }
+    {{ end }}
+
+    {{- end }}
+
+    return nil
+}
 
 // DeepCopy returns a deep copy if the {{ .Spec.Model.EntityName }}.
 func (o *{{ .Spec.Model.EntityName }}) DeepCopy() *{{ .Spec.Model.EntityName }} {
@@ -992,15 +1048,47 @@ func (o *Sparse{{ .Spec.Model.EntityName }}) ToPlain() elemental.PlainIdentifiab
     return out
 }
 
-{{- if $isEncryptable }}
 // EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
 func (o *Sparse{{ .Spec.Model.EntityName }}) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
     {{ range .Spec.Attributes $latestVersion }}
     {{- if .Encrypted }}
+
     if *o.{{ .ConvertedName}}, err = encrypter.EncryptString(*o.{{ .ConvertedName}}); err != nil {
         return fmt.Errorf("unable to encrypt attribute '{{ .ConvertedName}}' for 'Sparse{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
     }
     {{- end }}
+
+
+    {{ if eq .Type "ref" }}
+    {{- if ne .Extensions.refMode "pointer" }}
+    if err := o.{{ .ConvertedName }}.EncryptAttributes(encrypter); err != nil {
+        return fmt.Errorf("unable to encrypt ref attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+    }
+    {{ else }}
+    if o.{{ .ConvertedName }} != nil {
+        if err := o.{{ .ConvertedName }}.EncryptAttributes(encrypter); err != nil {
+            return fmt.Errorf("unable to encrypt ref attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+        }
+    }
+    {{ end -}}
+    {{ end }}
+
+    {{ if or (eq .Type "refList") (eq .Type "refMap") }}
+	if o.{{.ConvertedName}} != nil {
+		for _, sub := range *o.{{ .ConvertedName }} {
+			{{- if ne .Extensions.refMode "nopointer" }}
+			if sub == nil {
+				continue
+			}
+			{{ end -}}
+			if err := sub.EncryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to encrypt refList/refMap attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+			}
+		}
+	}
+    {{ end }}
+
     {{- end }}
 
     return nil
@@ -1008,17 +1096,48 @@ func (o *Sparse{{ .Spec.Model.EntityName }}) EncryptAttributes(encrypter element
 
 // DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
 func (o *Sparse{{ .Spec.Model.EntityName }}) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
     {{ range .Spec.Attributes $latestVersion }}
+
     {{- if .Encrypted }}
     if *o.{{ .ConvertedName}}, err = encrypter.DecryptString(*o.{{ .ConvertedName}}); err != nil {
         return fmt.Errorf("unable to decrypt attribute '{{ .ConvertedName}}' for 'Sparse{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
     }
     {{- end }}
+
+    {{ if eq .Type "ref" }}
+    {{- if ne .Extensions.refMode "pointer" }}
+    if err := o.{{ .ConvertedName }}.DecryptAttributes(encrypter); err != nil {
+        return fmt.Errorf("unable to decrypt ref attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+    }
+    {{ else }}
+    if o.{{ .ConvertedName }} != nil {
+        if err := o.{{ .ConvertedName }}.DecryptAttributes(encrypter); err != nil {
+            return fmt.Errorf("unable to decrypt ref attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+        }
+    }
+    {{ end -}}
+    {{ end }}
+
+    {{ if or (eq .Type "refList") (eq .Type "refMap") }}
+	if o.{{.ConvertedName}} != nil {
+		for _, sub := range *o.{{ .ConvertedName }} {
+			{{- if ne .Extensions.refMode "nopointer" }}
+			if sub == nil {
+				continue
+			}
+			{{ end -}}
+			if err := sub.DecryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to decrypt refList/refMap attribute '{{ .ConvertedName}}' for '{{ $.Spec.Model.EntityName }}' (%s): %s", o.Identifier(), err)
+			}
+		}
+	}
+    {{ end }}
+
     {{- end }}
 
     return nil
 }
-{{- end }}
 
 {{ range .Spec.Attributes $latestVersion }}
 {{ if shouldGenerateGetter . $.PublicMode }}
