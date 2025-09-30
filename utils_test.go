@@ -332,6 +332,10 @@ func TestUtils_isFieldValueZero(t *testing.T) {
 			var t time.Time
 			s := &S{"", false, 0, 0.0, nil, nil, t, &S{}}
 
+			Convey("Then isFieldValueZero on root S being nil should return true", func() {
+				So(isFieldValueZero("S", nil), ShouldBeTrue)
+			})
+
 			Convey("Then isFieldValueZero on S should return true", func() {
 				So(isFieldValueZero("S", s), ShouldBeTrue)
 			})

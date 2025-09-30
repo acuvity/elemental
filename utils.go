@@ -127,7 +127,12 @@ func areFieldValuesEqual(field string, o1, o2 any) bool {
 // isFieldValueZero check if the value of the given field is set to its zero value.
 func isFieldValueZero(field string, o any) bool {
 
-	return IsZero(reflect.Indirect(reflect.ValueOf(o)).FieldByName(field).Interface())
+	v := reflect.ValueOf(o)
+	if !v.IsValid() || v.IsZero() {
+		return true
+	}
+
+	return IsZero(reflect.Indirect(v).FieldByName(field).Interface())
 }
 
 // IsZero returns true if the given value is set to its Zero value.

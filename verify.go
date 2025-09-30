@@ -90,19 +90,108 @@ func ValidateAdvancedSpecification(obj AttributeSpecifiable, pristine AttributeS
 	return nil
 }
 
-// BackportUnexposedFields copy the values of unexposed fields from src to dest.
-func BackportUnexposedFields(src, dest AttributeSpecifiable) {
+// BackportUnexposedFields copy the values of unexposed and secret fields from src to dest.
+func BackportUnexposedFields(src, dst AttributeSpecifiable) {
 
 	for _, field := range extractFieldNames(src) {
 
 		spec := src.SpecificationForAttribute(field)
 
-		if !spec.Exposed {
-			reflect.Indirect(reflect.ValueOf(dest)).FieldByName(field).Set(reflect.Indirect(reflect.ValueOf(src)).FieldByName(field))
-		}
+		switch spec.Type {
 
-		if spec.Secret && isFieldValueZero(field, dest) {
-			reflect.Indirect(reflect.ValueOf(dest)).FieldByName(field).Set(reflect.Indirect(reflect.ValueOf(src)).FieldByName(field))
+		case "ref":
+
+			if rsrc, ok1 := src.ValueForAttribute(spec.Name).(AttributeSpecifiable); ok1 {
+				if rdst, ok2 := dst.ValueForAttribute(spec.Name).(AttributeSpecifiable); ok2 {
+					BackportUnexposedFields(rsrc, rdst)
+				}
+			}
+
+		case "refList":
+
+			rvsrc := reflect.ValueOf(src.ValueForAttribute(spec.Name))
+			rvdst := reflect.ValueOf(dst.ValueForAttribute(spec.Name))
+
+			if rvdst.Len() != rvsrc.Len() {
+				break
+			}
+
+			for i := 0; i < rvsrc.Len(); i++ {
+
+				isrc := rvsrc.Index(i)
+				if !isrc.IsValid() || !isrc.CanInterface() {
+					continue
+				}
+
+				vsrc, ok := isrc.Interface().(AttributeSpecifiable)
+				if !ok {
+					continue
+				}
+
+				idst := rvdst.Index(i)
+				if !idst.IsValid() || !idst.CanInterface() {
+					continue
+				}
+
+				vdst, ok := idst.Interface().(AttributeSpecifiable)
+				if !ok {
+					continue
+				}
+
+				BackportUnexposedFields(vsrc, vdst)
+			}
+
+		case "refMap":
+
+			rvsrc := reflect.ValueOf(src.ValueForAttribute(spec.Name))
+			rvdst := reflect.ValueOf(dst.ValueForAttribute(spec.Name))
+
+			if rvsrc.Len() != rvdst.Len() {
+				break
+			}
+
+			for _, e := range rvsrc.MapKeys() {
+
+				isrc := rvsrc.MapIndex(e)
+				if !isrc.IsValid() || !isrc.CanInterface() {
+					continue
+				}
+
+				vsrc, ok := isrc.Interface().(AttributeSpecifiable)
+				if !ok {
+					continue
+				}
+
+				idst := rvdst.MapIndex(e)
+				if !idst.IsValid() || !idst.CanInterface() {
+					continue
+				}
+
+				vdst, ok := idst.Interface().(AttributeSpecifiable)
+				if !ok {
+					continue
+				}
+
+				BackportUnexposedFields(vsrc, vdst)
+			}
+
+		default:
+
+			if !spec.Exposed {
+				if vdst := reflect.ValueOf(dst); vdst.IsValid() && !vdst.IsNil() {
+					if f := reflect.Indirect(vdst).FieldByName(field); f.IsValid() {
+						f.Set(reflect.Indirect(reflect.ValueOf(src)).FieldByName(field))
+					}
+				}
+			}
+
+			if spec.Secret && isFieldValueZero(field, dst) {
+				if vdst := reflect.ValueOf(dst); vdst.IsValid() && !vdst.IsNil() {
+					if f := reflect.Indirect(vdst).FieldByName(field); f.IsValid() {
+						f.Set(reflect.Indirect(reflect.ValueOf(src)).FieldByName(field))
+					}
+				}
+			}
 		}
 	}
 }

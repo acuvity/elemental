@@ -125,7 +125,7 @@ func TestVerify_ValidateAdvancedSpecification(t *testing.T) {
 
 func TestVerify_BackportUnexposedFields(t *testing.T) {
 
-	Convey("Given have to objects with unexposed fields", t, func() {
+	Convey("Given have two objects with unexposed fields", t, func() {
 
 		l1 := NewList()
 		l2 := NewList()
@@ -140,19 +140,14 @@ func TestVerify_BackportUnexposedFields(t *testing.T) {
 
 			BackportUnexposedFields(l1, l2)
 
-			Convey("Then the name should be different", func() {
-				So(l1.Name, ShouldEqual, "l1")
-				So(l2.Name, ShouldEqual, "l2")
-			})
-
-			Convey("Then the Unexposed attribute should be equal", func() {
-				So(l1.Unexposed, ShouldEqual, "u1")
-				So(l2.Unexposed, ShouldEqual, "u1")
-			})
+			So(l1.Name, ShouldEqual, "l1")
+			So(l2.Name, ShouldEqual, "l2")
+			So(l1.Unexposed, ShouldEqual, "u1")
+			So(l2.Unexposed, ShouldEqual, "u1")
 		})
 	})
 
-	Convey("Given have to objects with secret fields", t, func() {
+	Convey("Given have two objects with secret fields", t, func() {
 
 		l1 := NewList()
 		l2 := NewList()
@@ -164,10 +159,8 @@ func TestVerify_BackportUnexposedFields(t *testing.T) {
 
 			BackportUnexposedFields(l1, l2)
 
-			Convey("Then the Unexposed attribute should be equal", func() {
-				So(l1.Secret, ShouldEqual, "u1")
-				So(l2.Secret, ShouldEqual, "u1")
-			})
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l2.Secret, ShouldEqual, "u1")
 		})
 
 		Convey("When I backport secrets fields from l1 to l2 with empty changes in l2", func() {
@@ -177,10 +170,8 @@ func TestVerify_BackportUnexposedFields(t *testing.T) {
 
 			BackportUnexposedFields(l1, l2)
 
-			Convey("Then the Unexposed attribute should be equal", func() {
-				So(l1.Secret, ShouldEqual, "u1")
-				So(l2.Secret, ShouldEqual, "u1")
-			})
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l2.Secret, ShouldEqual, "u1")
 		})
 
 		Convey("When I backport secrets fields from l1 to l2 with changes in l2", func() {
@@ -190,10 +181,258 @@ func TestVerify_BackportUnexposedFields(t *testing.T) {
 
 			BackportUnexposedFields(l1, l2)
 
-			Convey("Then the Unexposed attribute should be equal", func() {
-				So(l1.Secret, ShouldEqual, "u1")
-				So(l2.Secret, ShouldEqual, "u2")
-			})
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l2.Secret, ShouldEqual, "u2")
+		})
+	})
+
+	Convey("Given have two objects with ref property with secret and unexposed fields", t, func() {
+
+		l1 := NewList()
+		l1.Ref = NewTask()
+		l2 := NewList()
+		l2.Ref = NewTask()
+
+		Convey("When I backport secrets fields from l1 to l2 with no change in l2", func() {
+
+			l1.Secret = "u1"
+			l1.Ref.Secret = "t1"
+			l2.Secret = "u1"
+			l2.Ref.Secret = "t1"
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.Ref.Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u1")
+			So(l2.Ref.Secret, ShouldEqual, "t1")
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 with empty changes in l2", func() {
+
+			l1.Secret = "u1"
+			l1.Ref.Secret = "t1"
+			l2.Secret = ""
+			l2.Ref.Secret = ""
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.Ref.Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u1")
+			So(l2.Ref.Secret, ShouldEqual, "t1")
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 with changes in l2", func() {
+
+			l1.Secret = "u1"
+			l1.Ref.Secret = "t1"
+			l2.Secret = "u2"
+			l2.Ref.Secret = "t2"
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.Ref.Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u2")
+			So(l2.Ref.Secret, ShouldEqual, "t2")
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 but l2 ref is nil", func() {
+
+			l1.Secret = "u1"
+			l1.Ref.Secret = "t1"
+			l2.Secret = "u2"
+			l2.Ref = nil
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.Ref.Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u2")
+			So(l2.Ref, ShouldBeNil)
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 but l1 ref is nil", func() {
+
+			l1.Secret = "u1"
+			l1.Ref = nil
+			l2.Secret = "u2"
+			l2.Ref.Secret = "t1"
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.Ref, ShouldBeNil)
+			So(l2.Secret, ShouldEqual, "u2")
+			So(l2.Ref.Secret, ShouldEqual, "t1")
+		})
+	})
+
+	Convey("Given have two objects with refList property with secret and unexposed fields", t, func() {
+
+		l1 := NewList()
+		l1.RefList = TasksList{NewTask()}
+		l2 := NewList()
+		l2.RefList = TasksList{NewTask()}
+
+		Convey("When I backport secrets fields from l1 to l2 with no change in l2", func() {
+
+			l1.Secret = "u1"
+			l1.RefList[0].Secret = "t1"
+			l2.Secret = "u1"
+			l2.RefList[0].Secret = "t1"
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefList[0].Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u1")
+			So(l2.RefList[0].Secret, ShouldEqual, "t1")
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 with empty changes in l2", func() {
+
+			l1.Secret = "u1"
+			l1.RefList[0].Secret = "t1"
+			l2.Secret = ""
+			l2.RefList[0].Secret = ""
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefList[0].Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u1")
+			So(l2.RefList[0].Secret, ShouldEqual, "t1")
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 with changes in l2", func() {
+
+			l1.Secret = "u1"
+			l1.RefList[0].Secret = "t1"
+			l2.Secret = "u2"
+			l2.RefList[0].Secret = "t2"
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefList[0].Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u2")
+			So(l2.RefList[0].Secret, ShouldEqual, "t2")
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 but l2 refList is nil", func() {
+
+			l1.Secret = "u1"
+			l1.RefList[0].Secret = "t1"
+			l2.Secret = "u2"
+			l2.RefList = nil
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefList[0].Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u2")
+			So(l2.RefList, ShouldBeNil)
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 but l1 refList is nil", func() {
+
+			l1.Secret = "u1"
+			l1.RefList = nil
+			l2.Secret = "u2"
+			l2.RefList[0].Secret = "t2"
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefList, ShouldBeNil)
+			So(l2.Secret, ShouldEqual, "u2")
+			So(l2.RefList[0].Secret, ShouldEqual, "t2")
+		})
+
+	})
+
+	Convey("Given have two objects with refMap property with secret and unexposed fields", t, func() {
+
+		l1 := NewList()
+		l1.RefMap = map[string]*Task{"a": NewTask()}
+		l2 := NewList()
+		l2.RefMap = map[string]*Task{"a": NewTask()}
+
+		Convey("When I backport secrets fields from l1 to l2 with no change in l2", func() {
+
+			l1.Secret = "u1"
+			l1.RefMap["a"].Secret = "t1"
+			l2.Secret = "u1"
+			l2.RefMap["a"].Secret = "t1"
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefMap["a"].Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u1")
+			So(l2.RefMap["a"].Secret, ShouldEqual, "t1")
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 with empty changes in l2", func() {
+
+			l1.Secret = "u1"
+			l1.RefMap["a"].Secret = "t1"
+			l2.Secret = ""
+			l2.RefMap["a"].Secret = ""
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefMap["a"].Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u1")
+			So(l2.RefMap["a"].Secret, ShouldEqual, "t1")
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 with changes in l2", func() {
+
+			l1.Secret = "u1"
+			l1.RefMap["a"].Secret = "t1"
+			l2.Secret = "u2"
+			l2.RefMap["a"].Secret = "t2"
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefMap["a"].Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u2")
+			So(l2.RefMap["a"].Secret, ShouldEqual, "t2")
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 but l2 refMap is nil", func() {
+
+			l1.Secret = "u1"
+			l1.RefMap["a"].Secret = "t1"
+			l2.Secret = "u2"
+			l2.RefMap = nil
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefMap["a"].Secret, ShouldEqual, "t1")
+			So(l2.Secret, ShouldEqual, "u2")
+			So(l2.RefMap, ShouldBeNil)
+		})
+
+		Convey("When I backport secrets fields from l1 to l2 but l1 refMap is nil", func() {
+
+			l1.Secret = "u1"
+			l1.RefMap = nil
+			l2.Secret = "u2"
+			l2.RefMap["a"].Secret = "t2"
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Secret, ShouldEqual, "u1")
+			So(l1.RefMap, ShouldBeNil)
+			So(l2.Secret, ShouldEqual, "u2")
+			So(l2.RefMap["a"].Secret, ShouldEqual, "t2")
 		})
 	})
 }
