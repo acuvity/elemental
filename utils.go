@@ -25,7 +25,7 @@ func RemoveZeroValues(obj any) {
 	for _, field := range extractFieldNames(obj) {
 		v := vv.FieldByName(field)
 
-		if v.Kind() != reflect.Ptr {
+		if v.Kind() != reflect.Pointer {
 			continue
 		}
 
@@ -68,7 +68,7 @@ func extractFieldNames(obj any) []string {
 	c := val.NumField()
 	fields := make([]string, c)
 
-	for i := 0; i < c; i++ {
+	for i := range c {
 		fields[i] = val.Type().Field(i).Name
 	}
 

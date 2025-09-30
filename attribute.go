@@ -215,7 +215,7 @@ func ResetSecretAttributesValues(obj any) {
 	}
 
 	v := reflect.ValueOf(obj)
-	if v.Kind() == reflect.Ptr && v.IsNil() {
+	if v.Kind() == reflect.Pointer && v.IsNil() {
 		return
 	}
 
