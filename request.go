@@ -15,6 +15,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"io"
+	"maps"
 	"net/http"
 	"strconv"
 	"strings"
@@ -366,17 +367,9 @@ func (r *Request) Duplicate() *Request {
 	req.ContentType = r.ContentType
 	req.Accept = r.Accept
 
-	for k, v := range r.Headers {
-		req.Headers[k] = v
-	}
-
-	for k, v := range r.Parameters {
-		req.Parameters[k] = v
-	}
-
-	for k, v := range r.Metadata {
-		req.Metadata[k] = v
-	}
+	maps.Copy(req.Headers, r.Headers)
+	maps.Copy(req.Parameters, r.Parameters)
+	maps.Copy(req.Metadata, r.Metadata)
 
 	return req
 }
