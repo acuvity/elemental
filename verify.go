@@ -210,11 +210,46 @@ func ResetDefaultForZeroValues(obj any) {
 
 		spec := o.SpecificationForAttribute(field)
 
-		if spec.DefaultValue == nil || !isFieldValueZero(field, o) {
-			continue
-		}
+		switch spec.Type {
 
-		reflect.Indirect(reflect.ValueOf(o)).FieldByName(field).Set(reflect.ValueOf(spec.DefaultValue))
+		case "ref":
+			ResetDefaultForZeroValues(o.ValueForAttribute(spec.Name))
+
+		case "refList":
+
+			lst := reflect.ValueOf(o.ValueForAttribute(spec.Name))
+
+			for i := 0; i < lst.Len(); i++ {
+
+				sub := lst.Index(i)
+				if !sub.IsValid() || !sub.CanInterface() {
+					continue
+				}
+
+				ResetDefaultForZeroValues(sub.Interface())
+			}
+
+		case "refMap":
+
+			mp := reflect.ValueOf(o.ValueForAttribute(spec.Name))
+
+			for _, k := range mp.MapKeys() {
+
+				sub := mp.MapIndex(k)
+				if !sub.IsValid() || !sub.CanInterface() {
+					continue
+				}
+
+				ResetDefaultForZeroValues(sub.Interface())
+			}
+
+		default:
+			if spec.DefaultValue == nil || !isFieldValueZero(field, o) {
+				continue
+			}
+
+			reflect.Indirect(reflect.ValueOf(o)).FieldByName(field).Set(reflect.ValueOf(spec.DefaultValue))
+		}
 	}
 }
 

@@ -439,21 +439,90 @@ func TestVerify_BackportUnexposedFields(t *testing.T) {
 
 func TestVerify_ResetDefaultForZeroValues(t *testing.T) {
 
-	Convey("Given I have a task with an empty string as status", t, func() {
+	Convey("When I call ResetDefaultForZeroValues", t, func() {
 
 		task := NewTask()
 		task.Status = ""
+		ResetDefaultForZeroValues(task)
 
-		Convey("When I call ResetDefaultForZeroValues", func() {
-
-			ResetDefaultForZeroValues(task)
-
-			Convey("Then the stats should be reset", func() {
-				So(task.Status, ShouldEqual, "TODO")
-			})
-		})
-
+		So(task.Status, ShouldEqual, "TODO")
 	})
+
+	Convey("When I call ResetDefaultForZeroValues on ref", t, func() {
+
+		t1 := NewTask()
+		t1.Status = ""
+
+		lst := NewList()
+		lst.Ref = t1
+		ResetDefaultForZeroValues(lst)
+
+		So(lst.Ref.Status, ShouldEqual, "TODO")
+
+		t1 = NewTask()
+		t1.Status = "DONE"
+
+		lst = NewList()
+		lst.Ref = t1
+		ResetDefaultForZeroValues(lst)
+
+		So(lst.Ref.Status, ShouldEqual, "DONE")
+	})
+
+	Convey("When I call ResetDefaultForZeroValues on refList", t, func() {
+
+		t1 := NewTask()
+		t1.Status = ""
+
+		t2 := NewTask()
+		t2.Status = ""
+
+		t3 := NewTask()
+		t3.Status = "DONE"
+
+		lst := NewList()
+		lst.RefList = TasksList{t1, t2, t3}
+
+		So(lst.RefList[0].Status, ShouldEqual, "")
+		So(lst.RefList[1].Status, ShouldEqual, "")
+		So(lst.RefList[2].Status, ShouldEqual, "DONE")
+
+		ResetDefaultForZeroValues(lst)
+
+		So(lst.RefList[0].Status, ShouldEqual, "TODO")
+		So(lst.RefList[1].Status, ShouldEqual, "TODO")
+		So(lst.RefList[2].Status, ShouldEqual, "DONE")
+	})
+
+	Convey("When I call ResetDefaultForZeroValues on refMap", t, func() {
+
+		t1 := NewTask()
+		t1.Status = ""
+
+		t2 := NewTask()
+		t2.Status = ""
+
+		t3 := NewTask()
+		t3.Status = "DONE"
+
+		lst := NewList()
+		lst.RefMap = map[string]*Task{
+			"t1": t1,
+			"t2": t2,
+			"t3": t3,
+		}
+
+		So(lst.RefMap["t1"].Status, ShouldEqual, "")
+		So(lst.RefMap["t2"].Status, ShouldEqual, "")
+		So(lst.RefMap["t3"].Status, ShouldEqual, "DONE")
+
+		ResetDefaultForZeroValues(lst)
+
+		So(lst.RefMap["t1"].Status, ShouldEqual, "TODO")
+		So(lst.RefMap["t2"].Status, ShouldEqual, "TODO")
+		So(lst.RefMap["t3"].Status, ShouldEqual, "DONE")
+	})
+
 }
 
 func TestVerify_ResetMaps(t *testing.T) {
