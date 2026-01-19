@@ -312,8 +312,16 @@ type aesAttributeEncrypter struct {
 func NewAESAttributeEncrypter(passphrase string) (AttributeEncrypter, error) {
 
 	passbytes := []byte(passphrase)
-	if len(passbytes) != aes.BlockSize {
-		return nil, fmt.Errorf("invalid passphrase: size must be exactly %d bytes", aes.BlockSize)
+
+	switch len(passbytes) {
+	case 16:
+		break
+	case 24:
+		break
+	case 32:
+		break
+	default:
+		return nil, fmt.Errorf("the length for AES Attribute encrypter must be 16, 24 or 32 bytes long (current length %d) to select AES-128, AES-192 or AES-256", len(passbytes))
 	}
 
 	return &aesAttributeEncrypter{
