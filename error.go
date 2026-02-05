@@ -137,8 +137,7 @@ func (e Errors) Append(errs ...error) Errors {
 // given trace ID.
 func (e Errors) Trace(id string) Errors {
 
-	out := Errors{}
-
+	out := make(Errors, 0, len(e))
 	for _, err := range e {
 		err.Trace = id
 		out = append(out, err)
@@ -203,4 +202,39 @@ func IsValidationError(err error, title string, attribute string) bool {
 	}
 
 	return m["attribute"].(string) == attribute
+}
+
+func InjectAttributePath(err error, path string) {
+
+	if path == "" {
+		return
+	}
+
+	eerrs := Errors{}
+	if !errors.As(err, &eerrs) {
+		eerr := Error{}
+		if !errors.As(err, &eerr) {
+			return
+		}
+		eerrs = append(eerrs, eerr)
+	}
+
+	for _, eerr := range eerrs {
+
+		if data, ok := eerr.Data.(map[string]any); ok {
+			if v, ok := data["attribute"]; ok {
+				if vs, ok := v.(string); ok {
+					data["attribute"] = fmt.Sprintf("%s/%s", path, vs)
+					eerr.Data = data
+				}
+			}
+		}
+
+		if data, ok := eerr.Data.(map[string]string); ok {
+			if v, ok := data["attribute"]; ok {
+				data["attribute"] = fmt.Sprintf("%s/%s", path, v)
+				eerr.Data = data
+			}
+		}
+	}
 }

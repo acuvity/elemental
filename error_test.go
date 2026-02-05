@@ -397,3 +397,153 @@ func TestIsErrorWithCode(t *testing.T) {
 		})
 	}
 }
+
+func TestSetValidateErrorPath(t *testing.T) {
+	type args struct {
+		err  error
+		path string
+	}
+	tests := []struct {
+		name  string
+		args  func(t *testing.T) args
+		paths []any
+	}{
+		{
+			"2 level",
+			func(*testing.T) args {
+				return args{
+					err:  NewErrorWithData("test", "desc", "sub", 1, map[string]any{"attribute": "name"}),
+					path: "parent",
+				}
+			},
+			[]any{"parent/name"},
+		},
+		{
+			"3 level",
+			func(*testing.T) args {
+				return args{
+					err:  NewErrorWithData("test", "desc", "sub", 1, map[string]string{"attribute": "parent/name"}),
+					path: "gparent",
+				}
+			},
+			[]any{"gparent/parent/name"},
+		},
+		{
+			"empty path",
+			func(*testing.T) args {
+				return args{
+					err:  NewErrorWithData("test", "desc", "sub", 1, map[string]any{"attribute": "name"}),
+					path: "",
+				}
+			},
+			[]any{"name"},
+		},
+		{
+			"nil data",
+			func(*testing.T) args {
+				return args{
+					err:  NewErrorWithData("test", "desc", "sub", 1, nil),
+					path: "p",
+				}
+			},
+			[]any{},
+		},
+		{
+
+			"empty data",
+			func(*testing.T) args {
+				return args{
+					err:  NewErrorWithData("test", "desc", "sub", 1, map[string]any{}),
+					path: "p",
+				}
+			},
+			[]any{},
+		},
+		{
+
+			"missing attribute key",
+			func(*testing.T) args {
+				return args{
+					err:  NewErrorWithData("test", "desc", "sub", 1, map[string]any{"dog": "cool"}),
+					path: "p",
+				}
+			},
+			[]any{},
+		},
+		{
+
+			"attribute value is not a string",
+			func(*testing.T) args {
+				return args{
+					err:  NewErrorWithData("test", "desc", "sub", 1, map[string]any{"attribute": 42}),
+					path: "p",
+				}
+			},
+
+			[]any{42},
+		},
+		{
+			"elemental errors",
+			func(*testing.T) args {
+				return args{
+					err: Errors{
+						NewErrorWithData("test", "desc", "sub", 1, map[string]any{"attribute": "name"}),
+						NewErrorWithData("test", "desc", "sub", 2, map[string]string{"attribute": "surname"}),
+					},
+					path: "asd",
+				}
+			},
+			[]any{"asd/name", "asd/surname"},
+		},
+		{
+			"elemental errors with one weird",
+			func(*testing.T) args {
+				return args{
+					err: Errors{
+						NewErrorWithData("test", "desc", "sub", 1, map[string]any{"attribute": "name"}),
+						NewErrorWithData("test", "desc", "sub", 2, map[string]any{"not-attr": "surname"}),
+						NewErrorWithData("test", "desc", "sub", 3, map[string]any{"attribute": "age"}),
+					},
+					path: "asd",
+				}
+			},
+			[]any{"asd/name", nil, "asd/age"},
+		},
+
+		{
+			"not elemental error",
+			func(*testing.T) args {
+				return args{
+					err:  fmt.Errorf("boom"),
+					path: "asd",
+				}
+			},
+			[]any{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tArgs := tt.args(t)
+
+			InjectAttributePath(tArgs.err, tArgs.path)
+
+			eerrs := Errors{}
+
+			if !errors.As(tArgs.err, &eerrs) {
+				eerr := Error{}
+				if errors.As(tArgs.err, &eerr) {
+					eerrs = append(eerrs, eerr)
+				}
+			}
+
+			for i, eerr := range eerrs {
+				if edata, ok := eerr.Data.(map[string]any); ok {
+					if epath, ok := edata["attribute"]; ok && epath != tt.paths[i] {
+						t.Errorf("invalid path: want '%s', got '%s'", tt.paths[i], epath)
+					}
+				}
+			}
+		})
+	}
+}
