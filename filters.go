@@ -78,7 +78,7 @@ type FilterValues [][]any
 // Then adds a new value to the receiver and returns it.
 func (f FilterValues) add(values ...any) FilterValues {
 
-	fv := FilterValue{}
+	fv := make(FilterValue, 0, len(values))
 	for _, v := range values {
 		fv = append(fv, v)
 	}
@@ -338,14 +338,14 @@ func (f *Filter) String() string {
 			}
 
 		case AndFilterOperator:
-			var strs []string
+			strs := make([]string, 0, len(f.ands[i]))
 			for _, andf := range f.ands[i] {
 				strs = append(strs, fmt.Sprintf("(%s)", andf))
 			}
 			writeString(&buffer, fmt.Sprintf("(%s)", strings.Join(strs, " and ")))
 
 		case OrFilterOperator:
-			var strs []string
+			strs := make([]string, 0, len(f.ors[i]))
 			for _, orf := range f.ors[i] {
 				strs = append(strs, fmt.Sprintf("(%s)", orf))
 			}
