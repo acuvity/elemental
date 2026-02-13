@@ -537,7 +537,7 @@ func (o *{{ .Spec.Model.EntityName }}) Validate() error {
         {{ end -}}
         if err := sub.Validate(); err != nil {
             errors = errors.Append(err)
-            elemental.InjectAttributePath(errors, fmt.Sprintf("%s/%d", "{{ .Name }}", i))
+            elemental.InjectAttributePath(errors, fmt.Sprintf("%s/%v", "{{ .Name }}", i))
         }
     }
     {{ end }}
