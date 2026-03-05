@@ -349,6 +349,12 @@ func TestFilter_NewComposer(t *testing.T) {
 					So(f.String(), ShouldEqual, `hello == 1 and ((x != true))`)
 				})
 			})
+
+			Convey("When a string contains double quotes", func() {
+				f.And(NewFilter().WithKey("x").Equals(`"coucou"`).Done())
+				So(f.String(), ShouldEqual, `hello == 1 and ((x == "\"coucou\""))`)
+			})
+
 		})
 	})
 }

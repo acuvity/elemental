@@ -421,7 +421,7 @@ func translateValue(comparator FilterComparator, value any) string {
 	switch v.Kind() {
 
 	case reflect.String:
-		return fmt.Sprintf(`"%s"`, v.Interface())
+		return fmt.Sprintf(`"%s"`, strings.ReplaceAll(v.Interface().(string), `"`, `\"`))
 
 	case reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64,
 		reflect.Int8, reflect.Uint, reflect.Uint16, reflect.Uint32,

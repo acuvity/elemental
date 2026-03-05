@@ -93,7 +93,9 @@ func (s *scanner) scan() (parserToken, string) {
 	}
 
 	if s.isLetter(ch) || s.isDigit(ch) {
-		s.unread()
+		if ch != runeBACKSLASH {
+			s.unread()
+		}
 		return s.scanWord()
 	}
 

@@ -34,6 +34,7 @@ const (
 	parserTokenAND
 	parserTokenOR
 	parserTokenQUOTE
+	parserTokenBACKSLASH
 	parserTokenSINGLEQUOTE
 	parserTokenEQUAL
 	parserTokenNOTEQUAL
@@ -88,6 +89,7 @@ const (
 	runeLEFTSQUAREBRACKET  = '['
 	runeRIGHTSQUAREBRACKET = ']'
 	runeCOMMA              = ','
+	runeBACKSLASH          = '\\'
 )
 
 var specialLetters = map[rune]any{
@@ -144,6 +146,7 @@ var (
 		runeLEFTSQUAREBRACKET:  parserTokenLEFTSQUAREBRACKET,
 		runeRIGHTSQUAREBRACKET: parserTokenRIGHTSQUAREBRACKET,
 		runeCOMMA:              parserTokenCOMMA,
+		runeBACKSLASH:          parserTokenBACKSLASH,
 	}
 )
 
@@ -619,6 +622,7 @@ func (p *FilterParser) parseDateValue() (time.Time, error) {
 func (p *FilterParser) parseUntilQuoteSimilar(tokenQuote parserToken) (string, error) {
 
 	var word string
+
 	// Scan everything until the next quote or the end of the input
 	for {
 		token, literal := p.scan()

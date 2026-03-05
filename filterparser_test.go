@@ -721,6 +721,23 @@ func TestParser_Values_StringType(t *testing.T) {
 		})
 	})
 
+	Convey(`Given the string value: "\"hello world\""`, t, func() {
+
+		parser := NewFilterParser(`key == "\"hello world\""`)
+		expectedFilter := NewFilterComposer().WithKey("key").Equals(`"hello world"`).Done()
+
+		Convey("When I run Parse", func() {
+
+			filter, err := parser.Parse()
+
+			Convey("Then there should be no error and the filter should as expected", func() {
+				So(err, ShouldEqual, nil)
+				So(filter, ShouldNotEqual, nil)
+				So(filter.String(), ShouldEqual, expectedFilter.String())
+			})
+		})
+	})
+
 	Convey("Given the string value with single quote: 'hello world'", t, func() {
 
 		parser := NewFilterParser("key == 'hello world'")
