@@ -541,17 +541,18 @@ func (p *FilterParser) parseExpression(prefix string, regex *regexp.Regexp) (str
 		return "", errorInvalidExpression
 	}
 
-	expression := literal
+	var expression strings.Builder
+	expression.WriteString(literal)
 	token, literal := p.scanIgnoreWhitespace()
 	if token != parserTokenLEFTPARENTHESIS {
 		p.unscan()
 		return "", errorInvalidExpression
 	}
 
-	expression += literal
+	expression.WriteString(literal)
 	for { // Read the expression until the next )
 		token, literal = p.scan()
-		expression += literal
+		expression.WriteString(literal)
 
 		if token == parserTokenLEFTPARENTHESIS ||
 			token == parserTokenEOF {
@@ -563,7 +564,7 @@ func (p *FilterParser) parseExpression(prefix string, regex *regexp.Regexp) (str
 		}
 	}
 
-	matches := regex.FindStringSubmatch(expression)
+	matches := regex.FindStringSubmatch(expression.String())
 	if len(matches) != 2 {
 		return "", errorInvalidExpression
 	}
