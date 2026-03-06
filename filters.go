@@ -418,6 +418,10 @@ func translateValue(comparator FilterComparator, value any) string {
 		}
 	}
 
+	if v.Kind() == reflect.Interface && !v.IsNil() {
+		v = v.Elem()
+	}
+
 	switch v.Kind() {
 
 	case reflect.String:
