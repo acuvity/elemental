@@ -12,6 +12,8 @@
 package elemental
 
 import (
+	"fmt"
+	"reflect"
 	"testing"
 	"time"
 
@@ -593,4 +595,49 @@ func Test_translateOperator(t *testing.T) {
 			So(func() { translateOperator(FilterOperator(42)) }, ShouldPanicWith, `Unknown operator: 42`)
 		})
 	})
+}
+
+func Test_translateValue(t *testing.T) {
+	type tt string
+	var thello tt = "hello"
+
+	d := time.Unix(42000000, 0)
+
+	thing := struct{ t int }{t: 42}
+
+	type args struct {
+		comparator FilterComparator
+		value      any
+	}
+	tests := []struct {
+		name string
+		args args
+
+		want1 string
+	}{
+		{"string", args{GreaterComparator, "hello"}, `"hello"`},
+		{"string with backslash", args{GreaterComparator, `"hello"`}, `"\"hello\""`},
+		{"string as type", args{GreaterComparator, thello}, `"hello"`},
+		{"int", args{GreaterComparator, 42}, "42"},
+		{"float", args{GreaterComparator, 42.69}, "42.690000"},
+		{"duration", args{GreaterComparator, 42 * time.Second}, `now("42s")`},
+		{"zero duration", args{GreaterComparator, 0 * time.Second}, `now()`},
+		{"bool", args{GreaterComparator, true}, `true`},
+		{"slice with non slice comp", args{EqualComparator, []string{"a", "b"}}, `"a"`},
+		{"slice with slice comp", args{InComparator, []string{"a", `"b"`}}, `["a", "\"b\""]`},
+		{"time", args{EqualComparator, d}, fmt.Sprintf(`date("%s")`, d.Format(time.RFC3339))},
+		{"struct", args{EqualComparator, thing}, "{42}"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tArgs := tt.args
+
+			got1 := translateValue(tArgs.comparator, tArgs.value)
+
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("translateValue got1 = %v, want1: %v", got1, tt.want1)
+			}
+		})
+	}
 }

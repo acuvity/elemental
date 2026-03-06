@@ -414,14 +414,14 @@ func translateValue(comparator FilterComparator, value any) string {
 		comparator != NotInComparator &&
 		comparator != MatchComparator {
 		if v.Kind() == reflect.Slice || v.Kind() == reflect.Array {
-			v = reflect.ValueOf(v.Index(0).Interface())
+			v = v.Index(0)
 		}
 	}
 
 	switch v.Kind() {
 
 	case reflect.String:
-		return fmt.Sprintf(`"%s"`, strings.ReplaceAll(v.Interface().(string), `"`, `\"`))
+		return fmt.Sprintf(`"%s"`, strings.ReplaceAll(v.String(), `"`, `\"`))
 
 	case reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64,
 		reflect.Int8, reflect.Uint, reflect.Uint16, reflect.Uint32,
