@@ -51,9 +51,9 @@ func (o UnmarshalableListsList) Append(objects ...elemental.Identifiable) elemen
 // List converts the object to an elemental.IdentifiablesList.
 func (o UnmarshalableListsList) List() elemental.IdentifiablesList {
 
-	out := elemental.IdentifiablesList{}
-	for _, item := range o {
-		out = append(out, item)
+	out := make(elemental.IdentifiablesList, len(o))
+	for i := range o {
+		out[i] = o[i]
 	}
 
 	return out

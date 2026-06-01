@@ -2,11 +2,11 @@ package elemental
 
 import (
 	"fmt"
-	"time"
 	"slices"
+	"time"
 
-    "github.com/globalsign/mgo/bson"
-    "github.com/mitchellh/copystructure"
+	"github.com/globalsign/mgo/bson"
+	"github.com/mitchellh/copystructure"
 )
 
 //lint:file-ignore U1000 auto generated code.
@@ -2100,6 +2100,7 @@ type mongoAttributesSparseTask struct {
 	Secret      *string          `bson:"secret,omitempty"`
 	Status      *TaskStatusValue `bson:"status,omitempty"`
 }
+
 // UnmarshalableListIdentity represents the Identity of the object.
 var UnmarshalableListIdentity = Identity{Name: "list", Category: "lists"}
 
@@ -2133,9 +2134,9 @@ func (o UnmarshalableListsList) Append(objects ...Identifiable) Identifiables {
 // List converts the object to an IdentifiablesList.
 func (o UnmarshalableListsList) List() IdentifiablesList {
 
-	out := IdentifiablesList{}
-	for _, item := range o {
-		out = append(out, item)
+	out := make(IdentifiablesList, len(o))
+	for i := range o {
+		out[i] = o[i]
 	}
 
 	return out
