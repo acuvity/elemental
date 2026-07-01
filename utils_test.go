@@ -60,6 +60,7 @@ func TestUtils_areFieldValuesEqual(t *testing.T) {
 		Map     map[string]any
 		Int     int
 		Float   float64
+		PtrInt  *int
 	}
 
 	Convey("Given I have 2 list", t, func() {
@@ -194,6 +195,49 @@ func TestUtils_areFieldValuesEqual(t *testing.T) {
 
 			Convey("Then the values should not be equal", func() {
 				So(areFieldValuesEqual("Map", s1, s2), ShouldBeFalse)
+			})
+		})
+		Convey("When I set a pointer with same value", func() {
+
+			i := 42
+			s1.PtrInt = &i
+			s2.PtrInt = &i
+
+			Convey("Then the values should be equal", func() {
+				So(areFieldValuesEqual("PtrInt", s1, s2), ShouldBeTrue)
+			})
+		})
+
+		Convey("When I set a pointer with different values", func() {
+
+			i1 := 42
+			i2 := 43
+			s1.PtrInt = &i1
+			s2.PtrInt = &i2
+
+			Convey("Then the values should not be equal", func() {
+				So(areFieldValuesEqual("PtrInt", s1, s2), ShouldBeFalse)
+			})
+		})
+
+		Convey("When I set one pointer to nil", func() {
+
+			i := 42
+			s1.PtrInt = &i
+			s2.PtrInt = nil
+
+			Convey("Then the values should not be equal", func() {
+				So(areFieldValuesEqual("PtrInt", s1, s2), ShouldBeFalse)
+			})
+		})
+
+		Convey("When I set both pointers to nil", func() {
+
+			s1.PtrInt = nil
+			s2.PtrInt = nil
+
+			Convey("Then the values should be equal", func() {
+				So(areFieldValuesEqual("PtrInt", s1, s2), ShouldBeTrue)
 			})
 		})
 	})

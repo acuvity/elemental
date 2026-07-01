@@ -121,6 +121,13 @@ func areFieldValuesEqual(field string, o1, o2 any) bool {
 		return reflect.DeepEqual(field1.Interface(), field2.Interface())
 	}
 
+	if field1.Kind() == reflect.Pointer {
+		if field1.IsNil() || field2.IsNil() {
+			return field1.IsNil() == field2.IsNil()
+		}
+		return reflect.DeepEqual(field1.Interface(), field2.Interface())
+	}
+
 	return field1.Interface() == field2.Interface()
 }
 
