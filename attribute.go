@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"slices"
 
 	"go.acuvity.ai/regolithe/spec"
 )
@@ -307,13 +308,15 @@ type aesAttributeEncrypter struct {
 	passphrase []byte
 }
 
+var AllowedKeySize = []int{16, 24, 32}
+
 // NewAESAttributeEncrypter returns a new elemental.AttributeEncrypter
 // implementing AES encryption.
 func NewAESAttributeEncrypter(passphrase string) (AttributeEncrypter, error) {
 
 	passbytes := []byte(passphrase)
-	if len(passbytes) != aes.BlockSize {
-		return nil, fmt.Errorf("invalid passphrase: size must be exactly %d bytes", aes.BlockSize)
+	if !slices.Contains(AllowedKeySize, len(passbytes)) {
+		return nil, fmt.Errorf("invalid passphrase: size must be either of %v", AllowedKeySize)
 	}
 
 	return &aesAttributeEncrypter{

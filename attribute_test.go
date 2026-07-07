@@ -207,7 +207,7 @@ func Test_ResetSecretAttributesValues(t *testing.T) {
 
 func TestNewAESEncrypter(t *testing.T) {
 
-	Convey("Given I call AESAttributeEncrypter with valid passphrase", t, func() {
+	Convey("Given I call AESAttributeEncrypter with valid 16 byte passphrase", t, func() {
 
 		enc, err := NewAESAttributeEncrypter("0123456789ABCDEF")
 
@@ -220,13 +220,39 @@ func TestNewAESEncrypter(t *testing.T) {
 		})
 	})
 
+	Convey("Given I call AESAttributeEncrypter with valid 24 byte passphrase", t, func() {
+
+		enc, err := NewAESAttributeEncrypter("0123456789ABCDEF01234567")
+
+		Convey("Then err should be nil", func() {
+			So(err, ShouldBeNil)
+		})
+
+		Convey("Then enc should be correct", func() {
+			So(enc.(*aesAttributeEncrypter).passphrase, ShouldResemble, []byte("0123456789ABCDEF01234567"))
+		})
+	})
+
+	Convey("Given I call AESAttributeEncrypter with valid 32 byte passphrase", t, func() {
+
+		enc, err := NewAESAttributeEncrypter("0123456789ABCDEF0123456789ABCDEF")
+
+		Convey("Then err should be nil", func() {
+			So(err, ShouldBeNil)
+		})
+
+		Convey("Then enc should be correct", func() {
+			So(enc.(*aesAttributeEncrypter).passphrase, ShouldResemble, []byte("0123456789ABCDEF0123456789ABCDEF"))
+		})
+	})
+
 	Convey("Given I call AESAttributeEncrypter with passphrase that is too small", t, func() {
 
 		enc, err := NewAESAttributeEncrypter("0123456789ABCDE")
 
 		Convey("Then err should not be nil", func() {
 			So(err, ShouldNotBeNil)
-			So(err.Error(), ShouldEqual, "invalid passphrase: size must be exactly 16 bytes")
+			So(err.Error(), ShouldEqual, "invalid passphrase: size must be either of [16 24 32]")
 		})
 
 		Convey("Then enc should be nil", func() {
@@ -236,11 +262,11 @@ func TestNewAESEncrypter(t *testing.T) {
 
 	Convey("Given I call AESAttributeEncrypter with passphrase that is too long", t, func() {
 
-		enc, err := NewAESAttributeEncrypter("0123456789ABCDE WEEEE")
+		enc, err := NewAESAttributeEncrypter("0123456789ABCDE WEEEE111WEEEE111WEEEE111")
 
 		Convey("Then err should not be nil", func() {
 			So(err, ShouldNotBeNil)
-			So(err.Error(), ShouldEqual, "invalid passphrase: size must be exactly 16 bytes")
+			So(err.Error(), ShouldEqual, "invalid passphrase: size must be either of [16 24 32]")
 		})
 
 		Convey("Then enc should be nil", func() {
