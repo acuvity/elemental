@@ -12,16 +12,12 @@
 package elemental
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
-	"encoding/base64"
 	"fmt"
-	"io"
 	"reflect"
 	"slices"
 
 	"go.acuvity.ai/regolithe/spec"
+	"go.acuvity.ai/tg/tglib"
 )
 
 // An AttributeSpecifiable is the interface an object must implement in order to access specification of its attributes.
@@ -327,61 +323,11 @@ func NewAESAttributeEncrypter(passphrase string) (AttributeEncrypter, error) {
 // EncryptString encrypts the given string.
 func (e *aesAttributeEncrypter) EncryptString(value string) (string, error) {
 
-	if value == "" {
-		return "", nil
-	}
-
-	data := []byte(value)
-
-	c, err := aes.NewCipher(e.passphrase)
-	if err != nil {
-		return "", err
-	}
-
-	gcm, err := cipher.NewGCM(c)
-	if err != nil {
-		return "", err
-	}
-
-	nonce := make([]byte, gcm.NonceSize())
-	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
-		return "", err
-	}
-
-	return base64.StdEncoding.EncodeToString(gcm.Seal(nonce, nonce, data, nil)), nil
+	return tglib.EncryptStringAES(value, e.passphrase)
 }
 
 // DecryptString decrypts the given string.
 func (e *aesAttributeEncrypter) DecryptString(value string) (string, error) {
 
-	if value == "" {
-		return "", nil
-	}
-
-	data, err := base64.StdEncoding.DecodeString(value)
-	if err != nil {
-		return "", err
-	}
-
-	c, err := aes.NewCipher(e.passphrase)
-	if err != nil {
-		return "", err
-	}
-
-	gcm, err := cipher.NewGCM(c)
-	if err != nil {
-		return "", err
-	}
-
-	nonceSize := gcm.NonceSize()
-	if len(data) < nonceSize {
-		return "", fmt.Errorf("data is too small")
-	}
-
-	out, err := gcm.Open(nil, data[:nonceSize], data[nonceSize:], nil)
-	if err != nil {
-		return "", err
-	}
-
-	return string(out), nil
+	return tglib.DecryptStringAES(value, e.passphrase)
 }
