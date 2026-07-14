@@ -180,3 +180,10 @@ type Propagatable interface {
 	GetProgagate() bool
 	Namespaceable
 }
+
+// Parentable is the interface of an object that is a child object and
+// has a relationship to its parent through a parent ID.
+type Parentable interface {
+	GetParentID() string
+	SetParentID(string)
+}
