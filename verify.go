@@ -103,7 +103,10 @@ func BackportUnexposedFields(src, dst AttributeSpecifiable) {
 
 			if rsrc, ok1 := src.ValueForAttribute(spec.Name).(AttributeSpecifiable); ok1 {
 				if rdst, ok2 := dst.ValueForAttribute(spec.Name).(AttributeSpecifiable); ok2 {
-					BackportUnexposedFields(rsrc, rdst)
+					rvdst := reflect.ValueOf(rdst)
+					if !rvdst.IsNil() && rvdst.IsValid() {
+						BackportUnexposedFields(rsrc, rdst)
+					}
 				}
 			}
 
