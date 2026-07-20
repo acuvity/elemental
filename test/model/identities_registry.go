@@ -7,17 +7,19 @@ import "go.acuvity.ai/elemental"
 
 var (
 	identityNamesMap = map[string]elemental.Identity{
-		"list": ListIdentity,
-		"root": RootIdentity,
-		"task": TaskIdentity,
-		"user": UserIdentity,
+		"list":    ListIdentity,
+		"root":    RootIdentity,
+		"subtask": SubtaskIdentity,
+		"task":    TaskIdentity,
+		"user":    UserIdentity,
 	}
 
 	identitycategoriesMap = map[string]elemental.Identity{
-		"lists": ListIdentity,
-		"root":  RootIdentity,
-		"tasks": TaskIdentity,
-		"users": UserIdentity,
+		"lists":    ListIdentity,
+		"root":     RootIdentity,
+		"subtasks": SubtaskIdentity,
+		"tasks":    TaskIdentity,
+		"users":    UserIdentity,
 	}
 
 	aliasesMap = map[string]elemental.Identity{
@@ -27,10 +29,11 @@ var (
 	}
 
 	indexesMap = map[string][][]string{
-		"list": nil,
-		"root": nil,
-		"task": nil,
-		"user": nil,
+		"list":    nil,
+		"root":    nil,
+		"subtask": nil,
+		"task":    nil,
+		"user":    nil,
 	}
 )
 
@@ -75,6 +78,8 @@ func (f modelManager) Identifiable(identity elemental.Identity) elemental.Identi
 		return NewList()
 	case RootIdentity:
 		return NewRoot()
+	case SubtaskIdentity:
+		return NewSubtask()
 	case TaskIdentity:
 		return NewTask()
 	case UserIdentity:
@@ -90,6 +95,8 @@ func (f modelManager) SparseIdentifiable(identity elemental.Identity) elemental.
 
 	case ListIdentity:
 		return NewSparseList()
+	case SubtaskIdentity:
+		return NewSparseSubtask()
 	case TaskIdentity:
 		return NewSparseTask()
 	case UserIdentity:
@@ -115,6 +122,8 @@ func (f modelManager) Identifiables(identity elemental.Identity) elemental.Ident
 
 	case ListIdentity:
 		return &ListsList{}
+	case SubtaskIdentity:
+		return &SubtasksList{}
 	case TaskIdentity:
 		return &TasksList{}
 	case UserIdentity:
@@ -130,6 +139,8 @@ func (f modelManager) SparseIdentifiables(identity elemental.Identity) elemental
 
 	case ListIdentity:
 		return &SparseListsList{}
+	case SubtaskIdentity:
+		return &SparseSubtasksList{}
 	case TaskIdentity:
 		return &SparseTasksList{}
 	case UserIdentity:
@@ -173,6 +184,7 @@ func AllIdentities() []elemental.Identity {
 	return []elemental.Identity{
 		ListIdentity,
 		RootIdentity,
+		SubtaskIdentity,
 		TaskIdentity,
 		UserIdentity,
 	}
@@ -187,6 +199,8 @@ func AliasesForIdentity(identity elemental.Identity) []string {
 			"lst",
 		}
 	case RootIdentity:
+		return []string{}
+	case SubtaskIdentity:
 		return []string{}
 	case TaskIdentity:
 		return []string{

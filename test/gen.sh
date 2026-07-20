@@ -24,6 +24,7 @@ import (
 EOF
 {
 	tail -n +15 model/list.go
+	tail -n +14 model/subtask.go
 	tail -n +14 model/task.go
 	tail -n +21 model/unmarshalable.go
 	tail -n +14 model/user.go

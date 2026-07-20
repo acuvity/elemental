@@ -194,8 +194,8 @@ func (o *List) GetBSON() (any, error) {
 // This is used to transparently convert ID to MongoDBID as ObectID.
 func (o *List) SetBSON(raw bson.Raw) error {
 
-	if o == nil {
-		return nil
+	if o == nil || raw.Kind == bson.ElementNil {
+		return bson.ErrSetZero
 	}
 
 	s := &mongoAttributesList{}
@@ -374,6 +374,66 @@ func (o *List) Patch(sparse elemental.SparseIdentifiable) {
 	}
 }
 
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *List) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	if o.Ref != nil {
+		if err := o.Ref.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt ref attribute 'Ref' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.RefList {
+		if sub == nil {
+			continue
+		}
+		if err := sub.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt refList/refMap attribute 'RefList' for 'List' (%s): %s", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.RefMap {
+		if sub == nil {
+			continue
+		}
+		if err := sub.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt refList/refMap attribute 'RefMap' for 'List' (%s): %s", o.Identifier(), err)
+		}
+	}
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *List) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	if o.Ref != nil {
+		if err := o.Ref.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt ref attribute 'Ref' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.RefList {
+		if sub == nil {
+			continue
+		}
+		if err := sub.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt refList/refMap attribute 'RefList' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.RefMap {
+		if sub == nil {
+			continue
+		}
+		if err := sub.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt refList/refMap attribute 'RefMap' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
+}
+
 // DeepCopy returns a deep copy if the List.
 func (o *List) DeepCopy() *List {
 
@@ -400,6 +460,8 @@ func (o *List) DeepCopyInto(out *List) {
 
 // Validate valides the current information stored into the structure.
 func (o *List) Validate() error {
+
+	elemental.ResetDefaultForZeroValues(o)
 
 	errors := elemental.Errors{}
 	requiredErrors := elemental.Errors{}
@@ -1155,6 +1217,74 @@ func (o *SparseList) ToPlain() elemental.PlainIdentifiable {
 	}
 
 	return out
+}
+
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *SparseList) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	if o.Ref != nil {
+		if err := o.Ref.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt ref attribute 'Ref' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	if o.RefList != nil {
+		for _, sub := range *o.RefList {
+			if sub == nil {
+				continue
+			}
+			if err := sub.EncryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to encrypt refList/refMap attribute 'RefList' for 'List' (%s): %w", o.Identifier(), err)
+			}
+		}
+	}
+
+	if o.RefMap != nil {
+		for _, sub := range *o.RefMap {
+			if sub == nil {
+				continue
+			}
+			if err := sub.EncryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to encrypt refList/refMap attribute 'RefMap' for 'List' (%s): %w", o.Identifier(), err)
+			}
+		}
+	}
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *SparseList) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	if o.Ref != nil {
+		if err := o.Ref.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt ref attribute 'Ref' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	if o.RefList != nil {
+		for _, sub := range *o.RefList {
+			if sub == nil {
+				continue
+			}
+			if err := sub.DecryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to decrypt refList/refMap attribute 'RefList' for 'List' (%s): %w", o.Identifier(), err)
+			}
+		}
+	}
+
+	if o.RefMap != nil {
+		for _, sub := range *o.RefMap {
+			if sub == nil {
+				continue
+			}
+			if err := sub.DecryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to decrypt refList/refMap attribute 'RefMap' for 'List' (%s): %w", o.Identifier(), err)
+			}
+		}
+	}
+
+	return nil
 }
 
 // GetName returns the Name of the receiver.

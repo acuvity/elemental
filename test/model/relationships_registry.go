@@ -130,6 +130,21 @@ func init() {
 
 	relationshipsRegistry[RootIdentity] = &elemental.Relationship{}
 
+	relationshipsRegistry[SubtaskIdentity] = &elemental.Relationship{
+		Update: map[string]*elemental.RelationshipInfo{
+			"root": {},
+		},
+		Patch: map[string]*elemental.RelationshipInfo{
+			"root": {},
+		},
+		Delete: map[string]*elemental.RelationshipInfo{
+			"root": {},
+		},
+		Retrieve: map[string]*elemental.RelationshipInfo{
+			"root": {},
+		},
+	}
+
 	relationshipsRegistry[TaskIdentity] = &elemental.Relationship{
 		Create: map[string]*elemental.RelationshipInfo{
 			"list": {

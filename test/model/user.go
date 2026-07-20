@@ -161,8 +161,8 @@ func (o *User) GetBSON() (any, error) {
 // This is used to transparently convert ID to MongoDBID as ObectID.
 func (o *User) SetBSON(raw bson.Raw) error {
 
-	if o == nil {
-		return nil
+	if o == nil || raw.Kind == bson.ElementNil {
+		return bson.ErrSetZero
 	}
 
 	s := &mongoAttributesUser{}
@@ -292,6 +292,18 @@ func (o *User) Patch(sparse elemental.SparseIdentifiable) {
 	}
 }
 
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *User) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *User) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	return nil
+}
+
 // DeepCopy returns a deep copy if the User.
 func (o *User) DeepCopy() *User {
 
@@ -318,6 +330,8 @@ func (o *User) DeepCopyInto(out *User) {
 
 // Validate valides the current information stored into the structure.
 func (o *User) Validate() error {
+
+	elemental.ResetDefaultForZeroValues(o)
 
 	errors := elemental.Errors{}
 	requiredErrors := elemental.Errors{}
@@ -811,6 +825,18 @@ func (o *SparseUser) ToPlain() elemental.PlainIdentifiable {
 	}
 
 	return out
+}
+
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *SparseUser) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *SparseUser) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	return nil
 }
 
 // GetArchived returns the Archived of the receiver.

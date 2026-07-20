@@ -2,11 +2,11 @@ package elemental
 
 import (
 	"fmt"
-	"slices"
 	"time"
+	"slices"
 
-	"github.com/globalsign/mgo/bson"
-	"github.com/mitchellh/copystructure"
+    "github.com/globalsign/mgo/bson"
+    "github.com/mitchellh/copystructure"
 )
 
 //lint:file-ignore U1000 auto generated code.
@@ -192,8 +192,8 @@ func (o *List) GetBSON() (any, error) {
 // This is used to transparently convert ID to MongoDBID as ObectID.
 func (o *List) SetBSON(raw bson.Raw) error {
 
-	if o == nil {
-		return nil
+	if o == nil || raw.Kind == bson.ElementNil {
+		return bson.ErrSetZero
 	}
 
 	s := &mongoAttributesList{}
@@ -372,6 +372,66 @@ func (o *List) Patch(sparse SparseIdentifiable) {
 	}
 }
 
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *List) EncryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	if o.Ref != nil {
+		if err := o.Ref.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt ref attribute 'Ref' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.RefList {
+		if sub == nil {
+			continue
+		}
+		if err := sub.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt refList/refMap attribute 'RefList' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.RefMap {
+		if sub == nil {
+			continue
+		}
+		if err := sub.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt refList/refMap attribute 'RefMap' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *List) DecryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	if o.Ref != nil {
+		if err := o.Ref.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt ref attribute 'Ref' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.RefList {
+		if sub == nil {
+			continue
+		}
+		if err := sub.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt refList/refMap attribute 'RefList' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.RefMap {
+		if sub == nil {
+			continue
+		}
+		if err := sub.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt refList/refMap attribute 'RefMap' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
+}
+
 // DeepCopy returns a deep copy if the List.
 func (o *List) DeepCopy() *List {
 
@@ -398,6 +458,8 @@ func (o *List) DeepCopyInto(out *List) {
 
 // Validate valides the current information stored into the structure.
 func (o *List) Validate() error {
+
+	ResetDefaultForZeroValues(o)
 
 	errors := Errors{}
 	requiredErrors := Errors{}
@@ -1155,6 +1217,74 @@ func (o *SparseList) ToPlain() PlainIdentifiable {
 	return out
 }
 
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *SparseList) EncryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	if o.Ref != nil {
+		if err := o.Ref.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt ref attribute 'Ref' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	if o.RefList != nil {
+		for _, sub := range *o.RefList {
+			if sub == nil {
+				continue
+			}
+			if err := sub.EncryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to encrypt refList/refMap attribute 'RefList' for 'List' (%s): %w", o.Identifier(), err)
+			}
+		}
+	}
+
+	if o.RefMap != nil {
+		for _, sub := range *o.RefMap {
+			if sub == nil {
+				continue
+			}
+			if err := sub.EncryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to encrypt refList/refMap attribute 'RefMap' for 'List' (%s): %w", o.Identifier(), err)
+			}
+		}
+	}
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *SparseList) DecryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	if o.Ref != nil {
+		if err := o.Ref.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt ref attribute 'Ref' for 'List' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	if o.RefList != nil {
+		for _, sub := range *o.RefList {
+			if sub == nil {
+				continue
+			}
+			if err := sub.DecryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to decrypt refList/refMap attribute 'RefList' for 'List' (%s): %w", o.Identifier(), err)
+			}
+		}
+	}
+
+	if o.RefMap != nil {
+		for _, sub := range *o.RefMap {
+			if sub == nil {
+				continue
+			}
+			if err := sub.DecryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to decrypt refList/refMap attribute 'RefMap' for 'List' (%s): %w", o.Identifier(), err)
+			}
+		}
+	}
+
+	return nil
+}
+
 // GetName returns the Name of the receiver.
 func (o *SparseList) GetName() (out string) {
 
@@ -1226,6 +1356,691 @@ type mongoAttributesSparseList struct {
 	Secret       *string           `bson:"secret,omitempty"`
 	Slice        *[]string         `bson:"slice,omitempty"`
 	Unexposed    *string           `bson:"unexposed,omitempty"`
+}
+
+// SubtaskIdentity represents the Identity of the object.
+var SubtaskIdentity = Identity{
+	Name:     "subtask",
+	Category: "subtasks",
+	Package:  "todo-list",
+	Private:  false,
+}
+
+// SubtasksList represents a list of Subtasks
+type SubtasksList []*Subtask
+
+// Identity returns the identity of the objects in the list.
+func (o SubtasksList) Identity() Identity {
+
+	return SubtaskIdentity
+}
+
+// Copy returns a pointer to a copy the SubtasksList.
+func (o SubtasksList) Copy() Identifiables {
+
+	out := slices.Clone(o)
+	return &out
+}
+
+// Append appends the objects to the a new copy of the SubtasksList.
+func (o SubtasksList) Append(objects ...Identifiable) Identifiables {
+
+	out := slices.Clone(o)
+	for _, obj := range objects {
+		out = append(out, obj.(*Subtask))
+	}
+
+	return out
+}
+
+// List converts the object to an IdentifiablesList.
+func (o SubtasksList) List() IdentifiablesList {
+
+	out := make(IdentifiablesList, len(o))
+	for i := range len(o) {
+		out[i] = o[i]
+	}
+
+	return out
+}
+
+// DefaultOrder returns the default ordering fields of the content.
+func (o SubtasksList) DefaultOrder() []string {
+
+	return []string{}
+}
+
+// ToSparse returns the SubtasksList converted to SparseSubtasksList.
+// Objects in the list will only contain the given fields. No field means entire field set.
+func (o SubtasksList) ToSparse(fields ...string) Identifiables {
+
+	out := make(SparseSubtasksList, len(o))
+	for i := range len(o) {
+		out[i] = o[i].ToSparse(fields...).(*SparseSubtask)
+	}
+
+	return out
+}
+
+// Version returns the version of the content.
+func (o SubtasksList) Version() int {
+
+	return 1
+}
+
+// Subtask represents the model of a subtask
+type Subtask struct {
+	// The identifier.
+	ID string `json:"ID" msgpack:"ID" bson:"-" mapstructure:"ID,omitempty"`
+
+	// The Name.
+	Name string `json:"Name" msgpack:"Name" bson:"name" mapstructure:"Name,omitempty"`
+
+	// The identifier of the parent of the object.
+	ParentID string `json:"parentID" msgpack:"parentID" bson:"parentid" mapstructure:"parentID,omitempty"`
+
+	// The type of the parent of the object.
+	ParentType string `json:"parentType" msgpack:"parentType" bson:"parenttype" mapstructure:"parentType,omitempty"`
+
+	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
+}
+
+// NewSubtask returns a new *Subtask
+func NewSubtask() *Subtask {
+
+	return &Subtask{
+		ModelVersion: 1,
+	}
+}
+
+// Identity returns the Identity of the object.
+func (o *Subtask) Identity() Identity {
+
+	return SubtaskIdentity
+}
+
+// Identifier returns the value of the object's unique identifier.
+func (o *Subtask) Identifier() string {
+
+	return o.ID
+}
+
+// SetIdentifier sets the value of the object's unique identifier.
+func (o *Subtask) SetIdentifier(id string) {
+
+	o.ID = id
+}
+
+// GetBSON implements the bson marshaling interface.
+// This is used to transparently convert ID to MongoDBID as ObectID.
+func (o *Subtask) GetBSON() (any, error) {
+
+	if o == nil {
+		return nil, nil
+	}
+
+	s := &mongoAttributesSubtask{}
+
+	if o.ID != "" {
+		s.ID = bson.ObjectIdHex(o.ID)
+	}
+	s.Name = o.Name
+	s.ParentID = o.ParentID
+	s.ParentType = o.ParentType
+
+	return s, nil
+}
+
+// SetBSON implements the bson marshaling interface.
+// This is used to transparently convert ID to MongoDBID as ObectID.
+func (o *Subtask) SetBSON(raw bson.Raw) error {
+
+	if o == nil || raw.Kind == bson.ElementNil {
+		return bson.ErrSetZero
+	}
+
+	s := &mongoAttributesSubtask{}
+	if err := raw.Unmarshal(s); err != nil {
+		return err
+	}
+
+	o.ID = s.ID.Hex()
+	o.Name = s.Name
+	o.ParentID = s.ParentID
+	o.ParentType = s.ParentType
+
+	return nil
+}
+
+// Version returns the hardcoded version of the model.
+func (o *Subtask) Version() int {
+
+	return 1
+}
+
+// BleveType implements the bleve.Classifier Interface.
+func (o *Subtask) BleveType() string {
+
+	return "subtask"
+}
+
+// DefaultOrder returns the list of default ordering fields.
+func (o *Subtask) DefaultOrder() []string {
+
+	return []string{}
+}
+
+// Doc returns the documentation for the object
+func (o *Subtask) Doc() string {
+
+	return `Represent a subtask object.`
+}
+
+func (o *Subtask) String() string {
+
+	return fmt.Sprintf("<%s:%s>", o.Identity().Name, o.Identifier())
+}
+
+// ToSparse returns the sparse version of the model.
+// The returned object will only contain the given fields. No field means entire field set.
+func (o *Subtask) ToSparse(fields ...string) SparseIdentifiable {
+
+	if len(fields) == 0 {
+		// nolint: goimports
+		return &SparseSubtask{
+			ID:         &o.ID,
+			Name:       &o.Name,
+			ParentID:   &o.ParentID,
+			ParentType: &o.ParentType,
+		}
+	}
+
+	sp := &SparseSubtask{}
+	for _, f := range fields {
+		switch f {
+		case "ID":
+			sp.ID = &(o.ID)
+		case "Name":
+			sp.Name = &(o.Name)
+		case "parentID":
+			sp.ParentID = &(o.ParentID)
+		case "parentType":
+			sp.ParentType = &(o.ParentType)
+		}
+	}
+
+	return sp
+}
+
+// Patch apply the non nil value of a *SparseSubtask to the object.
+func (o *Subtask) Patch(sparse SparseIdentifiable) {
+	if !sparse.Identity().IsEqual(o.Identity()) {
+		panic("cannot patch from a parse with different identity")
+	}
+
+	so := sparse.(*SparseSubtask)
+	if so.ID != nil {
+		o.ID = *so.ID
+	}
+	if so.Name != nil {
+		o.Name = *so.Name
+	}
+	if so.ParentID != nil {
+		o.ParentID = *so.ParentID
+	}
+	if so.ParentType != nil {
+		o.ParentType = *so.ParentType
+	}
+}
+
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *Subtask) EncryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *Subtask) DecryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
+// DeepCopy returns a deep copy if the Subtask.
+func (o *Subtask) DeepCopy() *Subtask {
+
+	if o == nil {
+		return nil
+	}
+
+	out := &Subtask{}
+	o.DeepCopyInto(out)
+
+	return out
+}
+
+// DeepCopyInto copies the receiver into the given *Subtask.
+func (o *Subtask) DeepCopyInto(out *Subtask) {
+
+	target, err := copystructure.Copy(o)
+	if err != nil {
+		panic(fmt.Sprintf("Unable to deepcopy Subtask: %s", err))
+	}
+
+	*out = *target.(*Subtask)
+}
+
+// Validate valides the current information stored into the structure.
+func (o *Subtask) Validate() error {
+
+	ResetDefaultForZeroValues(o)
+
+	errors := Errors{}
+	requiredErrors := Errors{}
+
+	if len(requiredErrors) > 0 {
+		return requiredErrors
+	}
+
+	if len(errors) > 0 {
+		return errors
+	}
+
+	return nil
+}
+
+// SpecificationForAttribute returns the AttributeSpecification for the given attribute name key.
+func (*Subtask) SpecificationForAttribute(name string) AttributeSpecification {
+
+	if v, ok := SubtaskAttributesMap[name]; ok {
+		return v
+	}
+
+	// We could not find it, so let's check on the lower case indexed spec map
+	return SubtaskLowerCaseAttributesMap[name]
+}
+
+// AttributeSpecifications returns the full attribute specifications map.
+func (*Subtask) AttributeSpecifications() map[string]AttributeSpecification {
+
+	return SubtaskAttributesMap
+}
+
+// ValueForAttribute returns the value for the given attribute.
+// This is a very advanced function that you should not need but in some
+// very specific use cases.
+func (o *Subtask) ValueForAttribute(name string) any {
+
+	switch name {
+	case "ID":
+		return o.ID
+	case "Name":
+		return o.Name
+	case "parentID":
+		return o.ParentID
+	case "parentType":
+		return o.ParentType
+	}
+
+	return nil
+}
+
+// SubtaskAttributesMap represents the map of attribute for Subtask.
+var SubtaskAttributesMap = map[string]AttributeSpecification{
+	"ID": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "_id",
+		ConvertedName:  "ID",
+		Description:    `The identifier.`,
+		Exposed:        true,
+		Filterable:     true,
+		Identifier:     true,
+		Name:           "ID",
+		Orderable:      true,
+		PrimaryKey:     true,
+		ReadOnly:       true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"Name": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "name",
+		ConvertedName:  "Name",
+		Description:    `The Name.`,
+		Exposed:        true,
+		Filterable:     true,
+		Name:           "Name",
+		Orderable:      true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"ParentID": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "parentid",
+		ConvertedName:  "ParentID",
+		Description:    `The identifier of the parent of the object.`,
+		Exposed:        true,
+		Filterable:     true,
+		ForeignKey:     true,
+		Name:           "parentID",
+		Orderable:      true,
+		ReadOnly:       true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"ParentType": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "parenttype",
+		ConvertedName:  "ParentType",
+		Description:    `The type of the parent of the object.`,
+		Exposed:        true,
+		Filterable:     true,
+		Name:           "parentType",
+		Orderable:      true,
+		ReadOnly:       true,
+		Stored:         true,
+		Type:           "string",
+	},
+}
+
+// SubtaskLowerCaseAttributesMap represents the map of attribute for Subtask.
+var SubtaskLowerCaseAttributesMap = map[string]AttributeSpecification{
+	"id": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "_id",
+		ConvertedName:  "ID",
+		Description:    `The identifier.`,
+		Exposed:        true,
+		Filterable:     true,
+		Identifier:     true,
+		Name:           "ID",
+		Orderable:      true,
+		PrimaryKey:     true,
+		ReadOnly:       true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"name": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "name",
+		ConvertedName:  "Name",
+		Description:    `The Name.`,
+		Exposed:        true,
+		Filterable:     true,
+		Name:           "Name",
+		Orderable:      true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"parentid": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "parentid",
+		ConvertedName:  "ParentID",
+		Description:    `The identifier of the parent of the object.`,
+		Exposed:        true,
+		Filterable:     true,
+		ForeignKey:     true,
+		Name:           "parentID",
+		Orderable:      true,
+		ReadOnly:       true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"parenttype": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "parenttype",
+		ConvertedName:  "ParentType",
+		Description:    `The type of the parent of the object.`,
+		Exposed:        true,
+		Filterable:     true,
+		Name:           "parentType",
+		Orderable:      true,
+		ReadOnly:       true,
+		Stored:         true,
+		Type:           "string",
+	},
+}
+
+// SparseSubtasksList represents a list of SparseSubtasks
+type SparseSubtasksList []*SparseSubtask
+
+// Identity returns the identity of the objects in the list.
+func (o SparseSubtasksList) Identity() Identity {
+
+	return SubtaskIdentity
+}
+
+// Copy returns a pointer to a copy the SparseSubtasksList.
+func (o SparseSubtasksList) Copy() Identifiables {
+
+	copy := slices.Clone(o)
+	return &copy
+}
+
+// Append appends the objects to the a new copy of the SparseSubtasksList.
+func (o SparseSubtasksList) Append(objects ...Identifiable) Identifiables {
+
+	out := slices.Clone(o)
+	for _, obj := range objects {
+		out = append(out, obj.(*SparseSubtask))
+	}
+
+	return out
+}
+
+// List converts the object to an IdentifiablesList.
+func (o SparseSubtasksList) List() IdentifiablesList {
+
+	out := make(IdentifiablesList, len(o))
+	for i := range len(o) {
+		out[i] = o[i]
+	}
+
+	return out
+}
+
+// DefaultOrder returns the default ordering fields of the content.
+func (o SparseSubtasksList) DefaultOrder() []string {
+
+	return []string{}
+}
+
+// ToPlain returns the SparseSubtasksList converted to SubtasksList.
+func (o SparseSubtasksList) ToPlain() IdentifiablesList {
+
+	out := make(IdentifiablesList, len(o))
+	for i := range len(o) {
+		out[i] = o[i].ToPlain()
+	}
+
+	return out
+}
+
+// Version returns the version of the content.
+func (o SparseSubtasksList) Version() int {
+
+	return 1
+}
+
+// SparseSubtask represents the sparse version of a subtask.
+type SparseSubtask struct {
+	// The identifier.
+	ID *string `json:"ID,omitempty" msgpack:"ID,omitempty" bson:"-" mapstructure:"ID,omitempty"`
+
+	// The Name.
+	Name *string `json:"Name,omitempty" msgpack:"Name,omitempty" bson:"name,omitempty" mapstructure:"Name,omitempty"`
+
+	// The identifier of the parent of the object.
+	ParentID *string `json:"parentID,omitempty" msgpack:"parentID,omitempty" bson:"parentid,omitempty" mapstructure:"parentID,omitempty"`
+
+	// The type of the parent of the object.
+	ParentType *string `json:"parentType,omitempty" msgpack:"parentType,omitempty" bson:"parenttype,omitempty" mapstructure:"parentType,omitempty"`
+
+	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
+}
+
+// NewSparseSubtask returns a new  SparseSubtask.
+func NewSparseSubtask() *SparseSubtask {
+	return &SparseSubtask{}
+}
+
+// Identity returns the Identity of the sparse object.
+func (o *SparseSubtask) Identity() Identity {
+
+	return SubtaskIdentity
+}
+
+// Identifier returns the value of the sparse object's unique identifier.
+func (o *SparseSubtask) Identifier() string {
+
+	if o.ID == nil {
+		return ""
+	}
+	return *o.ID
+}
+
+// SetIdentifier sets the value of the sparse object's unique identifier.
+func (o *SparseSubtask) SetIdentifier(id string) {
+
+	if id != "" {
+		o.ID = &id
+	} else {
+		o.ID = nil
+	}
+}
+
+// GetBSON implements the bson marshaling interface.
+// This is used to transparently convert ID to MongoDBID as ObectID.
+func (o *SparseSubtask) GetBSON() (any, error) {
+
+	if o == nil {
+		return nil, nil
+	}
+
+	s := &mongoAttributesSparseSubtask{}
+
+	if o.ID != nil {
+		s.ID = bson.ObjectIdHex(*o.ID)
+	}
+	if o.Name != nil {
+		s.Name = o.Name
+	}
+	if o.ParentID != nil {
+		s.ParentID = o.ParentID
+	}
+	if o.ParentType != nil {
+		s.ParentType = o.ParentType
+	}
+
+	return s, nil
+}
+
+// SetBSON implements the bson marshaling interface.
+// This is used to transparently convert ID to MongoDBID as ObectID.
+func (o *SparseSubtask) SetBSON(raw bson.Raw) error {
+
+	if o == nil {
+		return nil
+	}
+
+	s := &mongoAttributesSparseSubtask{}
+	if err := raw.Unmarshal(s); err != nil {
+		return err
+	}
+
+	id := s.ID.Hex()
+	o.ID = &id
+	if s.Name != nil {
+		o.Name = s.Name
+	}
+	if s.ParentID != nil {
+		o.ParentID = s.ParentID
+	}
+	if s.ParentType != nil {
+		o.ParentType = s.ParentType
+	}
+
+	return nil
+}
+
+// Version returns the hardcoded version of the model.
+func (o *SparseSubtask) Version() int {
+
+	return 1
+}
+
+// ToPlain returns the plain version of the sparse model.
+func (o *SparseSubtask) ToPlain() PlainIdentifiable {
+
+	out := NewSubtask()
+	if o.ID != nil {
+		out.ID = *o.ID
+	}
+	if o.Name != nil {
+		out.Name = *o.Name
+	}
+	if o.ParentID != nil {
+		out.ParentID = *o.ParentID
+	}
+	if o.ParentType != nil {
+		out.ParentType = *o.ParentType
+	}
+
+	return out
+}
+
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *SparseSubtask) EncryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *SparseSubtask) DecryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
+// DeepCopy returns a deep copy if the SparseSubtask.
+func (o *SparseSubtask) DeepCopy() *SparseSubtask {
+
+	if o == nil {
+		return nil
+	}
+
+	out := &SparseSubtask{}
+	o.DeepCopyInto(out)
+
+	return out
+}
+
+// DeepCopyInto copies the receiver into the given *SparseSubtask.
+func (o *SparseSubtask) DeepCopyInto(out *SparseSubtask) {
+
+	target, err := copystructure.Copy(o)
+	if err != nil {
+		panic(fmt.Sprintf("Unable to deepcopy SparseSubtask: %s", err))
+	}
+
+	*out = *target.(*SparseSubtask)
+}
+
+type mongoAttributesSubtask struct {
+	ID         bson.ObjectId `bson:"_id,omitempty"`
+	Name       string        `bson:"name"`
+	ParentID   string        `bson:"parentid"`
+	ParentType string        `bson:"parenttype"`
+}
+type mongoAttributesSparseSubtask struct {
+	ID         bson.ObjectId `bson:"_id,omitempty"`
+	Name       *string       `bson:"name,omitempty"`
+	ParentID   *string       `bson:"parentid,omitempty"`
+	ParentType *string       `bson:"parenttype,omitempty"`
 }
 
 // TaskStatusValue represents the possible values for attribute "status".
@@ -1335,6 +2150,9 @@ type Task struct {
 	// The status of the task.
 	Status TaskStatusValue `json:"status" msgpack:"status" bson:"status" mapstructure:"status,omitempty"`
 
+	// This is a nested ref.
+	Subtask *Subtask `json:"-" msgpack:"-" bson:"subtask" mapstructure:"-,omitempty"`
+
 	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
 }
 
@@ -1344,6 +2162,7 @@ func NewTask() *Task {
 	return &Task{
 		ModelVersion: 1,
 		Status:       TaskStatusTODO,
+		Subtask:      NewSubtask(),
 	}
 }
 
@@ -1384,6 +2203,7 @@ func (o *Task) GetBSON() (any, error) {
 	s.ParentType = o.ParentType
 	s.Secret = o.Secret
 	s.Status = o.Status
+	s.Subtask = o.Subtask
 
 	return s, nil
 }
@@ -1392,8 +2212,8 @@ func (o *Task) GetBSON() (any, error) {
 // This is used to transparently convert ID to MongoDBID as ObectID.
 func (o *Task) SetBSON(raw bson.Raw) error {
 
-	if o == nil {
-		return nil
+	if o == nil || raw.Kind == bson.ElementNil {
+		return bson.ErrSetZero
 	}
 
 	s := &mongoAttributesTask{}
@@ -1408,6 +2228,7 @@ func (o *Task) SetBSON(raw bson.Raw) error {
 	o.ParentType = s.ParentType
 	o.Secret = s.Secret
 	o.Status = s.Status
+	o.Subtask = s.Subtask
 
 	return nil
 }
@@ -1467,6 +2288,7 @@ func (o *Task) ToSparse(fields ...string) SparseIdentifiable {
 			ParentType:  &o.ParentType,
 			Secret:      &o.Secret,
 			Status:      &o.Status,
+			Subtask:     o.Subtask,
 		}
 	}
 
@@ -1487,6 +2309,8 @@ func (o *Task) ToSparse(fields ...string) SparseIdentifiable {
 			sp.Secret = &(o.Secret)
 		case "status":
 			sp.Status = &(o.Status)
+		case "subtask":
+			sp.Subtask = o.Subtask
 		}
 	}
 
@@ -1521,6 +2345,33 @@ func (o *Task) Patch(sparse SparseIdentifiable) {
 	if so.Status != nil {
 		o.Status = *so.Status
 	}
+	if so.Subtask != nil {
+		o.Subtask = so.Subtask
+	}
+}
+
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *Task) EncryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	if o.Subtask != nil {
+		if err := o.Subtask.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *Task) DecryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	if o.Subtask != nil {
+		if err := o.Subtask.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
 }
 
 // DeepCopy returns a deep copy if the Task.
@@ -1549,6 +2400,8 @@ func (o *Task) DeepCopyInto(out *Task) {
 
 // Validate valides the current information stored into the structure.
 func (o *Task) Validate() error {
+
+	ResetDefaultForZeroValues(o)
 
 	errors := Errors{}
 	requiredErrors := Errors{}
@@ -1609,6 +2462,8 @@ func (o *Task) ValueForAttribute(name string) any {
 		return o.Secret
 	case "status":
 		return o.Status
+	case "subtask":
+		return o.Subtask
 	}
 
 	return nil
@@ -1714,6 +2569,16 @@ var TaskAttributesMap = map[string]AttributeSpecification{
 		Stored:         true,
 		Type:           "enum",
 	},
+	"Subtask": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "subtask",
+		ConvertedName:  "Subtask",
+		Description:    `This is a nested ref.`,
+		Name:           "subtask",
+		Stored:         true,
+		SubType:        "subtask",
+		Type:           "ref",
+	},
 }
 
 // TaskLowerCaseAttributesMap represents the map of attribute for Task.
@@ -1816,6 +2681,16 @@ var TaskLowerCaseAttributesMap = map[string]AttributeSpecification{
 		Stored:         true,
 		Type:           "enum",
 	},
+	"subtask": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "subtask",
+		ConvertedName:  "Subtask",
+		Description:    `This is a nested ref.`,
+		Name:           "subtask",
+		Stored:         true,
+		SubType:        "subtask",
+		Type:           "ref",
+	},
 }
 
 // SparseTasksList represents a list of SparseTasks
@@ -1902,6 +2777,9 @@ type SparseTask struct {
 	// The status of the task.
 	Status *TaskStatusValue `json:"status,omitempty" msgpack:"status,omitempty" bson:"status,omitempty" mapstructure:"status,omitempty"`
 
+	// This is a nested ref.
+	Subtask *Subtask `json:"-" msgpack:"-" bson:"subtask,omitempty" mapstructure:"-,omitempty"`
+
 	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
 }
 
@@ -1966,6 +2844,9 @@ func (o *SparseTask) GetBSON() (any, error) {
 	if o.Status != nil {
 		s.Status = o.Status
 	}
+	if o.Subtask != nil {
+		s.Subtask = o.Subtask
+	}
 
 	return s, nil
 }
@@ -2003,6 +2884,9 @@ func (o *SparseTask) SetBSON(raw bson.Raw) error {
 	if s.Status != nil {
 		o.Status = s.Status
 	}
+	if s.Subtask != nil {
+		o.Subtask = s.Subtask
+	}
 
 	return nil
 }
@@ -2038,8 +2922,35 @@ func (o *SparseTask) ToPlain() PlainIdentifiable {
 	if o.Status != nil {
 		out.Status = *o.Status
 	}
+	if o.Subtask != nil {
+		out.Subtask = o.Subtask
+	}
 
 	return out
+}
+
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *SparseTask) EncryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	if o.Subtask != nil {
+		if err := o.Subtask.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *SparseTask) DecryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	if o.Subtask != nil {
+		if err := o.Subtask.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
 }
 
 // GetName returns the Name of the receiver.
@@ -2090,6 +3001,7 @@ type mongoAttributesTask struct {
 	ParentType  string          `bson:"parenttype"`
 	Secret      string          `bson:"secret"`
 	Status      TaskStatusValue `bson:"status"`
+	Subtask     *Subtask        `bson:"subtask"`
 }
 type mongoAttributesSparseTask struct {
 	ID          bson.ObjectId    `bson:"_id,omitempty"`
@@ -2099,8 +3011,8 @@ type mongoAttributesSparseTask struct {
 	ParentType  *string          `bson:"parenttype,omitempty"`
 	Secret      *string          `bson:"secret,omitempty"`
 	Status      *TaskStatusValue `bson:"status,omitempty"`
+	Subtask     *Subtask         `bson:"subtask,omitempty"`
 }
-
 // UnmarshalableListIdentity represents the Identity of the object.
 var UnmarshalableListIdentity = Identity{Name: "list", Category: "lists"}
 
@@ -2366,8 +3278,8 @@ func (o *User) GetBSON() (any, error) {
 // This is used to transparently convert ID to MongoDBID as ObectID.
 func (o *User) SetBSON(raw bson.Raw) error {
 
-	if o == nil {
-		return nil
+	if o == nil || raw.Kind == bson.ElementNil {
+		return bson.ErrSetZero
 	}
 
 	s := &mongoAttributesUser{}
@@ -2497,6 +3409,18 @@ func (o *User) Patch(sparse SparseIdentifiable) {
 	}
 }
 
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *User) EncryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *User) DecryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
 // DeepCopy returns a deep copy if the User.
 func (o *User) DeepCopy() *User {
 
@@ -2523,6 +3447,8 @@ func (o *User) DeepCopyInto(out *User) {
 
 // Validate valides the current information stored into the structure.
 func (o *User) Validate() error {
+
+	ResetDefaultForZeroValues(o)
 
 	errors := Errors{}
 	requiredErrors := Errors{}
@@ -3018,6 +3944,18 @@ func (o *SparseUser) ToPlain() PlainIdentifiable {
 	return out
 }
 
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *SparseUser) EncryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *SparseUser) DecryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
 // GetArchived returns the Archived of the receiver.
 func (o *SparseUser) GetArchived() (out bool) {
 
@@ -3124,8 +4062,8 @@ func (o *Root) GetBSON() (any, error) {
 // This is used to transparently convert ID to MongoDBID as ObectID.
 func (o *Root) SetBSON(raw bson.Raw) error {
 
-	if o == nil {
-		return nil
+	if o == nil || raw.Kind == bson.ElementNil {
+		return bson.ErrSetZero
 	}
 
 	s := &mongoAttributesRoot{}
@@ -3165,6 +4103,18 @@ func (o *Root) String() string {
 	return fmt.Sprintf("<%s:%s>", o.Identity().Name, o.Identifier())
 }
 
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *Root) EncryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *Root) DecryptAttributes(encrypter AttributeEncrypter) (err error) {
+
+	return nil
+}
+
 // DeepCopy returns a deep copy if the Root.
 func (o *Root) DeepCopy() *Root {
 
@@ -3191,6 +4141,8 @@ func (o *Root) DeepCopyInto(out *Root) {
 
 // Validate valides the current information stored into the structure.
 func (o *Root) Validate() error {
+
+	ResetDefaultForZeroValues(o)
 
 	errors := Errors{}
 	requiredErrors := Errors{}
@@ -3245,17 +4197,19 @@ type mongoAttributesRoot struct {
 
 var (
 	identityNamesMap = map[string]Identity{
-		"list": ListIdentity,
-		"root": RootIdentity,
-		"task": TaskIdentity,
-		"user": UserIdentity,
+		"list":    ListIdentity,
+		"root":    RootIdentity,
+		"subtask": SubtaskIdentity,
+		"task":    TaskIdentity,
+		"user":    UserIdentity,
 	}
 
 	identitycategoriesMap = map[string]Identity{
-		"lists": ListIdentity,
-		"root":  RootIdentity,
-		"tasks": TaskIdentity,
-		"users": UserIdentity,
+		"lists":    ListIdentity,
+		"root":     RootIdentity,
+		"subtasks": SubtaskIdentity,
+		"tasks":    TaskIdentity,
+		"users":    UserIdentity,
 	}
 
 	aliasesMap = map[string]Identity{
@@ -3265,10 +4219,11 @@ var (
 	}
 
 	indexesMap = map[string][][]string{
-		"list": nil,
-		"root": nil,
-		"task": nil,
-		"user": nil,
+		"list":    nil,
+		"root":    nil,
+		"subtask": nil,
+		"task":    nil,
+		"user":    nil,
 	}
 )
 
@@ -3313,6 +4268,8 @@ func (f modelManager) Identifiable(identity Identity) Identifiable {
 		return NewList()
 	case RootIdentity:
 		return NewRoot()
+	case SubtaskIdentity:
+		return NewSubtask()
 	case TaskIdentity:
 		return NewTask()
 	case UserIdentity:
@@ -3328,6 +4285,8 @@ func (f modelManager) SparseIdentifiable(identity Identity) SparseIdentifiable {
 
 	case ListIdentity:
 		return NewSparseList()
+	case SubtaskIdentity:
+		return NewSparseSubtask()
 	case TaskIdentity:
 		return NewSparseTask()
 	case UserIdentity:
@@ -3353,6 +4312,8 @@ func (f modelManager) Identifiables(identity Identity) Identifiables {
 
 	case ListIdentity:
 		return &ListsList{}
+	case SubtaskIdentity:
+		return &SubtasksList{}
 	case TaskIdentity:
 		return &TasksList{}
 	case UserIdentity:
@@ -3368,6 +4329,8 @@ func (f modelManager) SparseIdentifiables(identity Identity) SparseIdentifiables
 
 	case ListIdentity:
 		return &SparseListsList{}
+	case SubtaskIdentity:
+		return &SparseSubtasksList{}
 	case TaskIdentity:
 		return &SparseTasksList{}
 	case UserIdentity:
@@ -3411,6 +4374,7 @@ func AllIdentities() []Identity {
 	return []Identity{
 		ListIdentity,
 		RootIdentity,
+		SubtaskIdentity,
 		TaskIdentity,
 		UserIdentity,
 	}
@@ -3425,6 +4389,8 @@ func AliasesForIdentity(identity Identity) []string {
 			"lst",
 		}
 	case RootIdentity:
+		return []string{}
+	case SubtaskIdentity:
 		return []string{}
 	case TaskIdentity:
 		return []string{
@@ -3563,6 +4529,21 @@ func init() {
 	}
 
 	relationshipsRegistry[RootIdentity] = &Relationship{}
+
+	relationshipsRegistry[SubtaskIdentity] = &Relationship{
+		Update: map[string]*RelationshipInfo{
+			"root": {},
+		},
+		Patch: map[string]*RelationshipInfo{
+			"root": {},
+		},
+		Delete: map[string]*RelationshipInfo{
+			"root": {},
+		},
+		Retrieve: map[string]*RelationshipInfo{
+			"root": {},
+		},
+	}
 
 	relationshipsRegistry[TaskIdentity] = &Relationship{
 		Create: map[string]*RelationshipInfo{

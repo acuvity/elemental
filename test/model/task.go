@@ -119,6 +119,9 @@ type Task struct {
 	// The status of the task.
 	Status TaskStatusValue `json:"status" msgpack:"status" bson:"status" mapstructure:"status,omitempty"`
 
+	// This is a nested ref.
+	Subtask *Subtask `json:"-" msgpack:"-" bson:"subtask" mapstructure:"-,omitempty"`
+
 	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
 }
 
@@ -128,6 +131,7 @@ func NewTask() *Task {
 	return &Task{
 		ModelVersion: 1,
 		Status:       TaskStatusTODO,
+		Subtask:      NewSubtask(),
 	}
 }
 
@@ -168,6 +172,7 @@ func (o *Task) GetBSON() (any, error) {
 	s.ParentType = o.ParentType
 	s.Secret = o.Secret
 	s.Status = o.Status
+	s.Subtask = o.Subtask
 
 	return s, nil
 }
@@ -176,8 +181,8 @@ func (o *Task) GetBSON() (any, error) {
 // This is used to transparently convert ID to MongoDBID as ObectID.
 func (o *Task) SetBSON(raw bson.Raw) error {
 
-	if o == nil {
-		return nil
+	if o == nil || raw.Kind == bson.ElementNil {
+		return bson.ErrSetZero
 	}
 
 	s := &mongoAttributesTask{}
@@ -192,6 +197,7 @@ func (o *Task) SetBSON(raw bson.Raw) error {
 	o.ParentType = s.ParentType
 	o.Secret = s.Secret
 	o.Status = s.Status
+	o.Subtask = s.Subtask
 
 	return nil
 }
@@ -251,6 +257,7 @@ func (o *Task) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			ParentType:  &o.ParentType,
 			Secret:      &o.Secret,
 			Status:      &o.Status,
+			Subtask:     o.Subtask,
 		}
 	}
 
@@ -271,6 +278,8 @@ func (o *Task) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			sp.Secret = &(o.Secret)
 		case "status":
 			sp.Status = &(o.Status)
+		case "subtask":
+			sp.Subtask = o.Subtask
 		}
 	}
 
@@ -305,6 +314,33 @@ func (o *Task) Patch(sparse elemental.SparseIdentifiable) {
 	if so.Status != nil {
 		o.Status = *so.Status
 	}
+	if so.Subtask != nil {
+		o.Subtask = so.Subtask
+	}
+}
+
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *Task) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	if o.Subtask != nil {
+		if err := o.Subtask.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *Task) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	if o.Subtask != nil {
+		if err := o.Subtask.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
 }
 
 // DeepCopy returns a deep copy if the Task.
@@ -333,6 +369,8 @@ func (o *Task) DeepCopyInto(out *Task) {
 
 // Validate valides the current information stored into the structure.
 func (o *Task) Validate() error {
+
+	elemental.ResetDefaultForZeroValues(o)
 
 	errors := elemental.Errors{}
 	requiredErrors := elemental.Errors{}
@@ -393,6 +431,8 @@ func (o *Task) ValueForAttribute(name string) any {
 		return o.Secret
 	case "status":
 		return o.Status
+	case "subtask":
+		return o.Subtask
 	}
 
 	return nil
@@ -498,6 +538,16 @@ var TaskAttributesMap = map[string]elemental.AttributeSpecification{
 		Stored:         true,
 		Type:           "enum",
 	},
+	"Subtask": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "subtask",
+		ConvertedName:  "Subtask",
+		Description:    `This is a nested ref.`,
+		Name:           "subtask",
+		Stored:         true,
+		SubType:        "subtask",
+		Type:           "ref",
+	},
 }
 
 // TaskLowerCaseAttributesMap represents the map of attribute for Task.
@@ -600,6 +650,16 @@ var TaskLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		Stored:         true,
 		Type:           "enum",
 	},
+	"subtask": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "subtask",
+		ConvertedName:  "Subtask",
+		Description:    `This is a nested ref.`,
+		Name:           "subtask",
+		Stored:         true,
+		SubType:        "subtask",
+		Type:           "ref",
+	},
 }
 
 // SparseTasksList represents a list of SparseTasks
@@ -686,6 +746,9 @@ type SparseTask struct {
 	// The status of the task.
 	Status *TaskStatusValue `json:"status,omitempty" msgpack:"status,omitempty" bson:"status,omitempty" mapstructure:"status,omitempty"`
 
+	// This is a nested ref.
+	Subtask *Subtask `json:"-" msgpack:"-" bson:"subtask,omitempty" mapstructure:"-,omitempty"`
+
 	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
 }
 
@@ -750,6 +813,9 @@ func (o *SparseTask) GetBSON() (any, error) {
 	if o.Status != nil {
 		s.Status = o.Status
 	}
+	if o.Subtask != nil {
+		s.Subtask = o.Subtask
+	}
 
 	return s, nil
 }
@@ -787,6 +853,9 @@ func (o *SparseTask) SetBSON(raw bson.Raw) error {
 	if s.Status != nil {
 		o.Status = s.Status
 	}
+	if s.Subtask != nil {
+		o.Subtask = s.Subtask
+	}
 
 	return nil
 }
@@ -822,8 +891,35 @@ func (o *SparseTask) ToPlain() elemental.PlainIdentifiable {
 	if o.Status != nil {
 		out.Status = *o.Status
 	}
+	if o.Subtask != nil {
+		out.Subtask = o.Subtask
+	}
 
 	return out
+}
+
+// EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
+func (o *SparseTask) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	if o.Subtask != nil {
+		if err := o.Subtask.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
+}
+
+// DecryptAttributes decrypts the attributes marked as `encrypted` using the given decrypter.
+func (o *SparseTask) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err error) {
+
+	if o.Subtask != nil {
+		if err := o.Subtask.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	return nil
 }
 
 // GetName returns the Name of the receiver.
@@ -874,6 +970,7 @@ type mongoAttributesTask struct {
 	ParentType  string          `bson:"parenttype"`
 	Secret      string          `bson:"secret"`
 	Status      TaskStatusValue `bson:"status"`
+	Subtask     *Subtask        `bson:"subtask"`
 }
 type mongoAttributesSparseTask struct {
 	ID          bson.ObjectId    `bson:"_id,omitempty"`
@@ -883,4 +980,5 @@ type mongoAttributesSparseTask struct {
 	ParentType  *string          `bson:"parenttype,omitempty"`
 	Secret      *string          `bson:"secret,omitempty"`
 	Status      *TaskStatusValue `bson:"status,omitempty"`
+	Subtask     *Subtask         `bson:"subtask,omitempty"`
 }

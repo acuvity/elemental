@@ -125,6 +125,30 @@ func TestVerify_ValidateAdvancedSpecification(t *testing.T) {
 
 func TestVerify_BackportUnexposedFields(t *testing.T) {
 
+	Convey("Given have two objects with nested ref fields", t, func() {
+
+		l1 := NewList()
+		l1.Ref = NewTask()
+		l1.Ref.Name = "l1"
+		l1.Ref.Subtask = NewSubtask()
+		l1.Ref.Subtask.Name = "subtask1"
+
+		l2 := NewList()
+		l2.Ref = NewTask()
+		l2.Ref.Name = "l2"
+		l2.Ref.Subtask = nil
+
+		Convey("When I backport ref fields from l1 to l2 but l2 nested ref is nil", func() {
+
+			BackportUnexposedFields(l1, l2)
+
+			So(l1.Ref.Name, ShouldEqual, "l1")
+			So(l2.Ref, ShouldNotBeNil)
+			So(l2.Ref.Name, ShouldEqual, "l2")
+			So(l2.Ref.Subtask, ShouldBeNil)
+		})
+	})
+
 	Convey("Given have two objects with unexposed fields", t, func() {
 
 		l1 := NewList()
