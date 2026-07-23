@@ -29,7 +29,10 @@ var (
 	}
 
 	indexesMap = map[string][][]string{
-		"list":    nil,
+		"list": {
+			{":shard", ":unique", "zone", "zHash"},
+			{"namespace", "importLabel"},
+		},
 		"root":    nil,
 		"subtask": nil,
 		"task":    nil,

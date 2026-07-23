@@ -107,6 +107,9 @@ type Task struct {
 	// The name.
 	Name string `json:"name" msgpack:"name" bson:"name" mapstructure:"name,omitempty"`
 
+	// The namespace of the object.
+	Namespace string `json:"namespace,omitempty" msgpack:"namespace,omitempty" bson:"namespace,omitempty" mapstructure:"namespace,omitempty"`
+
 	// The identifier of the parent of the object.
 	ParentID string `json:"parentID" msgpack:"parentID" bson:"parentid" mapstructure:"parentID,omitempty"`
 
@@ -121,6 +124,9 @@ type Task struct {
 
 	// This is a nested ref.
 	Subtask *Subtask `json:"-" msgpack:"-" bson:"subtask" mapstructure:"-,omitempty"`
+
+	// This is a nested refList.
+	SubtaskList SubtasksList `json:"subtaskList" msgpack:"subtaskList" bson:"subtasklist" mapstructure:"subtaskList,omitempty"`
 
 	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
 }
@@ -168,11 +174,13 @@ func (o *Task) GetBSON() (any, error) {
 	}
 	s.Description = o.Description
 	s.Name = o.Name
+	s.Namespace = o.Namespace
 	s.ParentID = o.ParentID
 	s.ParentType = o.ParentType
 	s.Secret = o.Secret
 	s.Status = o.Status
 	s.Subtask = o.Subtask
+	s.SubtaskList = o.SubtaskList
 
 	return s, nil
 }
@@ -193,11 +201,13 @@ func (o *Task) SetBSON(raw bson.Raw) error {
 	o.ID = s.ID.Hex()
 	o.Description = s.Description
 	o.Name = s.Name
+	o.Namespace = s.Namespace
 	o.ParentID = s.ParentID
 	o.ParentType = s.ParentType
 	o.Secret = s.Secret
 	o.Status = s.Status
 	o.Subtask = s.Subtask
+	o.SubtaskList = s.SubtaskList
 
 	return nil
 }
@@ -243,6 +253,18 @@ func (o *Task) SetName(name string) {
 	o.Name = name
 }
 
+// GetNamespace returns the Namespace of the receiver.
+func (o *Task) GetNamespace() string {
+
+	return o.Namespace
+}
+
+// SetNamespace sets the property Namespace of the receiver using the given value.
+func (o *Task) SetNamespace(namespace string) {
+
+	o.Namespace = namespace
+}
+
 // ToSparse returns the sparse version of the model.
 // The returned object will only contain the given fields. No field means entire field set.
 func (o *Task) ToSparse(fields ...string) elemental.SparseIdentifiable {
@@ -253,11 +275,13 @@ func (o *Task) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			ID:          &o.ID,
 			Description: &o.Description,
 			Name:        &o.Name,
+			Namespace:   &o.Namespace,
 			ParentID:    &o.ParentID,
 			ParentType:  &o.ParentType,
 			Secret:      &o.Secret,
 			Status:      &o.Status,
 			Subtask:     o.Subtask,
+			SubtaskList: &o.SubtaskList,
 		}
 	}
 
@@ -270,6 +294,8 @@ func (o *Task) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			sp.Description = &(o.Description)
 		case "name":
 			sp.Name = &(o.Name)
+		case "namespace":
+			sp.Namespace = &(o.Namespace)
 		case "parentID":
 			sp.ParentID = &(o.ParentID)
 		case "parentType":
@@ -280,6 +306,8 @@ func (o *Task) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			sp.Status = &(o.Status)
 		case "subtask":
 			sp.Subtask = o.Subtask
+		case "subtaskList":
+			sp.SubtaskList = &(o.SubtaskList)
 		}
 	}
 
@@ -302,6 +330,9 @@ func (o *Task) Patch(sparse elemental.SparseIdentifiable) {
 	if so.Name != nil {
 		o.Name = *so.Name
 	}
+	if so.Namespace != nil {
+		o.Namespace = *so.Namespace
+	}
 	if so.ParentID != nil {
 		o.ParentID = *so.ParentID
 	}
@@ -317,6 +348,9 @@ func (o *Task) Patch(sparse elemental.SparseIdentifiable) {
 	if so.Subtask != nil {
 		o.Subtask = so.Subtask
 	}
+	if so.SubtaskList != nil {
+		o.SubtaskList = *so.SubtaskList
+	}
 }
 
 // EncryptAttributes encrypts the attributes marked as `encrypted` using the given encrypter.
@@ -325,6 +359,12 @@ func (o *Task) EncryptAttributes(encrypter elemental.AttributeEncrypter) (err er
 	if o.Subtask != nil {
 		if err := o.Subtask.EncryptAttributes(encrypter); err != nil {
 			return fmt.Errorf("unable to encrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.SubtaskList {
+		if err := sub.EncryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to encrypt refList/refMap attribute 'SubtaskList' for 'Task' (%s): %s", o.Identifier(), err)
 		}
 	}
 
@@ -337,6 +377,12 @@ func (o *Task) DecryptAttributes(encrypter elemental.AttributeEncrypter) (err er
 	if o.Subtask != nil {
 		if err := o.Subtask.DecryptAttributes(encrypter); err != nil {
 			return fmt.Errorf("unable to decrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	for _, sub := range o.SubtaskList {
+		if err := sub.DecryptAttributes(encrypter); err != nil {
+			return fmt.Errorf("unable to decrypt refList/refMap attribute 'SubtaskList' for 'Task' (%s): %w", o.Identifier(), err)
 		}
 	}
 
@@ -383,6 +429,13 @@ func (o *Task) Validate() error {
 		errors = errors.Append(err)
 	}
 
+	for i, sub := range o.SubtaskList {
+		if err := sub.Validate(); err != nil {
+			errors = errors.Append(err)
+			elemental.InjectAttributePath(errors, fmt.Sprintf("%s/%v", "subtaskList", i))
+		}
+	}
+
 	if len(requiredErrors) > 0 {
 		return requiredErrors
 	}
@@ -423,6 +476,8 @@ func (o *Task) ValueForAttribute(name string) any {
 		return o.Description
 	case "name":
 		return o.Name
+	case "namespace":
+		return o.Namespace
 	case "parentID":
 		return o.ParentID
 	case "parentType":
@@ -433,6 +488,8 @@ func (o *Task) ValueForAttribute(name string) any {
 		return o.Status
 	case "subtask":
 		return o.Subtask
+	case "subtaskList":
+		return o.SubtaskList
 	}
 
 	return nil
@@ -479,6 +536,21 @@ var TaskAttributesMap = map[string]elemental.AttributeSpecification{
 		Name:           "name",
 		Orderable:      true,
 		Required:       true,
+		Setter:         true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"Namespace": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "namespace",
+		ConvertedName:  "Namespace",
+		Description:    `The namespace of the object.`,
+		Exposed:        true,
+		Getter:         true,
+		Name:           "namespace",
+		Orderable:      true,
+		ReadOnly:       true,
 		Setter:         true,
 		Stored:         true,
 		Type:           "string",
@@ -548,6 +620,17 @@ var TaskAttributesMap = map[string]elemental.AttributeSpecification{
 		SubType:        "subtask",
 		Type:           "ref",
 	},
+	"SubtaskList": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "subtasklist",
+		ConvertedName:  "SubtaskList",
+		Description:    `This is a nested refList.`,
+		Exposed:        true,
+		Name:           "subtaskList",
+		Stored:         true,
+		SubType:        "subtask",
+		Type:           "refList",
+	},
 }
 
 // TaskLowerCaseAttributesMap represents the map of attribute for Task.
@@ -591,6 +674,21 @@ var TaskLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		Name:           "name",
 		Orderable:      true,
 		Required:       true,
+		Setter:         true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"namespace": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "namespace",
+		ConvertedName:  "Namespace",
+		Description:    `The namespace of the object.`,
+		Exposed:        true,
+		Getter:         true,
+		Name:           "namespace",
+		Orderable:      true,
+		ReadOnly:       true,
 		Setter:         true,
 		Stored:         true,
 		Type:           "string",
@@ -659,6 +757,17 @@ var TaskLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		Stored:         true,
 		SubType:        "subtask",
 		Type:           "ref",
+	},
+	"subtasklist": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "subtasklist",
+		ConvertedName:  "SubtaskList",
+		Description:    `This is a nested refList.`,
+		Exposed:        true,
+		Name:           "subtaskList",
+		Stored:         true,
+		SubType:        "subtask",
+		Type:           "refList",
 	},
 }
 
@@ -734,6 +843,9 @@ type SparseTask struct {
 	// The name.
 	Name *string `json:"name,omitempty" msgpack:"name,omitempty" bson:"name,omitempty" mapstructure:"name,omitempty"`
 
+	// The namespace of the object.
+	Namespace *string `json:"namespace,omitempty" msgpack:"namespace,omitempty" bson:"namespace,omitempty" mapstructure:"namespace,omitempty"`
+
 	// The identifier of the parent of the object.
 	ParentID *string `json:"parentID,omitempty" msgpack:"parentID,omitempty" bson:"parentid,omitempty" mapstructure:"parentID,omitempty"`
 
@@ -748,6 +860,9 @@ type SparseTask struct {
 
 	// This is a nested ref.
 	Subtask *Subtask `json:"-" msgpack:"-" bson:"subtask,omitempty" mapstructure:"-,omitempty"`
+
+	// This is a nested refList.
+	SubtaskList *SubtasksList `json:"subtaskList,omitempty" msgpack:"subtaskList,omitempty" bson:"subtasklist,omitempty" mapstructure:"subtaskList,omitempty"`
 
 	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
 }
@@ -801,6 +916,9 @@ func (o *SparseTask) GetBSON() (any, error) {
 	if o.Name != nil {
 		s.Name = o.Name
 	}
+	if o.Namespace != nil {
+		s.Namespace = o.Namespace
+	}
 	if o.ParentID != nil {
 		s.ParentID = o.ParentID
 	}
@@ -815,6 +933,9 @@ func (o *SparseTask) GetBSON() (any, error) {
 	}
 	if o.Subtask != nil {
 		s.Subtask = o.Subtask
+	}
+	if o.SubtaskList != nil {
+		s.SubtaskList = o.SubtaskList
 	}
 
 	return s, nil
@@ -841,6 +962,9 @@ func (o *SparseTask) SetBSON(raw bson.Raw) error {
 	if s.Name != nil {
 		o.Name = s.Name
 	}
+	if s.Namespace != nil {
+		o.Namespace = s.Namespace
+	}
 	if s.ParentID != nil {
 		o.ParentID = s.ParentID
 	}
@@ -855,6 +979,9 @@ func (o *SparseTask) SetBSON(raw bson.Raw) error {
 	}
 	if s.Subtask != nil {
 		o.Subtask = s.Subtask
+	}
+	if s.SubtaskList != nil {
+		o.SubtaskList = s.SubtaskList
 	}
 
 	return nil
@@ -879,6 +1006,9 @@ func (o *SparseTask) ToPlain() elemental.PlainIdentifiable {
 	if o.Name != nil {
 		out.Name = *o.Name
 	}
+	if o.Namespace != nil {
+		out.Namespace = *o.Namespace
+	}
 	if o.ParentID != nil {
 		out.ParentID = *o.ParentID
 	}
@@ -894,6 +1024,9 @@ func (o *SparseTask) ToPlain() elemental.PlainIdentifiable {
 	if o.Subtask != nil {
 		out.Subtask = o.Subtask
 	}
+	if o.SubtaskList != nil {
+		out.SubtaskList = *o.SubtaskList
+	}
 
 	return out
 }
@@ -907,6 +1040,14 @@ func (o *SparseTask) EncryptAttributes(encrypter elemental.AttributeEncrypter) (
 		}
 	}
 
+	if o.SubtaskList != nil {
+		for _, sub := range *o.SubtaskList {
+			if err := sub.EncryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to encrypt refList/refMap attribute 'SubtaskList' for 'Task' (%s): %w", o.Identifier(), err)
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -916,6 +1057,14 @@ func (o *SparseTask) DecryptAttributes(encrypter elemental.AttributeEncrypter) (
 	if o.Subtask != nil {
 		if err := o.Subtask.DecryptAttributes(encrypter); err != nil {
 			return fmt.Errorf("unable to decrypt ref attribute 'Subtask' for 'Task' (%s): %w", o.Identifier(), err)
+		}
+	}
+
+	if o.SubtaskList != nil {
+		for _, sub := range *o.SubtaskList {
+			if err := sub.DecryptAttributes(encrypter); err != nil {
+				return fmt.Errorf("unable to decrypt refList/refMap attribute 'SubtaskList' for 'Task' (%s): %w", o.Identifier(), err)
+			}
 		}
 	}
 
@@ -936,6 +1085,22 @@ func (o *SparseTask) GetName() (out string) {
 func (o *SparseTask) SetName(name string) {
 
 	o.Name = &name
+}
+
+// GetNamespace returns the Namespace of the receiver.
+func (o *SparseTask) GetNamespace() (out string) {
+
+	if o.Namespace == nil {
+		return
+	}
+
+	return *o.Namespace
+}
+
+// SetNamespace sets the property Namespace of the receiver using the address of the given value.
+func (o *SparseTask) SetNamespace(namespace string) {
+
+	o.Namespace = &namespace
 }
 
 // DeepCopy returns a deep copy if the SparseTask.
@@ -966,19 +1131,23 @@ type mongoAttributesTask struct {
 	ID          bson.ObjectId   `bson:"_id,omitempty"`
 	Description string          `bson:"description"`
 	Name        string          `bson:"name"`
+	Namespace   string          `bson:"namespace,omitempty"`
 	ParentID    string          `bson:"parentid"`
 	ParentType  string          `bson:"parenttype"`
 	Secret      string          `bson:"secret"`
 	Status      TaskStatusValue `bson:"status"`
 	Subtask     *Subtask        `bson:"subtask"`
+	SubtaskList SubtasksList    `bson:"subtasklist"`
 }
 type mongoAttributesSparseTask struct {
 	ID          bson.ObjectId    `bson:"_id,omitempty"`
 	Description *string          `bson:"description,omitempty"`
 	Name        *string          `bson:"name,omitempty"`
+	Namespace   *string          `bson:"namespace,omitempty"`
 	ParentID    *string          `bson:"parentid,omitempty"`
 	ParentType  *string          `bson:"parenttype,omitempty"`
 	Secret      *string          `bson:"secret,omitempty"`
 	Status      *TaskStatusValue `bson:"status,omitempty"`
 	Subtask     *Subtask         `bson:"subtask,omitempty"`
+	SubtaskList *SubtasksList    `bson:"subtasklist,omitempty"`
 }

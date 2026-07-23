@@ -97,8 +97,18 @@ type List struct {
 	// The description.
 	Description string `json:"description" msgpack:"description" bson:"description" mapstructure:"description,omitempty"`
 
+	// The hash of the structure used to compare with new import version.
+	ImportHash string `json:"importHash,omitempty" msgpack:"importHash,omitempty" bson:"importhash,omitempty" mapstructure:"importHash,omitempty"`
+
+	// The user-defined import label that allows the system to group resources from the
+	// same import operation.
+	ImportLabel string `json:"importLabel,omitempty" msgpack:"importLabel,omitempty" bson:"importlabel,omitempty" mapstructure:"importLabel,omitempty"`
+
 	// The name.
 	Name string `json:"name" msgpack:"name" bson:"name" mapstructure:"name,omitempty"`
+
+	// The namespace of the object.
+	Namespace string `json:"namespace,omitempty" msgpack:"namespace,omitempty" bson:"namespace,omitempty" mapstructure:"namespace,omitempty"`
 
 	// The identifier of the parent of the object.
 	ParentID string `json:"parentID" msgpack:"parentID" bson:"parentid" mapstructure:"parentID,omitempty"`
@@ -110,13 +120,13 @@ type List struct {
 	ReadOnly string `json:"readOnly" msgpack:"readOnly" bson:"readonly" mapstructure:"readOnly,omitempty"`
 
 	// This attribute is a ref to a single object.
-	Ref *Task `json:"-" msgpack:"-" bson:"ref" mapstructure:"-,omitempty"`
+	Ref *Task `json:"ref" msgpack:"ref" bson:"ref" mapstructure:"ref,omitempty"`
 
 	// This attribute is a ref to a objects.
-	RefList TasksList `json:"-" msgpack:"-" bson:"reflist" mapstructure:"-,omitempty"`
+	RefList TasksList `json:"refList" msgpack:"refList" bson:"reflist" mapstructure:"refList,omitempty"`
 
 	// This attribute is a ref map to a objects.
-	RefMap map[string]*Task `json:"-" msgpack:"-" bson:"refmap" mapstructure:"-,omitempty"`
+	RefMap map[string]*Task `json:"refMap" msgpack:"refMap" bson:"refmap" mapstructure:"refMap,omitempty"`
 
 	// This attribute is secret.
 	Secret string `json:"secret" msgpack:"secret" bson:"secret" mapstructure:"secret,omitempty"`
@@ -126,6 +136,12 @@ type List struct {
 
 	// This attribute is not exposed.
 	Unexposed string `json:"-" msgpack:"-" bson:"unexposed" mapstructure:"-,omitempty"`
+
+	// Hash of the object used to shard the data.
+	ZHash int `json:"-" msgpack:"-" bson:"zhash" mapstructure:"-,omitempty"`
+
+	// Sharding zone.
+	Zone int `json:"-" msgpack:"-" bson:"zone" mapstructure:"-,omitempty"`
 
 	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
 }
@@ -176,7 +192,10 @@ func (o *List) GetBSON() (any, error) {
 	s.CreationOnly = o.CreationOnly
 	s.Date = o.Date
 	s.Description = o.Description
+	s.ImportHash = o.ImportHash
+	s.ImportLabel = o.ImportLabel
 	s.Name = o.Name
+	s.Namespace = o.Namespace
 	s.ParentID = o.ParentID
 	s.ParentType = o.ParentType
 	s.ReadOnly = o.ReadOnly
@@ -186,6 +205,8 @@ func (o *List) GetBSON() (any, error) {
 	s.Secret = o.Secret
 	s.Slice = o.Slice
 	s.Unexposed = o.Unexposed
+	s.ZHash = o.ZHash
+	s.Zone = o.Zone
 
 	return s, nil
 }
@@ -207,7 +228,10 @@ func (o *List) SetBSON(raw bson.Raw) error {
 	o.CreationOnly = s.CreationOnly
 	o.Date = s.Date
 	o.Description = s.Description
+	o.ImportHash = s.ImportHash
+	o.ImportLabel = s.ImportLabel
 	o.Name = s.Name
+	o.Namespace = s.Namespace
 	o.ParentID = s.ParentID
 	o.ParentType = s.ParentType
 	o.ReadOnly = s.ReadOnly
@@ -217,6 +241,8 @@ func (o *List) SetBSON(raw bson.Raw) error {
 	o.Secret = s.Secret
 	o.Slice = s.Slice
 	o.Unexposed = s.Unexposed
+	o.ZHash = s.ZHash
+	o.Zone = s.Zone
 
 	return nil
 }
@@ -250,6 +276,30 @@ func (o *List) String() string {
 	return fmt.Sprintf("<%s:%s>", o.Identity().Name, o.Identifier())
 }
 
+// GetImportHash returns the ImportHash of the receiver.
+func (o *List) GetImportHash() string {
+
+	return o.ImportHash
+}
+
+// SetImportHash sets the property ImportHash of the receiver using the given value.
+func (o *List) SetImportHash(importHash string) {
+
+	o.ImportHash = importHash
+}
+
+// GetImportLabel returns the ImportLabel of the receiver.
+func (o *List) GetImportLabel() string {
+
+	return o.ImportLabel
+}
+
+// SetImportLabel sets the property ImportLabel of the receiver using the given value.
+func (o *List) SetImportLabel(importLabel string) {
+
+	o.ImportLabel = importLabel
+}
+
 // GetName returns the Name of the receiver.
 func (o *List) GetName() string {
 
@@ -260,6 +310,42 @@ func (o *List) GetName() string {
 func (o *List) SetName(name string) {
 
 	o.Name = name
+}
+
+// GetNamespace returns the Namespace of the receiver.
+func (o *List) GetNamespace() string {
+
+	return o.Namespace
+}
+
+// SetNamespace sets the property Namespace of the receiver using the given value.
+func (o *List) SetNamespace(namespace string) {
+
+	o.Namespace = namespace
+}
+
+// GetZHash returns the ZHash of the receiver.
+func (o *List) GetZHash() int {
+
+	return o.ZHash
+}
+
+// SetZHash sets the property ZHash of the receiver using the given value.
+func (o *List) SetZHash(zHash int) {
+
+	o.ZHash = zHash
+}
+
+// GetZone returns the Zone of the receiver.
+func (o *List) GetZone() int {
+
+	return o.Zone
+}
+
+// SetZone sets the property Zone of the receiver using the given value.
+func (o *List) SetZone(zone int) {
+
+	o.Zone = zone
 }
 
 // ToSparse returns the sparse version of the model.
@@ -273,7 +359,10 @@ func (o *List) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			CreationOnly: &o.CreationOnly,
 			Date:         &o.Date,
 			Description:  &o.Description,
+			ImportHash:   &o.ImportHash,
+			ImportLabel:  &o.ImportLabel,
 			Name:         &o.Name,
+			Namespace:    &o.Namespace,
 			ParentID:     &o.ParentID,
 			ParentType:   &o.ParentType,
 			ReadOnly:     &o.ReadOnly,
@@ -283,6 +372,8 @@ func (o *List) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			Secret:       &o.Secret,
 			Slice:        &o.Slice,
 			Unexposed:    &o.Unexposed,
+			ZHash:        &o.ZHash,
+			Zone:         &o.Zone,
 		}
 	}
 
@@ -297,8 +388,14 @@ func (o *List) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			sp.Date = &(o.Date)
 		case "description":
 			sp.Description = &(o.Description)
+		case "importHash":
+			sp.ImportHash = &(o.ImportHash)
+		case "importLabel":
+			sp.ImportLabel = &(o.ImportLabel)
 		case "name":
 			sp.Name = &(o.Name)
+		case "namespace":
+			sp.Namespace = &(o.Namespace)
 		case "parentID":
 			sp.ParentID = &(o.ParentID)
 		case "parentType":
@@ -317,6 +414,10 @@ func (o *List) ToSparse(fields ...string) elemental.SparseIdentifiable {
 			sp.Slice = &(o.Slice)
 		case "unexposed":
 			sp.Unexposed = &(o.Unexposed)
+		case "zHash":
+			sp.ZHash = &(o.ZHash)
+		case "zone":
+			sp.Zone = &(o.Zone)
 		}
 	}
 
@@ -342,8 +443,17 @@ func (o *List) Patch(sparse elemental.SparseIdentifiable) {
 	if so.Description != nil {
 		o.Description = *so.Description
 	}
+	if so.ImportHash != nil {
+		o.ImportHash = *so.ImportHash
+	}
+	if so.ImportLabel != nil {
+		o.ImportLabel = *so.ImportLabel
+	}
 	if so.Name != nil {
 		o.Name = *so.Name
+	}
+	if so.Namespace != nil {
+		o.Namespace = *so.Namespace
 	}
 	if so.ParentID != nil {
 		o.ParentID = *so.ParentID
@@ -371,6 +481,12 @@ func (o *List) Patch(sparse elemental.SparseIdentifiable) {
 	}
 	if so.Unexposed != nil {
 		o.Unexposed = *so.Unexposed
+	}
+	if so.ZHash != nil {
+		o.ZHash = *so.ZHash
+	}
+	if so.Zone != nil {
+		o.Zone = *so.Zone
 	}
 }
 
@@ -470,6 +586,33 @@ func (o *List) Validate() error {
 		requiredErrors = requiredErrors.Append(err)
 	}
 
+	if o.Ref != nil {
+		if err := o.Ref.Validate(); err != nil {
+			errors = errors.Append(err)
+			elemental.InjectAttributePath(errors, "ref")
+		}
+	}
+
+	for i, sub := range o.RefList {
+		if sub == nil {
+			continue
+		}
+		if err := sub.Validate(); err != nil {
+			errors = errors.Append(err)
+			elemental.InjectAttributePath(errors, fmt.Sprintf("%s/%v", "refList", i))
+		}
+	}
+
+	for i, sub := range o.RefMap {
+		if sub == nil {
+			continue
+		}
+		if err := sub.Validate(); err != nil {
+			errors = errors.Append(err)
+			elemental.InjectAttributePath(errors, fmt.Sprintf("%s/%v", "refMap", i))
+		}
+	}
+
 	if len(requiredErrors) > 0 {
 		return requiredErrors
 	}
@@ -512,8 +655,14 @@ func (o *List) ValueForAttribute(name string) any {
 		return o.Date
 	case "description":
 		return o.Description
+	case "importHash":
+		return o.ImportHash
+	case "importLabel":
+		return o.ImportLabel
 	case "name":
 		return o.Name
+	case "namespace":
+		return o.Namespace
 	case "parentID":
 		return o.ParentID
 	case "parentType":
@@ -532,6 +681,10 @@ func (o *List) ValueForAttribute(name string) any {
 		return o.Slice
 	case "unexposed":
 		return o.Unexposed
+	case "zHash":
+		return o.ZHash
+	case "zone":
+		return o.Zone
 	}
 
 	return nil
@@ -592,6 +745,34 @@ var ListAttributesMap = map[string]elemental.AttributeSpecification{
 		Stored:         true,
 		Type:           "string",
 	},
+	"ImportHash": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "importhash",
+		ConvertedName:  "ImportHash",
+		CreationOnly:   true,
+		Description:    `The hash of the structure used to compare with new import version.`,
+		Exposed:        true,
+		Getter:         true,
+		Name:           "importHash",
+		Setter:         true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"ImportLabel": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "importlabel",
+		ConvertedName:  "ImportLabel",
+		CreationOnly:   true,
+		Description: `The user-defined import label that allows the system to group resources from the
+same import operation.`,
+		Exposed: true,
+		Getter:  true,
+		Name:    "importLabel",
+		Setter:  true,
+		Stored:  true,
+		Type:    "string",
+	},
 	"Name": {
 		AllowedChoices: []string{},
 		BSONFieldName:  "name",
@@ -603,6 +784,21 @@ var ListAttributesMap = map[string]elemental.AttributeSpecification{
 		Name:           "name",
 		Orderable:      true,
 		Required:       true,
+		Setter:         true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"Namespace": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "namespace",
+		ConvertedName:  "Namespace",
+		Description:    `The namespace of the object.`,
+		Exposed:        true,
+		Getter:         true,
+		Name:           "namespace",
+		Orderable:      true,
+		ReadOnly:       true,
 		Setter:         true,
 		Stored:         true,
 		Type:           "string",
@@ -654,6 +850,7 @@ var ListAttributesMap = map[string]elemental.AttributeSpecification{
 		BSONFieldName:  "ref",
 		ConvertedName:  "Ref",
 		Description:    `This attribute is a ref to a single object.`,
+		Exposed:        true,
 		Filterable:     true,
 		Name:           "ref",
 		Orderable:      true,
@@ -666,6 +863,7 @@ var ListAttributesMap = map[string]elemental.AttributeSpecification{
 		BSONFieldName:  "reflist",
 		ConvertedName:  "RefList",
 		Description:    `This attribute is a ref to a objects.`,
+		Exposed:        true,
 		Filterable:     true,
 		Name:           "refList",
 		Orderable:      true,
@@ -678,6 +876,7 @@ var ListAttributesMap = map[string]elemental.AttributeSpecification{
 		BSONFieldName:  "refmap",
 		ConvertedName:  "RefMap",
 		Description:    `This attribute is a ref map to a objects.`,
+		Exposed:        true,
 		Filterable:     true,
 		Name:           "refMap",
 		Orderable:      true,
@@ -721,6 +920,33 @@ var ListAttributesMap = map[string]elemental.AttributeSpecification{
 		Orderable:      true,
 		Stored:         true,
 		Type:           "string",
+	},
+	"ZHash": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "zhash",
+		ConvertedName:  "ZHash",
+		Description:    `Hash of the object used to shard the data.`,
+		Getter:         true,
+		Name:           "zHash",
+		ReadOnly:       true,
+		Setter:         true,
+		Stored:         true,
+		Type:           "integer",
+	},
+	"Zone": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "zone",
+		ConvertedName:  "Zone",
+		Description:    `Sharding zone.`,
+		Getter:         true,
+		Name:           "zone",
+		ReadOnly:       true,
+		Setter:         true,
+		Stored:         true,
+		Transient:      true,
+		Type:           "integer",
 	},
 }
 
@@ -779,6 +1005,34 @@ var ListLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		Stored:         true,
 		Type:           "string",
 	},
+	"importhash": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "importhash",
+		ConvertedName:  "ImportHash",
+		CreationOnly:   true,
+		Description:    `The hash of the structure used to compare with new import version.`,
+		Exposed:        true,
+		Getter:         true,
+		Name:           "importHash",
+		Setter:         true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"importlabel": {
+		AllowedChoices: []string{},
+		BSONFieldName:  "importlabel",
+		ConvertedName:  "ImportLabel",
+		CreationOnly:   true,
+		Description: `The user-defined import label that allows the system to group resources from the
+same import operation.`,
+		Exposed: true,
+		Getter:  true,
+		Name:    "importLabel",
+		Setter:  true,
+		Stored:  true,
+		Type:    "string",
+	},
 	"name": {
 		AllowedChoices: []string{},
 		BSONFieldName:  "name",
@@ -790,6 +1044,21 @@ var ListLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		Name:           "name",
 		Orderable:      true,
 		Required:       true,
+		Setter:         true,
+		Stored:         true,
+		Type:           "string",
+	},
+	"namespace": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "namespace",
+		ConvertedName:  "Namespace",
+		Description:    `The namespace of the object.`,
+		Exposed:        true,
+		Getter:         true,
+		Name:           "namespace",
+		Orderable:      true,
+		ReadOnly:       true,
 		Setter:         true,
 		Stored:         true,
 		Type:           "string",
@@ -841,6 +1110,7 @@ var ListLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		BSONFieldName:  "ref",
 		ConvertedName:  "Ref",
 		Description:    `This attribute is a ref to a single object.`,
+		Exposed:        true,
 		Filterable:     true,
 		Name:           "ref",
 		Orderable:      true,
@@ -853,6 +1123,7 @@ var ListLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		BSONFieldName:  "reflist",
 		ConvertedName:  "RefList",
 		Description:    `This attribute is a ref to a objects.`,
+		Exposed:        true,
 		Filterable:     true,
 		Name:           "refList",
 		Orderable:      true,
@@ -865,6 +1136,7 @@ var ListLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		BSONFieldName:  "refmap",
 		ConvertedName:  "RefMap",
 		Description:    `This attribute is a ref map to a objects.`,
+		Exposed:        true,
 		Filterable:     true,
 		Name:           "refMap",
 		Orderable:      true,
@@ -908,6 +1180,33 @@ var ListLowerCaseAttributesMap = map[string]elemental.AttributeSpecification{
 		Orderable:      true,
 		Stored:         true,
 		Type:           "string",
+	},
+	"zhash": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "zhash",
+		ConvertedName:  "ZHash",
+		Description:    `Hash of the object used to shard the data.`,
+		Getter:         true,
+		Name:           "zHash",
+		ReadOnly:       true,
+		Setter:         true,
+		Stored:         true,
+		Type:           "integer",
+	},
+	"zone": {
+		AllowedChoices: []string{},
+		Autogenerated:  true,
+		BSONFieldName:  "zone",
+		ConvertedName:  "Zone",
+		Description:    `Sharding zone.`,
+		Getter:         true,
+		Name:           "zone",
+		ReadOnly:       true,
+		Setter:         true,
+		Stored:         true,
+		Transient:      true,
+		Type:           "integer",
 	},
 }
 
@@ -986,8 +1285,18 @@ type SparseList struct {
 	// The description.
 	Description *string `json:"description,omitempty" msgpack:"description,omitempty" bson:"description,omitempty" mapstructure:"description,omitempty"`
 
+	// The hash of the structure used to compare with new import version.
+	ImportHash *string `json:"importHash,omitempty" msgpack:"importHash,omitempty" bson:"importhash,omitempty" mapstructure:"importHash,omitempty"`
+
+	// The user-defined import label that allows the system to group resources from the
+	// same import operation.
+	ImportLabel *string `json:"importLabel,omitempty" msgpack:"importLabel,omitempty" bson:"importlabel,omitempty" mapstructure:"importLabel,omitempty"`
+
 	// The name.
 	Name *string `json:"name,omitempty" msgpack:"name,omitempty" bson:"name,omitempty" mapstructure:"name,omitempty"`
+
+	// The namespace of the object.
+	Namespace *string `json:"namespace,omitempty" msgpack:"namespace,omitempty" bson:"namespace,omitempty" mapstructure:"namespace,omitempty"`
 
 	// The identifier of the parent of the object.
 	ParentID *string `json:"parentID,omitempty" msgpack:"parentID,omitempty" bson:"parentid,omitempty" mapstructure:"parentID,omitempty"`
@@ -999,13 +1308,13 @@ type SparseList struct {
 	ReadOnly *string `json:"readOnly,omitempty" msgpack:"readOnly,omitempty" bson:"readonly,omitempty" mapstructure:"readOnly,omitempty"`
 
 	// This attribute is a ref to a single object.
-	Ref *Task `json:"-" msgpack:"-" bson:"ref,omitempty" mapstructure:"-,omitempty"`
+	Ref *Task `json:"ref,omitempty" msgpack:"ref,omitempty" bson:"ref,omitempty" mapstructure:"ref,omitempty"`
 
 	// This attribute is a ref to a objects.
-	RefList *TasksList `json:"-" msgpack:"-" bson:"reflist,omitempty" mapstructure:"-,omitempty"`
+	RefList *TasksList `json:"refList,omitempty" msgpack:"refList,omitempty" bson:"reflist,omitempty" mapstructure:"refList,omitempty"`
 
 	// This attribute is a ref map to a objects.
-	RefMap *map[string]*Task `json:"-" msgpack:"-" bson:"refmap,omitempty" mapstructure:"-,omitempty"`
+	RefMap *map[string]*Task `json:"refMap,omitempty" msgpack:"refMap,omitempty" bson:"refmap,omitempty" mapstructure:"refMap,omitempty"`
 
 	// This attribute is secret.
 	Secret *string `json:"secret,omitempty" msgpack:"secret,omitempty" bson:"secret,omitempty" mapstructure:"secret,omitempty"`
@@ -1015,6 +1324,12 @@ type SparseList struct {
 
 	// This attribute is not exposed.
 	Unexposed *string `json:"-" msgpack:"-" bson:"unexposed,omitempty" mapstructure:"-,omitempty"`
+
+	// Hash of the object used to shard the data.
+	ZHash *int `json:"-" msgpack:"-" bson:"zhash,omitempty" mapstructure:"-,omitempty"`
+
+	// Sharding zone.
+	Zone *int `json:"-" msgpack:"-" bson:"zone,omitempty" mapstructure:"-,omitempty"`
 
 	ModelVersion int `json:"-" msgpack:"-" bson:"_modelversion"`
 }
@@ -1071,8 +1386,17 @@ func (o *SparseList) GetBSON() (any, error) {
 	if o.Description != nil {
 		s.Description = o.Description
 	}
+	if o.ImportHash != nil {
+		s.ImportHash = o.ImportHash
+	}
+	if o.ImportLabel != nil {
+		s.ImportLabel = o.ImportLabel
+	}
 	if o.Name != nil {
 		s.Name = o.Name
+	}
+	if o.Namespace != nil {
+		s.Namespace = o.Namespace
 	}
 	if o.ParentID != nil {
 		s.ParentID = o.ParentID
@@ -1100,6 +1424,12 @@ func (o *SparseList) GetBSON() (any, error) {
 	}
 	if o.Unexposed != nil {
 		s.Unexposed = o.Unexposed
+	}
+	if o.ZHash != nil {
+		s.ZHash = o.ZHash
+	}
+	if o.Zone != nil {
+		s.Zone = o.Zone
 	}
 
 	return s, nil
@@ -1129,8 +1459,17 @@ func (o *SparseList) SetBSON(raw bson.Raw) error {
 	if s.Description != nil {
 		o.Description = s.Description
 	}
+	if s.ImportHash != nil {
+		o.ImportHash = s.ImportHash
+	}
+	if s.ImportLabel != nil {
+		o.ImportLabel = s.ImportLabel
+	}
 	if s.Name != nil {
 		o.Name = s.Name
+	}
+	if s.Namespace != nil {
+		o.Namespace = s.Namespace
 	}
 	if s.ParentID != nil {
 		o.ParentID = s.ParentID
@@ -1159,6 +1498,12 @@ func (o *SparseList) SetBSON(raw bson.Raw) error {
 	if s.Unexposed != nil {
 		o.Unexposed = s.Unexposed
 	}
+	if s.ZHash != nil {
+		o.ZHash = s.ZHash
+	}
+	if s.Zone != nil {
+		o.Zone = s.Zone
+	}
 
 	return nil
 }
@@ -1185,8 +1530,17 @@ func (o *SparseList) ToPlain() elemental.PlainIdentifiable {
 	if o.Description != nil {
 		out.Description = *o.Description
 	}
+	if o.ImportHash != nil {
+		out.ImportHash = *o.ImportHash
+	}
+	if o.ImportLabel != nil {
+		out.ImportLabel = *o.ImportLabel
+	}
 	if o.Name != nil {
 		out.Name = *o.Name
+	}
+	if o.Namespace != nil {
+		out.Namespace = *o.Namespace
 	}
 	if o.ParentID != nil {
 		out.ParentID = *o.ParentID
@@ -1214,6 +1568,12 @@ func (o *SparseList) ToPlain() elemental.PlainIdentifiable {
 	}
 	if o.Unexposed != nil {
 		out.Unexposed = *o.Unexposed
+	}
+	if o.ZHash != nil {
+		out.ZHash = *o.ZHash
+	}
+	if o.Zone != nil {
+		out.Zone = *o.Zone
 	}
 
 	return out
@@ -1287,6 +1647,38 @@ func (o *SparseList) DecryptAttributes(encrypter elemental.AttributeEncrypter) (
 	return nil
 }
 
+// GetImportHash returns the ImportHash of the receiver.
+func (o *SparseList) GetImportHash() (out string) {
+
+	if o.ImportHash == nil {
+		return
+	}
+
+	return *o.ImportHash
+}
+
+// SetImportHash sets the property ImportHash of the receiver using the address of the given value.
+func (o *SparseList) SetImportHash(importHash string) {
+
+	o.ImportHash = &importHash
+}
+
+// GetImportLabel returns the ImportLabel of the receiver.
+func (o *SparseList) GetImportLabel() (out string) {
+
+	if o.ImportLabel == nil {
+		return
+	}
+
+	return *o.ImportLabel
+}
+
+// SetImportLabel sets the property ImportLabel of the receiver using the address of the given value.
+func (o *SparseList) SetImportLabel(importLabel string) {
+
+	o.ImportLabel = &importLabel
+}
+
 // GetName returns the Name of the receiver.
 func (o *SparseList) GetName() (out string) {
 
@@ -1301,6 +1693,54 @@ func (o *SparseList) GetName() (out string) {
 func (o *SparseList) SetName(name string) {
 
 	o.Name = &name
+}
+
+// GetNamespace returns the Namespace of the receiver.
+func (o *SparseList) GetNamespace() (out string) {
+
+	if o.Namespace == nil {
+		return
+	}
+
+	return *o.Namespace
+}
+
+// SetNamespace sets the property Namespace of the receiver using the address of the given value.
+func (o *SparseList) SetNamespace(namespace string) {
+
+	o.Namespace = &namespace
+}
+
+// GetZHash returns the ZHash of the receiver.
+func (o *SparseList) GetZHash() (out int) {
+
+	if o.ZHash == nil {
+		return
+	}
+
+	return *o.ZHash
+}
+
+// SetZHash sets the property ZHash of the receiver using the address of the given value.
+func (o *SparseList) SetZHash(zHash int) {
+
+	o.ZHash = &zHash
+}
+
+// GetZone returns the Zone of the receiver.
+func (o *SparseList) GetZone() (out int) {
+
+	if o.Zone == nil {
+		return
+	}
+
+	return *o.Zone
+}
+
+// SetZone sets the property Zone of the receiver using the address of the given value.
+func (o *SparseList) SetZone(zone int) {
+
+	o.Zone = &zone
 }
 
 // DeepCopy returns a deep copy if the SparseList.
@@ -1332,7 +1772,10 @@ type mongoAttributesList struct {
 	CreationOnly string           `bson:"creationonly"`
 	Date         time.Time        `bson:"date"`
 	Description  string           `bson:"description"`
+	ImportHash   string           `bson:"importhash,omitempty"`
+	ImportLabel  string           `bson:"importlabel,omitempty"`
 	Name         string           `bson:"name"`
+	Namespace    string           `bson:"namespace,omitempty"`
 	ParentID     string           `bson:"parentid"`
 	ParentType   string           `bson:"parenttype"`
 	ReadOnly     string           `bson:"readonly"`
@@ -1342,13 +1785,18 @@ type mongoAttributesList struct {
 	Secret       string           `bson:"secret"`
 	Slice        []string         `bson:"slice"`
 	Unexposed    string           `bson:"unexposed"`
+	ZHash        int              `bson:"zhash"`
+	Zone         int              `bson:"zone"`
 }
 type mongoAttributesSparseList struct {
 	ID           bson.ObjectId     `bson:"_id,omitempty"`
 	CreationOnly *string           `bson:"creationonly,omitempty"`
 	Date         *time.Time        `bson:"date,omitempty"`
 	Description  *string           `bson:"description,omitempty"`
+	ImportHash   *string           `bson:"importhash,omitempty"`
+	ImportLabel  *string           `bson:"importlabel,omitempty"`
 	Name         *string           `bson:"name,omitempty"`
+	Namespace    *string           `bson:"namespace,omitempty"`
 	ParentID     *string           `bson:"parentid,omitempty"`
 	ParentType   *string           `bson:"parenttype,omitempty"`
 	ReadOnly     *string           `bson:"readonly,omitempty"`
@@ -1358,4 +1806,6 @@ type mongoAttributesSparseList struct {
 	Secret       *string           `bson:"secret,omitempty"`
 	Slice        *[]string         `bson:"slice,omitempty"`
 	Unexposed    *string           `bson:"unexposed,omitempty"`
+	ZHash        *int              `bson:"zhash,omitempty"`
+	Zone         *int              `bson:"zone,omitempty"`
 }
