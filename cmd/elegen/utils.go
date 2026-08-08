@@ -409,11 +409,16 @@ func writeDefaultValue(set spec.SpecificationSet, s spec.Specification, attr *sp
 		return attr.Initializer
 	}
 
-	var pointer string
+	var pointer, nopointer string
 	var ref string
-	if mode, ok := attr.Extensions["refMode"]; ok && mode == "pointer" {
-		pointer = "*"
+	if mode, ok := attr.Extensions["refMode"]; ok {
 		ref = "New"
+		switch mode {
+		case "pointer":
+			pointer = "*"
+		case "nopointer":
+			nopointer = "*"
+		}
 	}
 
 	switch attr.Type {
@@ -424,7 +429,7 @@ func writeDefaultValue(set spec.SpecificationSet, s spec.Specification, attr *sp
 		}
 
 	case spec.AttributeTypeRef:
-		return ref + set.Specification(attr.SubType).Model().EntityName + "()"
+		return nopointer + ref + set.Specification(attr.SubType).Model().EntityName + "()"
 
 	case spec.AttributeTypeRefList:
 		remoteSpec := set.Specification(attr.SubType)
