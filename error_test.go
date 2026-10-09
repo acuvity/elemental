@@ -547,3 +547,42 @@ func TestSetValidateErrorPath(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateNestedErrorPaths(t *testing.T) {
+
+	Convey("Given a list with an invalid ref and two invalid items in its ref list", t, func() {
+
+		badTask := func() *Task {
+			task := NewTask()
+			task.Name = "task"
+			task.Status = "NOPE"
+			return task
+		}
+
+		list := NewList()
+		list.Name = "list"
+		list.Ref = badTask()
+		list.RefList = TasksList{badTask(), badTask()}
+
+		Convey("When I validate it", func() {
+
+			err := list.Validate()
+
+			Convey("Then each error should have only its own path", func() {
+				var errs Errors
+				So(errors.As(err, &errs), ShouldBeTrue)
+
+				paths := make([]string, 0, len(errs))
+				for _, e := range errs {
+					paths = append(paths, e.Data.(map[string]string)["attribute"])
+				}
+
+				So(paths, ShouldResemble, []string{
+					"ref/status",
+					"refList/0/status",
+					"refList/1/status",
+				})
+			})
+		})
+	})
+}

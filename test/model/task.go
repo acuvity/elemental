@@ -431,8 +431,8 @@ func (o *Task) Validate() error {
 
 	for i, sub := range o.SubtaskList {
 		if err := sub.Validate(); err != nil {
+			elemental.InjectAttributePath(err, fmt.Sprintf("%s/%v", "subtaskList", i))
 			errors = errors.Append(err)
-			elemental.InjectAttributePath(errors, fmt.Sprintf("%s/%v", "subtaskList", i))
 		}
 	}
 

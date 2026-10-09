@@ -588,8 +588,8 @@ func (o *List) Validate() error {
 
 	if o.Ref != nil {
 		if err := o.Ref.Validate(); err != nil {
+			elemental.InjectAttributePath(err, "ref")
 			errors = errors.Append(err)
-			elemental.InjectAttributePath(errors, "ref")
 		}
 	}
 
@@ -598,8 +598,8 @@ func (o *List) Validate() error {
 			continue
 		}
 		if err := sub.Validate(); err != nil {
+			elemental.InjectAttributePath(err, fmt.Sprintf("%s/%v", "refList", i))
 			errors = errors.Append(err)
-			elemental.InjectAttributePath(errors, fmt.Sprintf("%s/%v", "refList", i))
 		}
 	}
 
@@ -608,8 +608,8 @@ func (o *List) Validate() error {
 			continue
 		}
 		if err := sub.Validate(); err != nil {
+			elemental.InjectAttributePath(err, fmt.Sprintf("%s/%v", "refMap", i))
 			errors = errors.Append(err)
-			elemental.InjectAttributePath(errors, fmt.Sprintf("%s/%v", "refMap", i))
 		}
 	}
 

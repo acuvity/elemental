@@ -515,14 +515,14 @@ func (o *{{ .Spec.Model.EntityName }}) Validate() error {
     {{ if eq .Type "ref" }}
     {{- if ne .Extensions.refMode "pointer" }}
     if err := o.{{ .ConvertedName }}.Validate(); err != nil {
+        elemental.InjectAttributePath(err, "{{ .Name }}")
         errors = errors.Append(err)
-        elemental.InjectAttributePath(errors, "{{ .Name }}")
     }
     {{ else }}
     if o.{{ .ConvertedName }} != nil {
         if err := o.{{ .ConvertedName }}.Validate(); err != nil {
+            elemental.InjectAttributePath(err, "{{ .Name }}")
             errors = errors.Append(err)
-            elemental.InjectAttributePath(errors, "{{ .Name }}")
         }
     }
     {{ end -}}
@@ -536,8 +536,8 @@ func (o *{{ .Spec.Model.EntityName }}) Validate() error {
         }
         {{ end -}}
         if err := sub.Validate(); err != nil {
+            elemental.InjectAttributePath(err, fmt.Sprintf("%s/%v", "{{ .Name }}", i))
             errors = errors.Append(err)
-            elemental.InjectAttributePath(errors, fmt.Sprintf("%s/%v", "{{ .Name }}", i))
         }
     }
     {{ end }}

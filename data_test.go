@@ -586,8 +586,8 @@ func (o *List) Validate() error {
 
 	if o.Ref != nil {
 		if err := o.Ref.Validate(); err != nil {
+			InjectAttributePath(err, "ref")
 			errors = errors.Append(err)
-			InjectAttributePath(errors, "ref")
 		}
 	}
 
@@ -596,8 +596,8 @@ func (o *List) Validate() error {
 			continue
 		}
 		if err := sub.Validate(); err != nil {
+			InjectAttributePath(err, fmt.Sprintf("%s/%v", "refList", i))
 			errors = errors.Append(err)
-			InjectAttributePath(errors, fmt.Sprintf("%s/%v", "refList", i))
 		}
 	}
 
@@ -606,8 +606,8 @@ func (o *List) Validate() error {
 			continue
 		}
 		if err := sub.Validate(); err != nil {
+			InjectAttributePath(err, fmt.Sprintf("%s/%v", "refMap", i))
 			errors = errors.Append(err)
-			InjectAttributePath(errors, fmt.Sprintf("%s/%v", "refMap", i))
 		}
 	}
 
@@ -2997,8 +2997,8 @@ func (o *Task) Validate() error {
 
 	for i, sub := range o.SubtaskList {
 		if err := sub.Validate(); err != nil {
+			InjectAttributePath(err, fmt.Sprintf("%s/%v", "subtaskList", i))
 			errors = errors.Append(err)
-			InjectAttributePath(errors, fmt.Sprintf("%s/%v", "subtaskList", i))
 		}
 	}
 
