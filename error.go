@@ -25,12 +25,10 @@ import (
 func IsErrorWithCode(err error, code int) bool {
 
 	var c int
-	var e1 Error
-	var e2 Errors
 
-	if errors.As(err, &e1) {
+	if e1, ok := errors.AsType[Error](err); ok {
 		c = e1.Code
-	} else if errors.As(err, &e2) {
+	} else if e2, ok := errors.AsType[Errors](err); ok {
 		c = e2.Code()
 	}
 
@@ -119,11 +117,9 @@ func (e Errors) Append(errs ...error) Errors {
 
 	for _, err := range errs {
 
-		var e1 Error
-		var e2 Errors
-		if errors.As(err, &e1) {
+		if e1, ok := errors.AsType[Error](err); ok {
 			out = append(out, e1)
-		} else if errors.As(err, &e2) {
+		} else if e2, ok := errors.AsType[Errors](err); ok {
 			out = append(out, e2...)
 		} else {
 			out = append(out, NewError("Internal Server Error", err.Error(), "elemental", http.StatusInternalServerError))
@@ -168,10 +164,7 @@ func IsValidationError(err error, title string, attribute string) bool {
 
 	var elementalError Error
 
-	var e1 Errors
-	var e2 Error
-
-	if errors.As(err, &e1) {
+	if e1, ok := errors.AsType[Errors](err); ok {
 		if e1.Code() != http.StatusUnprocessableEntity {
 			return false
 		}
@@ -179,7 +172,7 @@ func IsValidationError(err error, title string, attribute string) bool {
 			return false
 		}
 		elementalError = e1[0]
-	} else if errors.As(err, &e2) {
+	} else if e2, ok := errors.AsType[Error](err); ok {
 		if e2.Code != http.StatusUnprocessableEntity {
 			return false
 		}
