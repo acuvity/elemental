@@ -105,3 +105,45 @@ func TestConverter_Do__error_writer(t *testing.T) {
 		t.Fatalf("unexpected error\nwant: %v\n got: %v", simulatedErr2, err)
 	}
 }
+
+func TestParseExamples__panics(t *testing.T) {
+	t.Parallel()
+
+	cases := map[string]any{
+		"not a map":              []any{"nope"},
+		"example not a map":      map[string]any{"ex": "nope"},
+		"missing value":          map[string]any{"ex": map[string]any{"summary": "no value"}},
+		"non-string summary":     map[string]any{"ex": map[string]any{"value": 1, "summary": 42}},
+		"non-string description": map[string]any{"ex": map[string]any{"value": 1, "description": true}},
+	}
+
+	for name, entry := range cases {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			defer func() {
+				if recover() == nil {
+					t.Fatalf("expected parseExamples to panic")
+				}
+			}()
+
+			parseExamples("test", entry)
+		})
+	}
+}
+
+func TestGetResponseMapExtension__malformedExamples(t *testing.T) {
+	t.Parallel()
+
+	defer func() {
+		if recover() == nil {
+			t.Fatalf("expected getResponseMapExtension to panic")
+		}
+	}()
+
+	getResponseMapExtension(map[string]any{
+		responseMapExtensionName: map[string]any{
+			"200": map[string]any{"examples": "nope"},
+		},
+	})
+}

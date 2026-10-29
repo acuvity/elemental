@@ -14,6 +14,7 @@ const (
 	securityRequirementsExtensionName = "openapi_security_requirements"
 	pathExtensionName                 = "openapi_path"
 	responseMapExtensionName          = "openapi_response_map"
+	requestExamplesExtensionName      = "openapi_request_examples"
 	componentRegistryExtensionName    = "openapi_component_registry"
 )
 
@@ -21,6 +22,7 @@ type responseSpec struct {
 	Spec        string
 	IsArray     bool
 	Description string
+	Examples    openapi3.Examples
 }
 
 func getOpenAPIExtensionsExtension(extensions map[string]any) (map[string]any, bool) {
@@ -321,10 +323,15 @@ func getResponseMapExtension(extensions map[string]any) (map[string]responseSpec
 				panic(fmt.Sprintf("invalid %s extension entry: response spec: 'is_array' key: expected type bool, got %T", responseMapExtensionName, isArrayEntry))
 			}
 		}
+		var examples openapi3.Examples
+		if examplesEntry, ok := responseEntryMap["examples"]; ok {
+			examples = parseExamples(responseMapExtensionName+" extension entry: response spec: 'examples' key", examplesEntry)
+		}
 		ret[statusCode] = responseSpec{
 			Spec:        spec,
 			IsArray:     isArray,
 			Description: description,
+			Examples:    examples,
 		}
 	}
 	return ret, true
@@ -355,4 +362,58 @@ func getComponentRegistryExtension(extensions map[string]any) ([]string, bool) {
 	}
 
 	return types, true
+}
+
+func getRequestExamplesExtension(extensions map[string]any) (openapi3.Examples, bool) {
+
+	if extensions == nil {
+		return nil, false
+	}
+
+	entry, ok := extensions[requestExamplesExtensionName]
+	if !ok {
+		return nil, false
+	}
+
+	return parseExamples(requestExamplesExtensionName+" extension", entry), true
+}
+
+// parseExamples converts a map of named examples, each made of an optional summary
+// and description and a required value, into OpenAPI examples. The context is
+// used to locate the offending entry when panicking on a malformed one.
+func parseExamples(context string, entry any) openapi3.Examples {
+
+	examplesMap, ok := entry.(map[string]any)
+	if !ok {
+		panic(fmt.Sprintf("invalid %s: expected type map[string]any, got %T", context, entry))
+	}
+
+	examples := make(openapi3.Examples, len(examplesMap))
+	for name, exampleUntyped := range examplesMap {
+		exampleMap, ok := exampleUntyped.(map[string]any)
+		if !ok {
+			panic(fmt.Sprintf("invalid %s: example '%s': expected type map[string]any, got %T", context, name, exampleUntyped))
+		}
+
+		value, ok := exampleMap["value"]
+		if !ok {
+			panic(fmt.Sprintf("invalid %s: example '%s': missing 'value' key", context, name))
+		}
+
+		example := &openapi3.Example{Value: value}
+		if summaryEntry, ok := exampleMap["summary"]; ok {
+			if example.Summary, ok = summaryEntry.(string); !ok {
+				panic(fmt.Sprintf("invalid %s: example '%s': 'summary' key: expected type string, got %T", context, name, summaryEntry))
+			}
+		}
+		if descriptionEntry, ok := exampleMap["description"]; ok {
+			if example.Description, ok = descriptionEntry.(string); !ok {
+				panic(fmt.Sprintf("invalid %s: example '%s': 'description' key: expected type string, got %T", context, name, descriptionEntry))
+			}
+		}
+
+		examples[name] = &openapi3.ExampleRef{Value: example}
+	}
+
+	return examples
 }

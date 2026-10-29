@@ -130,6 +130,186 @@ func TestConverter_Do__specRelations_root(t *testing.T) {
 			`},
 		},
 
+		"relation-create-with-examples": {
+			inSpec: `
+				model:
+					root: true
+					rest_name: root
+					resource_name: root
+					entity_name: Root
+					package: root
+					group: core
+					description: root object.
+
+				relations:
+				- rest_name: resource
+					create:
+						description: Creates some resource.
+						extensions:
+							openapi_request_examples:
+								minimal:
+									summary: Minimal resource
+									value:
+										name: thing
+								full:
+									summary: Full resource
+									description: A resource with every field set.
+									value:
+										name: thing
+										labels:
+										- a
+										- b
+										nested:
+											enabled: true
+											count: 2
+							openapi_response_map:
+								"200":
+									description: The created resource.
+									spec: resource
+									examples:
+										created:
+											summary: Created
+											value:
+												name: thing
+								"422":
+									description: Validation failed.
+									examples:
+										invalid:
+											value: name is required
+			`,
+			outDocs: map[string]string{
+				"toplevel": `
+					{
+						"openapi": "3.1.0",
+						"servers": [{ "url": "https://api.acuvity.ai"}],
+						"tags":[
+							{
+								"name": "useful/thing",
+								"description": "This tag is for group 'useful/thing'"
+							}
+						],
+						"info": {
+							"contact": {
+								"email": "dev@aporeto.com",
+								"name":  "Aporeto Inc.",
+								"url":   "go.acuvity.ai/api"
+							},
+							"version": "1.0",
+							"title": "dummy"
+						},
+						"components": {
+							"schemas": {
+								"resource": {
+									"description": "Represents a resource.",
+									"type": "object"
+								}
+							},
+							"securitySchemes": {
+								"BearerAuth": {
+									"scheme": "bearer",
+									"type": "http"
+								},
+								"NamespaceHeader": {
+									"in": "header",
+									"name": "X-Namespace",
+									"type": "apiKey"
+								}
+							}
+						},
+						"paths": {
+							"/resources": {
+								"post": {
+									"operationId": "create-Resource-as-Resource",
+									"tags": ["useful/thing"],
+									"description": "Creates some resource.",
+									"requestBody": {
+										"content": {
+											"application/json": {
+												"schema": {
+													"$ref": "#/components/schemas/resource"
+												},
+												"examples": {
+													"minimal": {
+														"summary": "Minimal resource",
+														"value": {
+															"name": "thing"
+														}
+													},
+													"full": {
+														"summary": "Full resource",
+														"description": "A resource with every field set.",
+														"value": {
+															"name": "thing",
+															"labels": ["a", "b"],
+															"nested": {
+																"enabled": true,
+																"count": 2
+															}
+														}
+													}
+												}
+											}
+										},
+										"required": true
+									},
+									"responses": {
+										"200": {
+											"description": "The created resource.",
+											"content": {
+												"application/json": {
+													"schema": {
+														"$ref": "#/components/schemas/resource"
+													},
+													"examples": {
+														"created": {
+															"summary": "Created",
+															"value": {
+																"name": "thing"
+															}
+														}
+													}
+												}
+											}
+										},
+										"422": {
+											"description": "Validation failed.",
+											"content": {
+												"text/plain": {
+													"schema": {
+														"type": "string"
+													},
+													"examples": {
+														"invalid": {
+															"value": "name is required"
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"security": [
+							{
+								"BearerAuth": [],
+								"NamespaceHeader": []
+							}
+						]
+					}
+				`,
+			},
+			supportingSpecs: []string{`
+				model:
+					rest_name: resource
+					resource_name: resources
+					entity_name: Resource
+					package: usefulPackageName
+					group: useful/thing
+					description: Represents a resource.
+			`},
+		},
+
 		"relation-get": {
 			inSpec: `
 				model:

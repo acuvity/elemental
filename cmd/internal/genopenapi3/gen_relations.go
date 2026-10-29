@@ -150,6 +150,7 @@ func (c *converter) extractOperationPost(parentRestName string, relation *spec.R
 	}
 	relationAction := relation.Create
 	openAPIExtensions, _ := getOpenAPIExtensionsExtension(relationAction.Extensions)
+	requestExamples, _ := getRequestExamplesExtension(relationAction.Extensions)
 
 	model := relation.Specification().Model()
 
@@ -177,7 +178,8 @@ func (c *converter) extractOperationPost(parentRestName string, relation *spec.R
 				Required: true,
 				Content: openapi3.Content{
 					"application/json": &openapi3.MediaType{
-						Schema: schemaRef,
+						Schema:   schemaRef,
+						Examples: requestExamples,
 					},
 				},
 			},
@@ -399,7 +401,8 @@ func (c *converter) createResponsesFromExtension(relationAction *spec.RelationAc
 						Description: stringPtr(responseSpec.Description),
 						Content: openapi3.Content{
 							"text/plain": &openapi3.MediaType{
-								Schema: openapi3.NewStringSchema().NewRef(),
+								Schema:   openapi3.NewStringSchema().NewRef(),
+								Examples: responseSpec.Examples,
 							},
 						},
 					},
@@ -439,7 +442,8 @@ func (c *converter) createResponsesFromExtension(relationAction *spec.RelationAc
 						Description: stringPtr(responseSpec.Description),
 						Content: openapi3.Content{
 							"application/json": &openapi3.MediaType{
-								Schema: respSchemaRef,
+								Schema:   respSchemaRef,
+								Examples: responseSpec.Examples,
 							},
 						},
 					},
