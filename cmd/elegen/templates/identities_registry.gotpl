@@ -172,7 +172,7 @@ func(f modelManager) DetachedFromString(name string) any {
     switch name {
     {{ range .Set.Specifications }}
     {{- if not .Model.IsRoot }}
-    {{- if .Model.Detached }}
+    {{- if and .Model.Detached (not .Model.Private) }}
     case "{{ .Model.RestName }}", "{{.Model.EntityName}}":
         return New{{ .Model.EntityName }}()
     {{- end }}
