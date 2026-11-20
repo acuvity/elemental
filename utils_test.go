@@ -644,6 +644,11 @@ func TestVerify_areFieldValuesEqualWithEncoding(t *testing.T) {
 }
 
 func TestIsZero(t *testing.T) {
+
+	// structs that are not comparable with ==
+	type withSlice struct{ Values []string }
+	type withMap struct{ Values map[string]string }
+
 	type args struct {
 		o any
 	}
@@ -741,6 +746,31 @@ func TestIsZero(t *testing.T) {
 			"nil pointer",
 			args{(*struct{})(nil)},
 			true,
+		},
+		{
+			"struct with slice",
+			args{withSlice{Values: []string{"a"}}},
+			false,
+		},
+		{
+			"0 struct with slice",
+			args{withSlice{}},
+			true,
+		},
+		{
+			"pointer to struct with slice",
+			args{&withSlice{Values: []string{"a"}}},
+			false,
+		},
+		{
+			"pointer to 0 struct with slice",
+			args{&withSlice{}},
+			true,
+		},
+		{
+			"pointer to struct with map",
+			args{&withMap{Values: map[string]string{"a": "a"}}},
+			false,
 		},
 	}
 	for _, tt := range tests {

@@ -161,7 +161,7 @@ func IsZero(o any) bool {
 	case reflect.Slice, reflect.Map:
 		return v.IsNil() || v.Len() == 0
 	default:
-		return v.Interface() == reflect.Zero(reflect.TypeOf(v.Interface())).Interface()
+		return v.IsZero()
 	}
 }
 
