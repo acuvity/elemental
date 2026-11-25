@@ -13,6 +13,7 @@ package main
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 
 	"go.acuvity.ai/regolithe/spec"
@@ -512,6 +513,151 @@ func Test_sortIndexes(t *testing.T) {
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("sortIndexes got: %v, want: %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func makeTestSpec(t *testing.T, attrs string) spec.Specification {
+	t.Helper()
+
+	data := `model:
+  rest_name: thing
+  resource_name: things
+  entity_name: Thing
+  package: test
+  group: test
+  description: A thing.
+
+attributes:
+  v1:
+` + attrs
+
+	s := spec.NewSpecification()
+	if err := s.Read(strings.NewReader(data), false); err != nil {
+		t.Fatalf("unable to read spec: %s", err)
+	}
+
+	return s
+}
+
+func Test_verifyAttributeConstraints(t *testing.T) {
+
+	tests := []struct {
+		name  string
+		attrs string
+		want  []string
+	}{
+		{
+			"exposed non transient with constraints",
+			`  - name: a
+    type: string
+    exposed: true
+    required: true
+    max_length: 3
+    validations:
+    - $foo
+`,
+			nil,
+		},
+		{
+			"transient without constraints",
+			`  - name: a
+    type: string
+    exposed: true
+    transient: true
+`,
+			nil,
+		},
+		{
+			"transient enum with allowed_choices only",
+			`  - name: a
+    type: enum
+    exposed: true
+    transient: true
+    allowed_choices:
+    - A
+    - B
+`,
+			nil,
+		},
+		{
+			"transient with validations",
+			`  - name: a
+    type: string
+    exposed: true
+    transient: true
+    validations:
+    - $foo
+`,
+			[]string{"thing.spec: attribute 'a' is transient but defines validations which are never validated: remove them or make it non transient"},
+		},
+		{
+			"transient with every constraint",
+			`  - name: a
+    type: string
+    exposed: true
+    transient: true
+    required: true
+    allowed_chars: ^a$
+    allowed_chars_message: must be a
+    allowed_choices:
+    - a
+    max_length: 3
+    min_length: 1
+    max_value: 10
+    min_value: 1
+    validations:
+    - $foo
+`,
+			[]string{"thing.spec: attribute 'a' is transient but defines required, validations, allowed_chars, allowed_choices, max_length, min_length, max_value, min_value which are never validated: remove them or make it non transient"},
+		},
+		{
+			"not exposed with required",
+			`  - name: a
+    type: string
+    required: true
+`,
+			[]string{"thing.spec: attribute 'a' is not exposed but defines required which are never validated: remove them or make it exposed"},
+		},
+		{
+			"transient and not exposed with required",
+			`  - name: a
+    type: string
+    transient: true
+    required: true
+`,
+			[]string{"thing.spec: attribute 'a' is transient and not exposed but defines required which are never validated: remove them or make it exposed and non transient"},
+		},
+		{
+			"multiple bad attributes",
+			`  - name: a
+    type: string
+    exposed: true
+    transient: true
+    required: true
+  - name: b
+    type: string
+    exposed: true
+    required: true
+  - name: c
+    type: integer
+    exposed: true
+    transient: true
+    min_value: 1
+`,
+			[]string{
+				"thing.spec: attribute 'a' is transient but defines required which are never validated: remove them or make it non transient",
+				"thing.spec: attribute 'c' is transient but defines min_value which are never validated: remove them or make it non transient",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := verifyAttributeConstraints(makeTestSpec(t, tt.attrs))
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("verifyAttributeConstraints()\n got: %#v\nwant: %#v", got, tt.want)
 			}
 		})
 	}
