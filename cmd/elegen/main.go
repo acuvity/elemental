@@ -40,6 +40,12 @@ func main() {
 	)
 
 	generator := func(sets []spec.SpecificationSet, out string) error {
+		for _, set := range sets {
+			if err := verifySpecificationSet(set); err != nil {
+				return err
+			}
+		}
+
 		switch genType {
 		case "openapi3":
 			cfg := genopenapi3.Config{

@@ -554,3 +554,104 @@ func modelCommentFlags(exts map[string]any) []string {
 
 	return out
 }
+
+// ignoredConstraints returns the spec keys set on the given attribute
+// that the model template never turns into validation code.
+// The generated Validate() method skips every transient or non exposed
+// attribute, so any of these keys would silently have no effect.
+func ignoredConstraints(attr *spec.Attribute) []string {
+
+	if !attr.Transient && attr.Exposed {
+		return nil
+	}
+
+	var keys []string
+
+	if attr.Required {
+		keys = append(keys, "required")
+	}
+	if len(attr.Validations) > 0 {
+		keys = append(keys, "validations")
+	}
+	if attr.AllowedChars != "" {
+		keys = append(keys, "allowed_chars")
+	}
+	// Enums must define allowed_choices to generate their type,
+	// so they are only a validation for non enum attributes.
+	if len(attr.AllowedChoices) > 0 && attr.Type != spec.AttributeTypeEnum {
+		keys = append(keys, "allowed_choices")
+	}
+	if attr.MaxLength > 0 {
+		keys = append(keys, "max_length")
+	}
+	if attr.MinLength > 0 {
+		keys = append(keys, "min_length")
+	}
+	if attr.MaxValue > 0 {
+		keys = append(keys, "max_value")
+	}
+	if attr.MinValue > 0 {
+		keys = append(keys, "min_value")
+	}
+
+	return keys
+}
+
+// verifyAttributeConstraints returns a message for every attribute of the
+// given specification declaring constraints that will never be applied.
+func verifyAttributeConstraints(s spec.Specification) []string {
+
+	var msgs []string
+
+	for _, attr := range s.Attributes(s.LatestAttributesVersion()) {
+
+		keys := ignoredConstraints(attr)
+		if len(keys) == 0 {
+			continue
+		}
+
+		var state, fix string
+		switch {
+		case attr.Transient && !attr.Exposed:
+			state, fix = "transient and not exposed", "make it exposed and non transient"
+		case attr.Transient:
+			state, fix = "transient", "make it non transient"
+		default:
+			state, fix = "not exposed", "make it exposed"
+		}
+
+		msgs = append(msgs, fmt.Sprintf(
+			"%s.spec: attribute '%s' is %s but defines %s which are never validated: remove them or %s",
+			s.Model().RestName,
+			attr.Name,
+			state,
+			strings.Join(keys, ", "),
+			fix,
+		))
+	}
+
+	return msgs
+}
+
+// verifySpecificationSet ensures no specification of the set declares
+// constraints that elegen does not generate validation code for.
+func verifySpecificationSet(set spec.SpecificationSet) error {
+
+	msgs := make([]string, 0, len(set.Specifications()))
+	for _, s := range set.Specifications() {
+		msgs = append(msgs, verifyAttributeConstraints(s)...)
+	}
+
+	if len(msgs) == 0 {
+		return nil
+	}
+
+	sort.Strings(msgs)
+
+	// The trailing newline is intentional: the error is printed as is by the command.
+	return fmt.Errorf( //nolint:staticcheck
+		"found %d attribute(s) with constraints that would be silently ignored:\n  - %s\n",
+		len(msgs),
+		strings.Join(msgs, "\n  - "),
+	)
+}
